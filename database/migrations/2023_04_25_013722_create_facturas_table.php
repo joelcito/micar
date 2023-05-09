@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('ventas', function (Blueprint $table) {
+        Schema::create('facturas', function (Blueprint $table) {
             $table->id();
             $table->foreign('creador_id')->references('id')->on('users');
             $table->unsignedBigInteger('creador_id')->nullable();
@@ -21,12 +21,23 @@ return new class extends Migration
             $table->unsignedBigInteger('modificador_id')->nullable();
             $table->foreign('eliminador_id')->references('id')->on('users');
             $table->unsignedBigInteger('eliminador_id')->nullable();
-            $table->foreign('lavador_id')->references('id')->on('users');
-            $table->unsignedBigInteger('lavador_id')->nullable();
+
             $table->foreign('vehiculo_id')->references('id')->on('vehiculos');
             $table->unsignedBigInteger('vehiculo_id')->nullable();
-            $table->decimal('precio', 15, 2)->nullable();
-            $table->date('fecha')->nullable();
+            $table->foreign('cliente_id')->references('id')->on('clientes');
+            $table->unsignedBigInteger('cliente_id')->nullable();
+            $table->string('parametro_id')->nullable();
+            $table->decimal('importe', 12, 2);
+            $table->string('razon_social')->nullable();
+            $table->string('carnet')->nullable();
+            $table->string('nit')->nullable();
+            $table->dateTime('fecha')->nullable();
+            $table->decimal('total',12,2)->nullable();
+            $table->string('facturado',5)->nullable();
+            $table->string('numero',10)->nullable();
+            $table->string('numero_recibo',10)->nullable();
+            $table->string('codigo_control',10)->nullable();
+
             $table->string('estado')->nullable();
             $table->datetime('deleted_at')->nullable();
             $table->timestamps();
@@ -40,6 +51,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ventas');
+        Schema::dropIfExists('facturas');
     }
 };

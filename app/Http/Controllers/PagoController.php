@@ -2,34 +2,50 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cliente;
+use App\Models\Pago;
+use App\Models\Venta;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
-class ClienteController extends Controller
+class PagoController extends Controller
 {
-
     public function listado(Request $request){
-        return view('cliente.listado');
-    }
 
-    public function nuevo(Request $request){
-        return view('cliente.nuevo');
+        // $pagos = Pago::all();
+
+        // return view('pago.listado')->with(compact('pagos'));
+        return view('pago.listado');
     }
 
     public function ajaxListado(Request $request){
+        $data = array();
+
         if($request->ajax()){
+            $data['listado']=$this->listadoArray();
             $data['estado'] = 'success';
-            $data['listado'] = $this->listadoArray();
         }else{
             $data['estado'] = 'error';
         }
+
         return json_encode($data);
     }
 
     protected function listadoArray(){
-        $clientes = Cliente::all();
-        return view('cliente.ajaxListado')->with(compact('clientes'))->render();
+        $pagos = Pago::select('ventas.pago_id', 'ventas.vehiculo_id','pagos.id', DB::raw('SUM(ventas.total) as total'))
+                       ->join('ventas', 'pagos.id','=','ventas.pago_id')
+                       ->groupBy('ventas.pago_id','ventas.vehiculo_id')
+                       ->orderBy('pagos.id', 'DESC')
+                       ->get();
+        return view('pago.ajaxListado')->with(compact('pagos'))->render();
     }
+
+    public function detalle(Request $request, $pago_id){
+
+        $ventas = Venta::where('pago_id', $pago_id)->get();
+
+        return view('pago.detalle')->with(compact('ventas'));
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -64,10 +80,10 @@ class ClienteController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Cliente  $cliente
+     * @param  \App\Models\Pago  $pago
      * @return \Illuminate\Http\Response
      */
-    public function show(Cliente $cliente)
+    public function show(Pago $pago)
     {
         //
     }
@@ -75,10 +91,10 @@ class ClienteController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Cliente  $cliente
+     * @param  \App\Models\Pago  $pago
      * @return \Illuminate\Http\Response
      */
-    public function edit(Cliente $cliente)
+    public function edit(Pago $pago)
     {
         //
     }
@@ -87,10 +103,10 @@ class ClienteController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Cliente  $cliente
+     * @param  \App\Models\Pago  $pago
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Cliente $cliente)
+    public function update(Request $request, Pago $pago)
     {
         //
     }
@@ -98,10 +114,10 @@ class ClienteController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Cliente  $cliente
+     * @param  \App\Models\Pago  $pago
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Cliente $cliente)
+    public function destroy(Pago $pago)
     {
         //
     }

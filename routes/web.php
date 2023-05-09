@@ -1,12 +1,15 @@
 <?php
 
 use App\Http\Controllers\CategoriaController;
+use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PagoController;
 use App\Http\Controllers\RolController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VentaController;
 use App\Http\Controllers\ServicioController;
+use App\Http\Controllers\VehiculoController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -22,7 +25,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    // return view('welcome');
+    return view('auth.login');
 });
 
 // Route::get('/dashboard', function () {
@@ -41,12 +45,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/venta/guarda', [VentaController::class, 'guarda']);
     Route::post('/venta/pagar', [VentaController::class, 'pagar']);
 
-
     // USUARIOS
     Route::get('/user', [UserController::class, 'listado']);
     Route::post('/user/ajaxListado', [UserController::class, 'ajaxListado']);
     Route::post('/user/guarda', [UserController::class, 'guarda']);
-
 
     // ROLES
     Route::get('/rol', [RolController::class, 'listado']);
@@ -65,6 +67,33 @@ Route::middleware('auth')->group(function () {
     Route::post('/categoria/guarda', [CategoriaController::class, 'guarda']);
     Route::post('/categoria/ajaxListado', [CategoriaController::class, 'ajaxListado']);
     Route::post('/categoria/eliminar', [CategoriaController::class, 'eliminar']);
+
+    // CLIENTETS
+    Route::get('/cliente', [ClienteController::class, 'listado']);
+    Route::get('/cliente/nuevo', [ClienteController::class, 'nuevo']);
+    // Route::post('/cliente/guarda', [ClienteController::class, 'guarda']);
+    Route::post('/cliente/ajaxListado', [ClienteController::class, 'ajaxListado']);
+    // Route::post('/cliente/eliminar', [ClienteController::class, 'eliminar']);
+
+    // VEHICULO
+    Route::get('/vehiculo', [VehiculoController::class, 'listado']);
+    Route::post('/vehiculo/ajaxListado', [VehiculoController::class, 'ajaxListado']);
+    Route::post('/vehiculo/ajaxRegistraVenta', [VehiculoController::class, 'ajaxRegistraVenta']);
+    Route::post('/vehiculo/eliminarVenta', [VehiculoController::class, 'eliminarVenta']);
+    Route::get('/vehiculo/imprimeNota/{pago_id}', [VehiculoController::class, 'imprimeNota']);
+
+    // PAGOS
+    Route::prefix('/pago')->group(function(){
+        Route::get('/', [PagoController::class, 'listado']);
+        Route::post('/ajaxListado', [PagoController::class, 'ajaxListado']);
+        Route::get('/detalle/{pago_id}', [PagoController::class, 'detalle']);
+    });
+
+    // Route::post('/pago/ajaxListado', [PagoController::class, 'ajaxListado']);
+    // Route::get('/pago', [PagoController::class, 'listado']);
+
+
+
 
     // Route::prefix('/venta')->group(function () {
     // });

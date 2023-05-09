@@ -17,7 +17,7 @@
                 <!--begin::Modal header-->
                 <div class="modal-header" id="kt_modal_add_user_header">
                     <!--begin::Modal title-->
-                    <h2 class="fw-bold">Formulario de venta</h2>
+                    <h2 class="fw-bold">Formulario de rol</h2>
                     <!--end::Modal title-->
                     <!--begin::Close-->
                     <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-users-modal-action="close">
@@ -32,49 +32,23 @@
                 <!--begin::Modal body-->
                 <div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
 
-                    <form id="formularioVentas">
+                    <form id="formularioRol">
                         @csrf
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="fv-row mb-7">
-                                    <label class="required fw-semibold fs-6 mb-2">Lavador</label>
-                                    <select name="lavador_id" id="lavador_id" class="form-control form-control-solid" required>
-                                        <option value="">Seleccione el Vendedor</option>
-                                        {{--  @foreach ( $lavadores as $l)
-                                        <option value="{{ $l->id }}">{{ $l->name }}</option>
-                                        @endforeach  --}}
-                                    </select>
-                                    {{--  <input type="text" name="user_name" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Full name" value="Emma Smith" />  --}}
+                                    <label class="required fw-semibold fs-6 mb-2">Nombre</label>
+                                    <input type="text" id="nombre" name="nombre" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Administrador">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="fv-row mb-7">
-                                    <label class="required fw-semibold fs-6 mb-2">Vehiculo</label>
-                                    <select name="vehiculo_id" id="vehiculo_id" class="form-control form-control-solid" required>
-                                        <option value="">Seleccione el Vendedor</option>
-                                        {{--  @foreach ( $vehiculos as $v)
-                                        <option value="{{ $v->id }}">{{ $v->placa }}</option>
-                                        @endforeach  --}}
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="fv-row mb-7">
-                                    <label class="required fw-semibold fs-6 mb-2">Precio</label>
-                                    <input type="number" name="precio" id="precio" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="150" required/>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="fv-row mb-7">
-                                    <label class="required fw-semibold fs-6 mb-2">Fecha</label>
-                                    <input type="date" name="fecha" id="fecha" class="form-control form-control-solid mb-3 mb-lg-0" required/>
+                                    <label class="required fw-semibold fs-6 mb-2">Descripcion</label>
+                                    <input type="text" id="descripcion" name="descripcion" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Administrador del sistema">
                                 </div>
                             </div>
                         </div>
                     </form>
-
                     <div class="row">
                         <div class="col-md-12">
                             <button class="btn btn-success w-100" onclick="guardarVenta()">Guardar</button>
@@ -89,78 +63,6 @@
     </div>
     <!--end::Modal - Add task-->
 
-
-    <!--end::Modal - New Card-->
-    <!--begin::Modal - Add task-->
-    <div class="modal fade" id="modal_pagar" tabindex="-1" aria-hidden="true">
-        <!--begin::Modal dialog-->
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <!--begin::Modal content-->
-            <div class="modal-content">
-                <!--begin::Modal header-->
-                <div class="modal-header" id="kt_modal_add_user_header">
-                    <!--begin::Modal title-->
-                    <h2 class="fw-bold">Formulario de pago</h2>
-                    <!--end::Modal title-->
-                    <!--begin::Close-->
-                    <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-users-modal-action="close">
-                        <i class="ki-duotone ki-cross fs-1">
-                            <span class="path1"></span>
-                            <span class="path2"></span>
-                        </i>
-                    </div>
-                    <!--end::Close-->
-                </div>
-                <!--end::Modal header-->
-                <!--begin::Modal body-->
-                <div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
-
-                    <form id="formularioVentas">
-                        @csrf
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="fv-row mb-7">
-                                    <label class="required fw-semibold fs-6 mb-2">Lavador</label>
-                                    <input type="hidden" id="venta_id_cobro">
-                                    <input type="text" disabled class="form-control form-control-solid" id="lavador_cobro">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="fv-row mb-7">
-                                    <label class="required fw-semibold fs-6 mb-2">Vehiculo</label>
-                                    <input type="text" disabled class="form-control form-control-solid" id="vehiculo_cobro">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="fv-row mb-7">
-                                    <label class="required fw-semibold fs-6 mb-2">Precio</label>
-                                    <input type="number" readonly id="monto_cobro" class="form-control form-control-solid"/>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="fv-row mb-7">
-                                    <label class="required fw-semibold fs-6 mb-2">Efectivo</label>
-                                    <input type="number" name="efectivo_cobro" id="efectivo_cobro" class="form-control form-control-solid" onkeypress="calcula()" required/>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-
-                    <div class="row">
-                        <div class="col-md-12">
-                            <button class="btn btn-success w-100" onclick="pagar()">Guardar</button>
-                        </div>
-                    </div>
-                </div>
-                <!--end::Modal body-->
-            </div>
-            <!--end::Modal content-->
-        </div>
-        <!--end::Modal dialog-->
-    </div>
-    <!--end::Modal - Add task-->
 
     <!--begin::Card-->
     <div class="card">
@@ -243,7 +145,7 @@
                     <!--end::Export-->
                     <!--begin::Add user-->  --}}
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_user">
-                    <i class="ki-duotone ki-plus fs-2"></i>Nueva venta</button>
+                    <i class="ki-duotone ki-plus fs-2"></i>Nuevo Rol</button>
                     <!--end::Add user-->
                 </div>
                 <!--end::Toolbar-->
@@ -337,77 +239,9 @@
         <!--end::Card header-->
         <!--begin::Card body-->
         <div class="card-body py-4">
-            <!--begin::Table-->
-            <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_table_users">
-                <thead>
-                    <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
-                        <th class="w-10px pe-2">
-                            <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
-                                <input class="form-check-input" type="checkbox" data-kt-check="true" data-kt-check-target="#kt_table_users .form-check-input" value="1" />
-                            </div>
-                        </th>
-                        <th class="min-w-125px">Lavador</th>
-                        <th class="min-w-125px">Vehiculo</th>
-                        <th class="min-w-125px">Precio</th>
-                        <th class="min-w-125px">Fecha</th>
-                        <th class="min-w-125px">Estado</th>
-                        <th class="text-end min-w-100px">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="text-gray-600 fw-semibold">
-                    {{--  @forelse ( $ventas as  $v )
-                        <tr>
-                            <td>
-                                <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                    <input class="form-check-input" type="checkbox" value="1" />
-                                </div>
-                            </td>
-                            <td class="d-flex align-items-center">
-                                @if ($v->lavador)
-                                    <div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
-                                        <a href="../../demo1/dist/apps/user-management/users/view.html">
-                                            <div class="symbol-label">
-                                                <img src="assets/media/avatars/300-6.jpg" alt="Emma Smith" class="w-100" />
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="d-flex flex-column">
-                                        <a href="../../demo1/dist/apps/user-management/users/view.html" class="text-gray-800 text-hover-primary mb-1">{{ $v->lavador->name }}</a>
-                                        <span>{{ $v->lavador->email }}</span>
-                                    </div>
-                                @endif
-                            </td>
-                            <td>
-                                @if ($v->vehiculo)
-                                    <span class="text-gray-800 text-hover-primary mb-1">{{ $v->vehiculo->marca }}</span>
-                                    <br>
-                                    <span>{{ $v->vehiculo->placa }}</span>
-                                @endif
-                            </td>
-                            <td>
-                                <div class="badge badge-light fw-bold">{{ $v->precio }} Bs.</div>
-                            </td>
-                            <td>{{ $v->fecha }}</td>
-                            <td>
-                                @if ($v->estado == 'Pagado')
-                                    <span class="badge badge-light-success fw-bold">Pagado</span>
-                                @else
-                                    <span class="badge badge-light-danger fw-bold">Sin cobrar</span>
-                                @endif
-                            </td>
-                            <td class="text-end">
-                                <button class="btn btn-success btn-sm btn-icon" onclick="cobrar('{{ $v->id }}', '{{ $v->lavador->name }}', '{{ $v->precio }}', '{{ $v->vehiculo->placa }}')"><i class="fa fa-dollar"></i></button>
-                                <button class="btn btn-warning btn-sm btn-icon"><i class="fa fa-edit"></i></button>
-                                <button class="btn btn-danger btn-sm btn-icon"><i class="fa fa-trash"></i></button>
+            <div id="table_roles">
 
-                            </td>
-                        </tr>
-                    @empty
-                        <h4 class="text-danger text-center">Sin registros</h4>
-                    @endforelse  --}}
-                </tbody>
-            </table>
-            <!--end::Table-->
+            </div>
         </div>
         <!--end::Card body-->
     </div>
@@ -417,17 +251,18 @@
 @section('js')
     <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
 
-    {{--  <script src="{{ asset('assets/js/custom/apps/user-management/users/list/table.js') }}"></script>
-    <script src="{{ asset('assets/js/custom/apps/user-management/users/list/export-users.js') }}"></script>
-    <script src="{{ asset('assets/js/custom/apps/user-management/users/list/add.js') }}"></script>
-    <script src="{{ asset('assets/js/widgets.bundle.js') }}"></script>
+    {{--  <script src="{{ asset('assets/js/custom/apps/user-management/users/list/table.js') }}"></script>  --}}
+    {{--  <script src="{{ asset('assets/js/custom/apps/user-management/users/list/export-users.js') }}"></script>  --}}
+    {{--  <script src="{{ asset('assets/js/custom/apps/user-management/users/list/add.js') }}"></script>  --}}
+    {{--  <script src="{{ asset('assets/js/widgets.bundle.js') }}"></script>
     <script src="{{ asset('assets/js/custom/widgets.js') }}"></script>
     <script src="{{ asset('assets/js/custom/apps/chat/chat.js') }}"></script>
     <script src="{{ asset('assets/js/custom/utilities/modals/upgrade-plan.js') }}"></script>
     <script src="{{ asset('assets/js/custom/utilities/modals/create-app.js') }}"></script>
     <script src="{{ asset('assets/js/custom/utilities/modals/users-search.js') }}"></script>  --}}
 
-    <script>
+    <script type="text/javascript">
+
         $.ajaxSetup({
             // definimos cabecera donde estarra el token y poder hacer nuestras operaciones de put,post...
             headers: {
@@ -439,9 +274,27 @@
             ajaxListado();
         });
 
+       function guardarVenta(){
+            if($("#formularioRol")[0].checkValidity()){
+                datos = $("#formularioRol").serializeArray()
+                $.ajax({
+                    url: "{{ url('rol/guarda') }}",
+                    data:datos,
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function(data) {
+                        if(data.estado === 'success')
+                            $('#table_roles').html(data.listado);
+                    }
+                });
+            }else{
+    			$("#formularioRol")[0].reportValidity()
+            }
+        }
+
         function ajaxListado(){
             $.ajax({
-                url: "{{ url('venta/ajaxListado') }}",
+                url: "{{ url('pago/ajaxListado') }}",
                 type: 'POST',
                 dataType: 'json',
                 success: function(data) {
@@ -451,48 +304,15 @@
             });
         }
 
-
-
-       {{--  function guardarVenta(){
-            if($("#formularioVentas")[0].checkValidity()){
-                datos = $("#formularioVentas").serializeArray()
-
-                $.ajax({
-                    url: "{{ url('venta/guarda') }}",
-                    data:datos,
-                    type: 'POST',
-                    success: function(data) {
-
-                    }
-                });
-
-            }else{
-    			$("#formularioVentas")[0].reportValidity()
-            }
-        }
-
-        function cobrar(venta, lavador, monto, vehiculo){
-            $('#venta_id_cobro').val(venta);
-            $('#lavador_cobro').val(lavador);
-            $('#vehiculo_cobro').val(vehiculo);
-            $('#monto_cobro').val(monto);
-
-            $('#modal_pagar').modal('show');
-
-        }
-
-        function calcula(){
-            consolo.log($('#monto_cobro').val()+$('#efectivo_cobro').val())
-            console.log(parseInt($('#monto_cobro').val())+parseInt($('#efectivo_cobro').val()))
-        }
-
-        function pagar(){
+        {{--  function eliminar(rol){
             $.ajax({
-                url: "{{ url('venta/pagar') }}",
-                data:{id: $('#venta_id_cobro').val()},
+                url: "{{ url('rol/eliminar') }}",
                 type: 'POST',
+                data:{id:rol},
+                dataType: 'json',
                 success: function(data) {
-
+                    if(data.estado === 'success')
+                        $('#table_roles').html(data.listado);
                 }
             });
         }  --}}

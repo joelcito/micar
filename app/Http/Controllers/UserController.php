@@ -56,8 +56,6 @@ class UserController extends Controller
             $data['estado'] = 'error';
         }
 
-        // echo "haber";
-
         return json_encode($data);
     }
 }

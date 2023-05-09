@@ -16,49 +16,69 @@ class VentaController extends Controller
 
     public function listado(Request $request){
 
-        $ventas = Venta::all();
-        $lavadores = User::all();
-        $vehiculos = Vehiculo::all();
+        return view('venta.listado');
 
-        return view('venta.listado')->with(compact('ventas', 'lavadores', 'vehiculos'));
+        // $ventas = Venta::all();
+        // $lavadores = User::all();
+        // $vehiculos = Vehiculo::all();
+
+        // return view('venta.listado')->with(compact('ventas', 'lavadores', 'vehiculos'));
+    }
+
+    public function ajaxListado(Request $request){
+        $data = array();
+
+        if($request->ajax()){
+            $data['listado']=$this->listadoArray();
+            $data['estado'] = 'success';
+        }else{
+            $data['estado'] = 'error';
+        }
+
+        return json_encode($data);
+    }
+
+    protected function listadoArray(){
+        $ventas = Venta::all();
+        return view('venta.ajaxListado')->with(compact('ventas'))->render();
     }
 
     public function guarda(Request $request){
 
-        if($request->ajax()){
+        // if($request->ajax()){
 
-            // $validated = $request->validate([
-            //     'lavador_id' => 'required',
-            //     'vehiculo_id' => 'required',
-            //     'precio' => 'required',
-            //     'fecha' => 'required',
-            // ]);
+        //     // $validated = $request->validate([
+        //     //     'lavador_id' => 'required',
+        //     //     'vehiculo_id' => 'required',
+        //     //     'precio' => 'required',
+        //     //     'fecha' => 'required',
+        //     // ]);
 
-            $venta = new Venta();
+        //     $venta = new Venta();
 
-            $venta->creador_id = Auth::user()->id;
-            $venta->lavador_id = $request->input('lavador_id');
-            $venta->vehiculo_id = $request->input('vehiculo_id');
-            $venta->precio = $request->input('precio');
-            $venta->fecha = $request->input('fecha');
+        //     $venta->creador_id = Auth::user()->id;
+        //     $venta->lavador_id = $request->input('lavador_id');
+        //     $venta->vehiculo_id = $request->input('vehiculo_id');
+        //     $venta->precio = $request->input('precio');
+        //     $venta->fecha = $request->input('fecha');
 
-            $venta->save();
+        //     $venta->save();
 
-        }else{
+        // }else{
 
-        }
+        // }
 
     }
 
     public function pagar(Request $request){
 
-        // dd($request->input('id'));
+        // // dd($request->input('id'));
 
-        $venta = Venta::find($request->input('id'));
+        // $venta = Venta::find($request->input('id'));
 
-        $venta->estado = "Pagado";
+        // $venta->estado = "Pagado";
 
-        $venta->save();
+        // $venta->save();
     }
     /**
      * Display a listing of the resource.

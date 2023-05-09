@@ -18,6 +18,7 @@ class Venta extends Model
 
         'lavador_id',
         'vehiculo_id',
+        'servicio_id',
         'precio',
         'fecha',
 
@@ -31,5 +32,9 @@ class Venta extends Model
 
     public function vehiculo(){
         return $this->belongsTo('App\Models\Vehiculo', 'vehiculo_id');
+    }
+
+    public function servicio(){
+        return $this->belongsTo('App\Models\Servicio', 'servicio_id');
     }
 }

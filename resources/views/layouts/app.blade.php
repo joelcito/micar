@@ -108,7 +108,7 @@
 								<!--begin::Menu-->
 								<div class="menu menu-rounded menu-column menu-lg-row my-5 my-lg-0 align-items-stretch fw-semibold px-2 px-lg-0" id="kt_app_header_menu" data-kt-menu="true">
 									<!--begin:Menu item-->
-									<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="bottom-start" class="menu-item here show menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
+									{{--  <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="bottom-start" class="menu-item here show menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
 										<!--begin:Menu link-->
 										<span class="menu-link">
 											<span class="menu-title">Dashboards</span>
@@ -769,7 +769,7 @@
 															<!--end:Col-->
 															<!--begin:Col-->
 															<div class="col-lg-4">
-																<img src="assets/media/stock/600x600/img-82.jpg" class="rounded mw-100" alt="" />
+																<img src="{{ asset('assets/media/stock/600x600/img-82.jpg') }}" class="rounded mw-100" alt="" />
 															</div>
 															<!--end:Col-->
 														</div>
@@ -879,7 +879,7 @@
 															<!--end:Col-->
 															<!--begin:Col-->
 															<div class="col-lg-7">
-																<img src="assets/media/stock/900x600/46.jpg" class="rounded mw-100" alt="" />
+																<img src="{{ asset('assets/media/stock/900x600/46.jpg') }}" class="rounded mw-100" alt="" />
 															</div>
 															<!--end:Col-->
 														</div>
@@ -1591,7 +1591,7 @@
 															<!--end:Col-->
 															<!--begin:Col-->
 															<div class="col-lg-5 pe-lg-5">
-																<img src="assets/media/stock/600x600/img-84.jpg" class="rounded mw-100" alt="" />
+																<img src="{{ asset('assets/media/stock/600x600/img-84.jpg') }}" class="rounded mw-100" alt="" />
 															</div>
 															<!--end:Col-->
 														</div>
@@ -1662,7 +1662,7 @@
 															<!--end:Col-->
 															<!--begin:Col-->
 															<div class="col-lg-8">
-																<img src="assets/media/stock/900x600/44.jpg" class="rounded mw-100" alt="" />
+																<img src="{{ asset('assets/media/stock/900x600/44.jpg') }}" class="rounded mw-100" alt="" />
 															</div>
 															<!--end:Col-->
 														</div>
@@ -3010,7 +3010,7 @@
 													<!--end:Col-->
 													<!--begin:Col-->
 													<div class="col-lg-6 mb-3 py-lg-3 pe-lg-8 d-flex align-items-center">
-														<img src="assets/media/stock/900x600/45.jpg" class="rounded mw-100" alt="" />
+														<img src="{{ asset('assets/media/stock/900x600/45.jpg') }}" class="rounded mw-100" alt="" />
 													</div>
 													<!--end:Col-->
 												</div>
@@ -3080,7 +3080,7 @@
 											<!--end:Menu item-->
 										</div>
 										<!--end:Menu sub-->
-									</div>
+									</div>  --}}
 									<!--end:Menu item-->
 								</div>
 								<!--end::Menu-->
@@ -3088,7 +3088,7 @@
 							<!--end::Menu wrapper-->
 							<!--begin::Navbar-->
 							<div class="app-navbar flex-shrink-0">
-								<!--begin::Search-->
+								{{--  <!--begin::Search-->
 								<div class="app-navbar-item align-items-stretch ms-1 ms-md-3">
 									<!--begin::Search-->
 									<div id="kt_header_search" class="header-search d-flex align-items-stretch" data-kt-search-keypress="true" data-kt-search-min-length="2" data-kt-search-enter="enter" data-kt-search-layout="menu" data-kt-menu-trigger="auto" data-kt-menu-overflow="false" data-kt-menu-permanent="true" data-kt-menu-placement="bottom-end">
@@ -3163,7 +3163,7 @@
 														<a href="#" class="d-flex text-dark text-hover-primary align-items-center mb-5">
 															<!--begin::Symbol-->
 															<div class="symbol symbol-40px me-4">
-																<img src="assets/media/avatars/300-6.jpg" alt="" />
+																<img src="{{ asset('assets/media/avatars/300-6.jpg') }}" alt="" />
 															</div>
 															<!--end::Symbol-->
 															<!--begin::Title-->
@@ -3178,7 +3178,7 @@
 														<a href="#" class="d-flex text-dark text-hover-primary align-items-center mb-5">
 															<!--begin::Symbol-->
 															<div class="symbol symbol-40px me-4">
-																<img src="assets/media/avatars/300-2.jpg" alt="" />
+																<img src="{{ asset('assets/media/avatars/300-2.jpg') }}" alt="" />
 															</div>
 															<!--end::Symbol-->
 															<!--begin::Title-->
@@ -3193,7 +3193,7 @@
 														<a href="#" class="d-flex text-dark text-hover-primary align-items-center mb-5">
 															<!--begin::Symbol-->
 															<div class="symbol symbol-40px me-4">
-																<img src="assets/media/avatars/300-9.jpg" alt="" />
+																<img src="{{ asset('assets/media/avatars/300-9.jpg') }}" alt="" />
 															</div>
 															<!--end::Symbol-->
 															<!--begin::Title-->
@@ -3208,7 +3208,7 @@
 														<a href="#" class="d-flex text-dark text-hover-primary align-items-center mb-5">
 															<!--begin::Symbol-->
 															<div class="symbol symbol-40px me-4">
-																<img src="assets/media/avatars/300-14.jpg" alt="" />
+																<img src="{{ asset('assets/media/avatars/300-14.jpg') }}" alt="" />
 															</div>
 															<!--end::Symbol-->
 															<!--begin::Title-->
@@ -3223,7 +3223,7 @@
 														<a href="#" class="d-flex text-dark text-hover-primary align-items-center mb-5">
 															<!--begin::Symbol-->
 															<div class="symbol symbol-40px me-4">
-																<img src="assets/media/avatars/300-11.jpg" alt="" />
+																<img src="{{ asset('assets/media/avatars/300-11.jpg') }}" alt="" />
 															</div>
 															<!--end::Symbol-->
 															<!--begin::Title-->
@@ -3242,7 +3242,7 @@
 															<!--begin::Symbol-->
 															<div class="symbol symbol-40px me-4">
 																<span class="symbol-label bg-light">
-																	<img class="w-20px h-20px" src="assets/media/svg/brand-logos/volicity-9.svg" alt="" />
+																	<img class="w-20px h-20px" src="{{ asset('assets/media/svg/brand-logos/volicity-9.svg') }}" alt="" />
 																</span>
 															</div>
 															<!--end::Symbol-->
@@ -3259,7 +3259,7 @@
 															<!--begin::Symbol-->
 															<div class="symbol symbol-40px me-4">
 																<span class="symbol-label bg-light">
-																	<img class="w-20px h-20px" src="assets/media/svg/brand-logos/tvit.svg" alt="" />
+																	<img class="w-20px h-20px" src="{{ asset('assets/media/svg/brand-logos/tvit.svg') }}" alt="" />
 																</span>
 															</div>
 															<!--end::Symbol-->
@@ -3276,7 +3276,7 @@
 															<!--begin::Symbol-->
 															<div class="symbol symbol-40px me-4">
 																<span class="symbol-label bg-light">
-																	<img class="w-20px h-20px" src="assets/media/svg/misc/infography.svg" alt="" />
+																	<img class="w-20px h-20px" src="{{ asset('assets/media/svg/misc/infography.svg') }}" alt="" />
 																</span>
 															</div>
 															<!--end::Symbol-->
@@ -3293,7 +3293,7 @@
 															<!--begin::Symbol-->
 															<div class="symbol symbol-40px me-4">
 																<span class="symbol-label bg-light">
-																	<img class="w-20px h-20px" src="assets/media/svg/brand-logos/leaf.svg" alt="" />
+																	<img class="w-20px h-20px" src="{{ asset('assets/media/svg/brand-logos/leaf.svg') }}" alt="" />
 																</span>
 															</div>
 															<!--end::Symbol-->
@@ -4570,7 +4570,7 @@
 									<!--end::My apps-->
 									<!--end::Menu wrapper-->
 								</div>
-								<!--end::My apps links-->
+								<!--end::My apps links-->  --}}
 								<!--begin::Theme mode-->
 								<div class="app-navbar-item ms-1 ms-md-3">
 									<!--begin::Menu toggle-->
@@ -4652,7 +4652,7 @@
 								<div class="app-navbar-item ms-1 ms-md-3" id="kt_header_user_menu_toggle">
 									<!--begin::Menu wrapper-->
 									<div class="cursor-pointer symbol symbol-30px symbol-md-40px" data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
-										<img src="assets/media/avatars/300-1.jpg" alt="user" />
+										<img src="{{ asset('assets/media/avatars/300-1.jpg') }}" alt="user" />
 									</div>
 									<!--begin::User account menu-->
 									<div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-color fw-semibold py-4 fs-6 w-275px" data-kt-menu="true">
@@ -4661,7 +4661,7 @@
 											<div class="menu-content d-flex align-items-center px-3">
 												<!--begin::Avatar-->
 												<div class="symbol symbol-50px me-5">
-													<img alt="Logo" src="assets/media/avatars/300-1.jpg" />
+													<img alt="Logo" src="{{ asset('assets/media/avatars/300-1.jpg') }}" />
 												</div>
 												<!--end::Avatar-->
 												<!--begin::Username-->
@@ -4673,7 +4673,7 @@
 												<!--end::Username-->
 											</div>
 										</div>
-										<!--end::Menu item-->
+										{{--  <!--end::Menu item-->
 										<!--begin::Menu separator-->
 										<div class="separator my-2"></div>
 										<!--end::Menu separator-->
@@ -4810,9 +4810,15 @@
 											<a href="../../demo1/dist/account/settings.html" class="menu-link px-5">Account Settings</a>
 										</div>
 										<!--end::Menu item-->
-										<!--begin::Menu item-->
+										<!--begin::Menu item-->  --}}
 										<div class="menu-item px-5">
-											<a href="../../demo1/dist/authentication/layouts/corporate/sign-in.html" class="menu-link px-5">Sign Out</a>
+                                            <form method="POST" action="{{ route('logout') }}">
+                                                @csrf
+                                                <a href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();" class="menu-link px-5">Cerrar Sesion</a>
+                                                {{--  <x-dropdown-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">
+                                                    {{ __('Log Out') }}
+                                                </x-dropdown-link>  --}}
+                                            </form>
 										</div>
 										<!--end::Menu item-->
 									</div>
@@ -4846,8 +4852,8 @@
 						<div class="app-sidebar-logo px-6" id="kt_app_sidebar_logo">
 							<!--begin::Logo image-->
 							<a href="../../demo1/dist/index.html">
-								<img alt="Logo" src="assets/media/logos/default-dark.svg" class="h-25px app-sidebar-logo-default" />
-								<img alt="Logo" src="assets/media/logos/default-small.svg" class="h-20px app-sidebar-logo-minimize" />
+								<img alt="Logo" src="{{ asset('assets/imagenes/logo.jpeg') }}" class="pl-lg-5 mt-13 h-100px app-sidebar-logo-default" />
+								{{--  <img alt="Logo" src="{{ asset('assets/media/logos/default-small.svg') }}" class="h-20px app-sidebar-logo-minimize" />  --}}
 							</a>
 							<!--end::Logo image-->
 							<!--begin::Sidebar toggle-->
@@ -4890,44 +4896,7 @@
 						<div class="d-flex flex-column flex-column-fluid">
 							<!--begin::Toolbar-->
 							<div id="kt_app_toolbar" class="app-toolbar py-3 py-lg-6">
-								<!--begin::Toolbar container-->
-								<div id="kt_app_toolbar_container" class="app-container container-fluid d-flex flex-stack">
-									<!--begin::Page title-->
-									<div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
-										<!--begin::Title-->
-										<h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">Multipurpose</h1>
-										<!--end::Title-->
-										<!--begin::Breadcrumb-->
-										<ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
-											<!--begin::Item-->
-											<li class="breadcrumb-item text-muted">
-												<a href="../../demo1/dist/index.html" class="text-muted text-hover-primary">Home</a>
-											</li>
-											<!--end::Item-->
-											<!--begin::Item-->
-											<li class="breadcrumb-item">
-												<span class="bullet bg-gray-400 w-5px h-2px"></span>
-											</li>
-											<!--end::Item-->
-											<!--begin::Item-->
-											<li class="breadcrumb-item text-muted">Dashboards</li>
-											<!--end::Item-->
-										</ul>
-										<!--end::Breadcrumb-->
-									</div>
-									<!--end::Page title-->
-									<!--begin::Actions-->
-									<div class="d-flex align-items-center gap-2 gap-lg-3">
-										<!--begin::Secondary button-->
-										<a href="#" class="btn btn-sm fw-bold bg-body btn-color-gray-700 btn-active-color-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_create_app">Rollover</a>
-										<!--end::Secondary button-->
-										<!--begin::Primary button-->
-										<a href="#" class="btn btn-sm fw-bold btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_new_target">Add Target</a>
-										<!--end::Primary button-->
-									</div>
-									<!--end::Actions-->
-								</div>
-								<!--end::Toolbar container-->
+
 							</div>
 							<!--end::Toolbar-->
 							<!--begin::Content-->
