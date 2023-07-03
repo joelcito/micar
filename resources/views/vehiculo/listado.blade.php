@@ -8,9 +8,8 @@
 @section('content')
 
 
-<!--end::Modal - New Card-->
 <!--begin::Modal - Add task-->
-<div class="modal fade" id="kt_modal_add_categoria" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="modal_registro_usuario" tabindex="-1" aria-hidden="true">
     <!--begin::Modal dialog-->
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <!--begin::Modal content-->
@@ -18,7 +17,99 @@
             <!--begin::Modal header-->
             <div class="modal-header" id="kt_modal_add_user_header">
                 <!--begin::Modal title-->
-                <h2 class="fw-bold">Formulario de categoria</h2>
+                <h2 class="fw-bold">Formulario de registro nuevo cliente</h2>
+                <!--end::Modal title-->
+                <!--begin::Close-->
+                <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-users-modal-action="close">
+                    <i class="ki-duotone ki-cross fs-1">
+                        <span class="path1"></span>
+                        <span class="path2"></span>
+                    </i>
+                </div>
+                <!--end::Close-->
+            </div>
+            <!--end::Modal header-->
+            <!--begin::Modal body-->
+            <div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
+
+                <form id="formularioNuevoCliente">
+                    @csrf
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="fv-row mb-7">
+                                <label class="required fw-semibold fs-6 mb-2">Ap Paterno</label>
+                                <input type="text" class="form-control" required name="paterno" id="paterno">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="fv-row mb-7">
+                                <label class="required fw-semibold fs-6 mb-2">Ap Materno</label>
+                                <input type="text" class="form-control" required name="materno" id="materno">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="fv-row mb-7">
+                                <label class="required fw-semibold fs-6 mb-2">Nombres</label>
+                                <input type="text" class="form-control" required name="nombres" id="nombres">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="fv-row mb-7">
+                                <label class="required fw-semibold fs-6 mb-2">Cedula</label>
+                                <input type="text" class="form-control" required name="cedula" id="cedula">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-5">
+                        <div class="col-md-4">
+                            <div class="fv-row mb-7">
+                                <label class="required fw-semibold fs-6 mb-2">Correo</label>
+                                <input type="text" class="form-control" required name="correo" id="correo">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="fv-row mb-7">
+                                <label class="required fw-semibold fs-6 mb-2">Celular</label>
+                                <input type="text" class="form-control" required name="celular" id="celular">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="fv-row mb-7">
+                                <label class="required fw-semibold fs-6 mb-2">Fecha Nacimiento</label>
+                                <input type="date" class="form-control" required name="fecha_naci" id="fecha_naci">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <button class="btn btn-dark w-100" onclick="cancelarRegistroCliente()">Cancelar</button>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-success w-100" onclick="guardarRegistroCliente()">Guardar</button>
+                    </div>
+                </div>
+            </div>
+            <!--end::Modal body-->
+        </div>
+        <!--end::Modal content-->
+    </div>
+    <!--end::Modal dialog-->
+</div>
+<!--end::Modal - Add task-->
+
+
+<!--begin::Modal - Add task-->
+<div class="modal fade" id="modal_registro_vehiculo" tabindex="-1" aria-hidden="true">
+    <!--begin::Modal dialog-->
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <!--begin::Modal content-->
+        <div class="modal-content">
+            <!--begin::Modal header-->
+            <div class="modal-header" id="kt_modal_add_user_header">
+                <!--begin::Modal title-->
+                <h2 class="fw-bold">Formulario de registro nuevo vehiculo</h2>
                 <!--end::Modal title-->
                 <!--begin::Close-->
                 <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-users-modal-action="close">
@@ -36,17 +127,36 @@
                 <form id="formularioCategoria">
                     @csrf
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-11">
+                            <label class="required fw-semibold fs-6 mb-2">Cliente</label>
+                            <select name="cliente_id" id="cliente_id" class="form-control" required data-control="select2" data-dropdown-parent="#modal_registro_vehiculo" data-placeholder="Select an option" data-allow-clear="true">
+                                <option value="">SELECCIONE AL CLIENTE</option>
+                                @foreach ($clientes as $c)
+                                    <option value="{{ $c->id }}">{{ $c->ap_paterno." ".$c->ap_materno." ".$c->nombres }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-1 mt-9">
+                            <button class="btn btn-icon btn-sm btn-success" onclick="modalNuevoUsuario()"><i class="fas fa-user-plus"></i> </button>
+                        </div>
+                    </div>
+                    <div class="row mt-5">
+                        <div class="col-md-4">
                             <div class="fv-row mb-7">
-                                <label class="required fw-semibold fs-6 mb-2">Nombre</label>
-                                <input type="text" class="form-control form-control-solid" required name="nombre" id="nombre" placeholder="LAVADO">
-                                <input type="hidden" name="categoria_id" id="categoria_id">
+                                <label class="required fw-semibold fs-6 mb-2">PLACA</label>
+                                <input type="text" class="form-control" required name="placa" id="placa">
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="fv-row mb-7">
-                                <label class="required fw-semibold fs-6 mb-2">Descripcion</label>
-                                <input type="text" class="form-control form-control-solid" required name="descripcion" id="descripcion" placeholder="LAVADO ESPECIFICO">
+                                <label class="required fw-semibold fs-6 mb-2">COLOR</label>
+                                <input type="text" class="form-control" required name="color" id="color">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="fv-row mb-7">
+                                <label class="required fw-semibold fs-6 mb-2">MARCA</label>
+                                <input type="text" class="form-control" required name="marca" id="marca">
                             </div>
                         </div>
                     </div>
@@ -72,120 +182,13 @@
     <!--begin::Card header-->
     <div class="card-header border-0 pt-6">
         <div class="row w-100" >
-            <div class="col-md-8">
-                <input type="text" class="form-control" placeholder="Buscar por placa">
+            <div class="col-md-12s">
+                <input type="text" class="form-control" placeholder="Buscar por placa" id="buscar_placa">
             </div>
-            <div class="col-md-4">
-                <button class="btn btn-success w-100">Buscar</button>
-            </div>
+            {{--  <div class="col-md-4">
+                <button class="btn btn-success w-100" onclick="buscarVehiculo()">Buscar</button>
+            </div>  --}}
         </div>
-        <!--begin::Card title-->
-        {{--  <div class="card-title">
-            <!--begin::Search-->
-            <div class="d-flex align-items-center position-relative my-1">
-                <i class="ki-duotone ki-magnifier fs-3 position-absolute ms-5">
-                    <span class="path1"></span>
-                    <span class="path2"></span>
-                </i>
-                <input type="text" data-kt-user-table-filter="search" class="form-control form-control-solid w-250px ps-13" placeholder="Buscar Venta" />
-            </div>
-            <!--end::Search-->
-        </div>  --}}
-        <!--begin::Card title-->
-        <!--begin::Card toolbar-->
-        {{--  <div class="card-toolbar">
-            <!--begin::Toolbar-->
-            <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">
-                <button type="button" class="btn btn-primary" onclick="nuevoCategoria()">
-                    <i class="ki-duotone ki-plus fs-2"></i>Nueva Categoria
-                </button>
-            </div>
-            <!--end::Toolbar-->
-            <!--begin::Group actions-->
-            <div class="d-flex justify-content-end align-items-center d-none" data-kt-user-table-toolbar="selected">
-                <div class="fw-bold me-5">
-                <span class="me-2" data-kt-user-table-select="selected_count"></span>Selected</div>
-                <button type="button" class="btn btn-danger" data-kt-user-table-select="delete_selected">Delete Selected</button>
-            </div>
-            <!--end::Group actions-->
-            <!--begin::Modal - Adjust Balance-->
-            <div class="modal fade" id="kt_modal_export_users" tabindex="-1" aria-hidden="true">
-                <!--begin::Modal dialog-->
-                <div class="modal-dialog modal-dialog-centered mw-650px">
-                    <!--begin::Modal content-->
-                    <div class="modal-content">
-                        <!--begin::Modal header-->
-                        <div class="modal-header">
-                            <!--begin::Modal title-->
-                            <h2 class="fw-bold">Export Users</h2>
-                            <!--end::Modal title-->
-                            <!--begin::Close-->
-                            <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-users-modal-action="close">
-                                <i class="ki-duotone ki-cross fs-1">
-                                    <span class="path1"></span>
-                                    <span class="path2"></span>
-                                </i>
-                            </div>
-                            <!--end::Close-->
-                        </div>
-                        <!--end::Modal header-->
-                        <!--begin::Modal body-->
-                        <div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
-                            <!--begin::Form-->
-                            <form id="kt_modal_export_users_form" class="form" action="#">
-                                <!--begin::Input group-->
-                                <div class="fv-row mb-10">
-                                    <!--begin::Label-->
-                                    <label class="fs-6 fw-semibold form-label mb-2">Select Roles:</label>
-                                    <!--end::Label-->
-                                    <!--begin::Input-->
-                                    <select name="role" data-control="select2" data-placeholder="Select a role" data-hide-search="true" class="form-select form-select-solid fw-bold">
-                                        <option></option>
-                                        <option value="Administrator">Administrator</option>
-                                        <option value="Analyst">Analyst</option>
-                                        <option value="Developer">Developer</option>
-                                        <option value="Support">Support</option>
-                                        <option value="Trial">Trial</option>
-                                    </select>
-                                    <!--end::Input-->
-                                </div>
-                                <!--end::Input group-->
-                                <!--begin::Input group-->
-                                <div class="fv-row mb-10">
-                                    <!--begin::Label-->
-                                    <label class="required fs-6 fw-semibold form-label mb-2">Select Export Format:</label>
-                                    <!--end::Label-->
-                                    <!--begin::Input-->
-                                    <select name="format" data-control="select2" data-placeholder="Select a format" data-hide-search="true" class="form-select form-select-solid fw-bold">
-                                        <option></option>
-                                        <option value="excel">Excel</option>
-                                        <option value="pdf">PDF</option>
-                                        <option value="cvs">CVS</option>
-                                        <option value="zip">ZIP</option>
-                                    </select>
-                                    <!--end::Input-->
-                                </div>
-                                <!--end::Input group-->
-                                <!--begin::Actions-->
-                                <div class="text-center">
-                                    <button type="reset" class="btn btn-light me-3" data-kt-users-modal-action="cancel">Discard</button>
-                                    <button type="submit" class="btn btn-primary" data-kt-users-modal-action="submit">
-                                        <span class="indicator-label">Submit</span>
-                                        <span class="indicator-progress">Please wait...
-                                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-                                    </button>
-                                </div>
-                                <!--end::Actions-->
-                            </form>
-                            <!--end::Form-->
-                        </div>
-                        <!--end::Modal body-->
-                    </div>
-                    <!--end::Modal content-->
-                </div>
-                <!--end::Modal dialog-->
-            </div>
-        </div>  --}}
         <!--end::Card toolbar-->
     </div>
     <!--end::Card header-->
@@ -284,6 +287,10 @@
                 let total = $('#cantidad').val()*$('#precio').val();
                 $('#total').val(total)
             })
+
+            $('#buscar_placa').on('keyup input', function() {
+                buscarVehiculo();
+            });
         });
 
         function ajaxListado(){
@@ -482,6 +489,64 @@
             window.location.href = url;
         }
 
+        function buscarVehiculo(){
+            let placa = $('#buscar_placa').val();
+            $.ajax({
+                url: "{{ url('vehiculo/buscarVehiculo') }}",
+                type: 'POST',
+                data:{
+                    placa     :placa,
+                },
+                dataType: 'json',
+                success: function(data) {
+                    if(data.estado === 'success'){
+                        $('#table_vehiculos').html(data.listado)
+                        console.log(data)
+                    }
+                }
+            });
+        }
+
+        function registraNuevoVehiculo(){
+            $('#modal_registro_vehiculo').modal('show');
+            {{--  console.log("este es nuevo registro de vehiulo")  --}}
+        }
+
+        function modalNuevoUsuario(){
+            $('#modal_registro_vehiculo').modal('hide');
+            $('#modal_registro_usuario').modal('show');
+        }
+
+        function cancelarRegistroCliente(){
+            $('#modal_registro_usuario').modal('hide');
+            $('#modal_registro_vehiculo').modal('show');
+        }
+
+        function guardarRegistroCliente(){
+            if($("#formularioNuevoCliente")[0].checkValidity()){
+                datos = $("#formularioNuevoCliente").serializeArray()
+                $.ajax({
+                    url: "{{ url('categoria/guarda') }}",
+                    data:datos,
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function(data) {
+                        if(data.estado === 'success'){
+                            $('#table_vehiculos').html(data.listado);
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Correcto!',
+                                text: 'Se cambio  con exito!',
+                                timer: 1500
+                            })
+                            $('#kt_modal_add_categoria').modal('hide');
+                        }
+                    }
+                });
+            }else{
+    			$("#formularioNuevoCliente")[0].reportValidity()
+            }
+        }
     </script>
 @endsection
 

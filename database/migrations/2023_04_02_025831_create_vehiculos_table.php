@@ -24,6 +24,8 @@ return new class extends Migration
             $table->foreign('cliente_id')->references('id')->on('clientes');
             $table->unsignedBigInteger('cliente_id')->nullable();
             $table->string('placa',20)->nullable();
+            $table->string('nit',100)->nullable();
+            $table->string('razon_social')->nullable();
             $table->string('color',20)->nullable();
             $table->string('marca',20)->nullable();
             $table->string('estado')->nullable();

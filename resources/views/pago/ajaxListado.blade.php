@@ -14,14 +14,20 @@
                 <tr>
                     <td class="d-flex align-items-center">
                         <div class="d-flex flex-column">
+                            @if ($p->vehiculo)
                             <a class="text-gray-800 text-hover-primary mb-1">{{ $p->vehiculo->marca }}</a>
+                            @endif
                         </div>
                     </td>
                     <td>
+                        @if ($p->vehiculo)
                         <a class="text-gray-800 text-hover-primary mb-1">{{ $p->vehiculo->placa }}</a>
+                        @endif
                     </td>
                     <td>
+                        @if ($p->vehiculo)
                         <a class="text-gray-800 text-hover-primary mb-1">{{ $p->vehiculo->cliente->nombres." ".$p->vehiculo->cliente->ap_paterno." ".$p->vehiculo->cliente->ap_materno }}</a>
+                        @endif
                     </td>
                     <td>
                         <a class="text-gray-800 text-hover-primary mb-1">{{ $p->total }}</a>

@@ -4,6 +4,7 @@ use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MigracionController;
 use App\Http\Controllers\PagoController;
 use App\Http\Controllers\RolController;
 use App\Http\Controllers\UserController;
@@ -81,6 +82,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/vehiculo/ajaxRegistraVenta', [VehiculoController::class, 'ajaxRegistraVenta']);
     Route::post('/vehiculo/eliminarVenta', [VehiculoController::class, 'eliminarVenta']);
     Route::get('/vehiculo/imprimeNota/{pago_id}', [VehiculoController::class, 'imprimeNota']);
+    Route::post('/vehiculo/buscarVehiculo', [VehiculoController::class, 'buscarVehiculo']);
+
 
     // PAGOS
     Route::prefix('/pago')->group(function(){
@@ -92,6 +95,9 @@ Route::middleware('auth')->group(function () {
     // Route::post('/pago/ajaxListado', [PagoController::class, 'ajaxListado']);
     // Route::get('/pago', [PagoController::class, 'listado']);
 
+    // MIGRACIONES
+    Route::get('/migracion/migrarServicios', [MigracionController::class, 'migrarServicios']);
+    Route::get('/migracion/migrarVehiculos', [MigracionController::class, 'migrarVehiculos']);
 
 
 

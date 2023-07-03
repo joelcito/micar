@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cliente;
 use App\Models\Servicio;
 use App\Models\User;
 use App\Models\Pago;
@@ -20,7 +21,9 @@ class VehiculoController extends Controller
 
         $lavadores = User::where('rol_id', 3)->get();
 
-        return view('vehiculo.listado')->with(compact('servicios', 'lavadores'));
+        $clientes = Cliente::all();
+
+        return view('vehiculo.listado')->with(compact('servicios', 'lavadores', 'clientes'));
     }
 
     public function ajaxListado(Request $request){
@@ -34,7 +37,8 @@ class VehiculoController extends Controller
     }
 
     protected function listadoArray(){
-        $vehiculos = Vehiculo::all();
+        // $vehiculos = Vehiculo::all()->limit(100);
+        $vehiculos = Vehiculo::orderBy('id', 'desc')->limit(100)->get();
         return view('vehiculo.ajaxListado')->with(compact('vehiculos'))->render();
     }
 
@@ -111,6 +115,26 @@ class VehiculoController extends Controller
         $ventas = Venta::where('pago_id', $pago_id)->get();
 
         return view('vehiculo.imprimeNota')->with(compact('ventas'));
+    }
+
+    public function buscarVehiculo(Request $request){
+        if($request->ajax()){
+            if(!is_null($request->input('placa'))){
+                $placa = $request->input('placa');
+                $vehiculos = Vehiculo::where('placa', 'LIKE',"%$placa%")
+                                    ->limit(100)
+                                    ->get();
+            }else{
+                $vehiculos = Vehiculo::orderBy('id', 'desc')
+                                        ->limit(200)
+                                        ->get();
+            }
+            $data['estado'] = 'success';
+            $data['listado'] = view('vehiculo.ajaxListado')->with(compact('vehiculos'))->render();
+        }else{
+            $data['estado'] = 'error';
+        }
+        return json_encode($data);
     }
     /**
      * Display a listing of the resource.

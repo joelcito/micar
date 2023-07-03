@@ -781,6 +781,14 @@
                             <span class="menu-title">Ventas</span>
                         </a>
                     </div>
+                    <div class="menu-item">
+                        <a class="menu-link" href="{{ url('/pago') }}">
+                            <span class="menu-bullet">
+                                <span class="bullet bullet-dot"></span>
+                            </span>
+                            <span class="menu-title">Pagos</span>
+                        </a>
+                    </div>
                 </div>
             </div>
 
