@@ -23,7 +23,11 @@ class VehiculoController extends Controller
 
         $clientes = Cliente::all();
 
-        return view('vehiculo.listado')->with(compact('servicios', 'lavadores', 'clientes'));
+        // para el siat LA CONECCION
+        $siat = app(SiatController::class);
+        $verificacionSiat = json_decode($siat->verificarComunicacion());
+
+        return view('vehiculo.listado')->with(compact('servicios', 'lavadores', 'clientes', 'verificacionSiat'));
     }
 
     public function ajaxListado(Request $request){
@@ -48,42 +52,71 @@ class VehiculoController extends Controller
         return view('vehiculo.detalleVentaAjax')->with(compact('ventas'))->render();
     }
 
+
+    protected function listadoArrayPagos($vehiculo_id){
+
+        $pagos = Pago::where('vehiculo_id', $vehiculo_id)
+                        ->where('estado', "Parapagar")
+                        ->get();
+
+        return view('vehiculo.ajaxListadoApagar')->with(compact('pagos'))->render();
+    }
+
     public function ajaxRegistraVenta(Request $request){
         if($request->ajax()){
 
             // dd($request->all());
 
-            if($request->input('pago_id') == 0){
-                $pago = new Pago();
+            $vehiculo_id = $request->input('vehiculo_id');
 
-                $pago->creador_id = Auth::user()->id;
-                $pago->vehiculo_id = $request->input('vehiculo_id');
+            $pago = new Pago();
 
-                $pago->save();
+            $pago->creador_id       = Auth::user()->id;
+            $pago->vehiculo_id      = $vehiculo_id;
+            $pago->servicio_id      = $request->input('servicio_id');
+            $pago->lavador_id       = $request->input('lavador_id');
+            $pago->precio           = $request->input('precio');
+            $pago->cantidad         = $request->input('cantidad');
+            $pago->total            = $request->input('total');
+            $pago->descuento        = 0;
+            $pago->importe          = $pago->total;
+            $pago->fecha            = date('Y-m-d');
+            $pago->estado           = "Parapagar";
+            $pago->save();
 
-                $pago_id = $pago->id;
 
-            }else{
-                $pago_id = $request->input('pago_id');
-            }
 
-            $venta = new Venta();
+            // if($request->input('pago_id') == 0){
+            //     $pago = new Pago();
 
-            $venta->creador_id  = Auth::user()->id;
-            $venta->lavador_id  = $request->input('lavador_id');
-            $venta->vehiculo_id = $request->input('vehiculo_id');
-            $venta->servicio_id = $request->input('servicio_id');
-            $venta->precio      = $request->input('precio');
-            $venta->cantidad    = $request->input('cantidad');
-            $venta->total       = $request->input('total');
-            $venta->fecha       = date('Y-m-d');
-            $venta->pago_id     = $pago_id;
+            //     $pago->creador_id = Auth::user()->id;
+            //     $pago->vehiculo_id = $request->input('vehiculo_id');
 
-            $venta->save();
+            //     $pago->save();
+
+            //     $pago_id = $pago->id;
+
+            // }else{
+            //     $pago_id = $request->input('pago_id');
+            // }
+
+            // $venta = new Venta();
+
+            // $venta->creador_id  = Auth::user()->id;
+            // $venta->lavador_id  = $request->input('lavador_id');
+            // $venta->vehiculo_id = $request->input('vehiculo_id');
+            // $venta->servicio_id = $request->input('servicio_id');
+            // $venta->precio      = $request->input('precio');
+            // $venta->cantidad    = $request->input('cantidad');
+            // $venta->total       = $request->input('total');
+            // $venta->fecha       = date('Y-m-d');
+            // $venta->pago_id     = $pago_id;
+
+            // $venta->save();
 
             $data['estado'] = 'success';
-            $data['pago_id'] = $pago_id;
-            $data['listado_ventas'] = $this->listadoArrayVentas($pago_id);
+            // $data['pago_id'] = $pago_id;
+            $data['listado_ventas'] = $this->listadoArrayPagos($vehiculo_id);
 
         }else{
             $data['estado'] = 'error';
@@ -96,7 +129,6 @@ class VehiculoController extends Controller
 
     public function eliminarVenta(Request $request){
         if($request->ajax()){
-
             Venta::destroy($request->input('id'));
             $data['estado'] = 'success';
             $pago_id = $request->input('pago');

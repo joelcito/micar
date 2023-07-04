@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('ap_materno')->nullable()->after('ap_paterno');
             $table->string('cedula')->nullable()->after('ap_materno');
             $table->string('direccion')->nullable()->after('cedula');
+            $table->string('codigo_punto_venta')->nullable()->after('direccion');
         });
     }
 
@@ -40,6 +41,7 @@ return new class extends Migration
             $table->dropColumn('ap_materno');
             $table->dropColumn('cedula');
             $table->dropColumn('direccion');
+            $table->dropColumn('codigo_punto_venta');
         });
     }
 };

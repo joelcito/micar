@@ -90,6 +90,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [PagoController::class, 'listado']);
         Route::post('/ajaxListado', [PagoController::class, 'ajaxListado']);
         Route::get('/detalle/{pago_id}', [PagoController::class, 'detalle']);
+        Route::post('/eliminarPago', [PagoController::class, 'eliminarPago']);
     });
 
     // Route::post('/pago/ajaxListado', [PagoController::class, 'ajaxListado']);

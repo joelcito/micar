@@ -27,6 +27,9 @@ return new class extends Migration
             $table->string('descripcion')->nullable();
             $table->string('unidad_venta')->nullable();
             $table->decimal('precio', 12, 2)->nullable();
+            $table->string('codigoActividad')->nullable();
+            $table->string('codigoProducto')->nullable();
+            $table->string('unidadMedida')->nullable();
             $table->string('estado')->nullable();
             $table->datetime('deleted_at')->nullable();
             $table->timestamps();

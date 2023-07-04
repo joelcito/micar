@@ -46,6 +46,29 @@ class PagoController extends Controller
         return view('pago.detalle')->with(compact('ventas'));
     }
 
+    public function eliminarPago(Request $request) {
+        if($request->ajax()){
+            $vehiculo_id = $request->input('vehiculo');
+            $pago_id = $request->input('id') ;
+            Pago::destroy($pago_id);
+            $data['listado'] = $this->listadoArrayPagos($vehiculo_id);
+            $data['estado'] = 'success';
+        }else{
+            $data['estado'] = 'error';
+        }
+
+        return $data;
+    }
+
+    protected function listadoArrayPagos($vehiculo_id){
+
+        $pagos = Pago::where('vehiculo_id', $vehiculo_id)
+                        ->where('estado', "Parapagar")
+                        ->get();
+
+        return view('vehiculo.ajaxListadoApagar')->with(compact('pagos'))->render();
+    }
+
     /**
      * Display a listing of the resource.
      *

@@ -21,7 +21,6 @@ return new class extends Migration
             $table->unsignedBigInteger('modificador_id')->nullable();
             $table->foreign('eliminador_id')->references('id')->on('users');
             $table->unsignedBigInteger('eliminador_id')->nullable();
-
             $table->foreign('vehiculo_id')->references('id')->on('vehiculos');
             $table->unsignedBigInteger('vehiculo_id')->nullable();
             $table->foreign('cliente_id')->references('id')->on('clientes');
@@ -37,7 +36,6 @@ return new class extends Migration
             $table->string('numero',10)->nullable();
             $table->string('numero_recibo',10)->nullable();
             $table->string('codigo_control',10)->nullable();
-
             $table->string('estado')->nullable();
             $table->datetime('deleted_at')->nullable();
             $table->timestamps();

@@ -28,4 +28,12 @@ class Pago extends Model
         return $this->belongsTo('App\Models\Vehiculo', 'vehiculo_id');
     }
 
+    public function lavador(){
+        return $this->belongsTo('App\Models\User', 'lavador_id');
+    }
+
+    public function servicio(){
+        return $this->belongsTo('App\Models\Servicio', 'servicio_id');
+    }
+
 }

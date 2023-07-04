@@ -185,9 +185,6 @@
             <div class="col-md-12s">
                 <input type="text" class="form-control" placeholder="Buscar por placa" id="buscar_placa">
             </div>
-            {{--  <div class="col-md-4">
-                <button class="btn btn-success w-100" onclick="buscarVehiculo()">Buscar</button>
-            </div>  --}}
         </div>
         <!--end::Card toolbar-->
     </div>
@@ -204,6 +201,26 @@
             </div>
             <div class="col-md-4">
                 <span class="text-primary"><b>PLACA:</b></span><span id="placa"></span>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                @if ($verificacionSiat->estado === "success")
+                    <div class="row">
+                        <div class="col-md-6 text-center">
+                            <span class="badge bg-success text-white w-100">{{ $verificacionSiat->resultado->RespuestaComunicacion->mensajesList->descripcion }}</span>
+                        </div>
+                        <div class="col-md-3">
+                            CUIS: {{ (session()->has('scuis'))?  session('scuis') : '<span class="text-danger">NO existe la Cuis Vigente</span>'}}
+                        </div>
+                        <div class="col-md-3">
+                            CUFD: {{ session('scodigoControl')." ".str_replace("T", " ",substr(session('sfechaVigenciaCufd'), 0 , 16)) }}
+                        </div>
+                    </div>
+                @else
+                    <span class="badge bg-danger text-white w-100">NO HAY CONECCION CON SIAT</span>
+                @endif
             </div>
         </div>
         <hr>
@@ -245,7 +262,6 @@
             <div class="col-md-3 haber" style="display: none">
                 <label class="required fw-semibold fs-6 mb-2">Total</label>
                 <input type="text" class="form-control" id="total" name="total" readonly>
-                <input type="text" id="pago_id" value="0">
             </div>
             <div class="col-md-6 haber" style="display: none">
                 <button class="btn btn-success btn-icon btn-sm w-100 mt-10" onclick="agregarVenta()"><i class="fa fa-car-alt"></i>  Agregar</button>
@@ -260,6 +276,39 @@
             <div class="col-md-12">
                 <div id="detalle_ventas">
 
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div id="bloqueDatosFactura" style="display: none">
+            <div class="row">
+                <div class="col-md-2">
+                    <label for="">N Factura</label>
+                    <input type="number" class="form-control">
+                </div>
+                <div class="col-md-2">
+                    <label for="">Tipo Docuemnto</label>
+                    <input type="number" class="form-control">
+                </div>
+                <div class="col-md-2">
+                    <label for="">Nit/Cedula</label>
+                    <input type="number" class="form-control">
+                </div>
+                <div class="col-md-2">
+                    <label for="">Razon Social</label>
+                    <input type="number" class="form-control">
+                </div>
+                <div class="col-md-2">
+                    <label for="">Tipo Factura</label>
+                    <input type="number" class="form-control">
+                </div>
+                <div class="col-md-2">
+                    <h4>Aqui para el cafc</h4>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-md-12">
+                    <button class="btn btn-sm w-100 btn-success">Enviar</button>
                 </div>
             </div>
         </div>
@@ -399,9 +448,6 @@
         }
 
         function agregarVenta(){
-
-            console.log("haber!!");
-
             let servicio_id = (JSON.parse($('#serivicio_id').val())).id
             let lavador_id = $('#lavador_id').val();
             let vehiculo_id = $('#vehiculo_id').val();
@@ -433,58 +479,61 @@
                 dataType: 'json',
                 success: function(data) {
                     if(data.estado === 'success'){
+                        console.log(data)
                         $('#pago_id').val(data.pago_id);
                         $('#detalle_ventas').html(data.listado_ventas);
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Eliminado!',
-                            text: 'La categoria se elimino!',
-                            timer: 1000
-                        })
+                        // Swal.fire({
+                        //     icon: 'success',
+                        //     title: 'Eliminado!',
+                        //     text: 'La categoria se elimino!',
+                        //     timer: 1000
+                        // })
                     }
                 }
             });
 
         }
 
-        function eliminarVenta(venta, pago){
-            Swal.fire({
-                title: 'Estas seguro de eliminar el servicio ?',
-                text: "No podrás revertir esto.!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Si, eliminar!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: "{{ url('vehiculo/eliminarVenta') }}",
-                        type: 'POST',
-                        data:{
-                            id:venta,
-                            pago:pago
-                        },
-                        dataType: 'json',
-                        success: function(data) {
-                            if(data.estado === 'success'){
-                                $('#pago_id').val(data.pago_id);
-                                $('#detalle_ventas').html(data.listado_ventas);
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Eliminado!',
-                                    text: 'La categoria se elimino!',
-                                    timer: 1000
-                                })
-                            }
-                        }
-                    });
+        function eliminarPago(pago){
+            // Swal.fire({
+            //     title: 'Estas seguro de eliminar el servicio ?',
+            //     text: "No podrás revertir esto.!",
+            //     icon: 'warning',
+            //     showCancelButton: true,
+            //     confirmButtonColor: '#3085d6',
+            //     cancelButtonColor: '#d33',
+            //     confirmButtonText: 'Si, eliminar!'
+            // }).then((result) => {
+            //     if (result.isConfirmed) {
+
+            //     }
+            // })
+
+            $.ajax({
+                url: "{{ url('pago/eliminarPago') }}",
+                type: 'POST',
+                data:{
+                    id      :pago,
+                    vehiculo:$('#vehiculo_id').val()
+                },
+                dataType: 'json',
+                success: function(data) {
+                    if(data.estado === 'success'){
+                        // $('#pago_id').val(data.pago_id);
+                        $('#detalle_ventas').html(data.listado);
+                        // Swal.fire({
+                        //     icon: 'success',
+                        //     title: 'Eliminado!',
+                        //     text: 'La categoria se elimino!',
+                        //     timer: 1000
+                        // })
+                    }
                 }
-            })
+            });
         }
 
         function imprimeNota(){
-            let pago = $('#pago_id').val();
+            // let pago = $('#pago_id').val();
             let url = "{{ asset('vehiculo/imprimeNota') }}/"+pago;
             window.location.href = url;
         }
@@ -546,6 +595,10 @@
             }else{
     			$("#formularioNuevoCliente")[0].reportValidity()
             }
+        }
+
+        function muestraDatosFactura(){
+            $('#bloqueDatosFactura').show('toggle')
         }
     </script>
 @endsection

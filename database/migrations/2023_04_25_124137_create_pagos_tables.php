@@ -21,17 +21,20 @@ return new class extends Migration
             $table->unsignedBigInteger('modificador_id')->nullable();
             $table->foreign('eliminador_id')->references('id')->on('users');
             $table->unsignedBigInteger('eliminador_id')->nullable();
-
             $table->foreign('factura_id')->references('id')->on('facturas');
             $table->unsignedBigInteger('factura_id')->nullable();
             $table->foreign('vehiculo_id')->references('id')->on('vehiculos');
             $table->unsignedBigInteger('vehiculo_id')->nullable();
-            // $table->foreign('venta_id')->references('id')->on('ventas');
-            // $table->unsignedBigInteger('venta_id')->nullable();
-            $table->decimal('importe',12,2)->nullable();
+            $table->foreign('servicio_id')->references('id')->on('servicios');
+            $table->unsignedBigInteger('servicio_id')->nullable();
+            $table->foreign('lavador_id')->references('id')->on('users');
+            $table->unsignedBigInteger('lavador_id')->nullable();
+            $table->decimal('precio', 15, 2)->nullable();
+            $table->decimal('cantidad', 15, 2)->nullable();
             $table->decimal('total',12,2)->nullable();
-            $table->dateTime('fecha')->nullable();
-
+            $table->decimal('descuento',12,2)->nullable();
+            $table->decimal('importe',12,2)->nullable();
+            $table->date('fecha')->nullable();
             $table->string('estado')->nullable();
             $table->datetime('deleted_at')->nullable();
             $table->timestamps();
