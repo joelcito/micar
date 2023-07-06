@@ -281,34 +281,45 @@
         </div>
         <hr>
         <div id="bloqueDatosFactura" style="display: none">
-            <div class="row">
-                <div class="col-md-2">
-                    <label for="">N Factura</label>
-                    <input type="number" class="form-control">
+            <form id="formularioGeneraFactura">
+                <div class="row">
+                    <div class="col-md-2">
+                        <label for="">N Factura</label>
+                        <input type="number" class="form-control" id="numero_factura">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="">Tipo Docuemnto</label>
+                        <select name="" id="" class="form-control">
+                            <option value="">Cedula de Identidad</option>
+                            <option value="">Cedula de Identidad de Extranjero</option>
+                            <option value="">Pasaporte</option>
+                            <option value="">Otro documento de identidad</option>
+                            <option value="">Numero de identificacion Tributaria</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="">Nit/Cedula</label>
+                        <input type="number" class="form-control">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="">Razon Social</label>
+                        <input type="text" class="form-control">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="">Tipo Factura</label>
+                        <select name="" id="" class="form-control">
+                            <option value="">En Linea</option>
+                            <option value="">Fuera de Linea</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <h4>Aqui para el cafc</h4>
+                    </div>
                 </div>
-                <div class="col-md-2">
-                    <label for="">Tipo Docuemnto</label>
-                    <input type="number" class="form-control">
-                </div>
-                <div class="col-md-2">
-                    <label for="">Nit/Cedula</label>
-                    <input type="number" class="form-control">
-                </div>
-                <div class="col-md-2">
-                    <label for="">Razon Social</label>
-                    <input type="number" class="form-control">
-                </div>
-                <div class="col-md-2">
-                    <label for="">Tipo Factura</label>
-                    <input type="number" class="form-control">
-                </div>
-                <div class="col-md-2">
-                    <h4>Aqui para el cafc</h4>
-                </div>
-            </div>
+            </form>
             <div class="row mt-2">
                 <div class="col-md-12">
-                    <button class="btn btn-sm w-100 btn-success">Enviar</button>
+                    <button class="btn btn-sm w-100 btn-success" onclick="emitirFactura()">Enviar</button>
                 </div>
             </div>
         </div>
@@ -598,7 +609,158 @@
         }
 
         function muestraDatosFactura(){
+
+
             $('#bloqueDatosFactura').show('toggle')
+
+            
+        }
+
+        function emitirFactura(){
+
+            if($("#formularioGeneraFactura")[0].checkValidity()){
+
+                //PONEMOS TODO AL MODELO DEL SIAT EL DETALLE
+                detalle = [];
+                arrayProductos.forEach(function (prod){
+                    detalle.push({
+                        actividadEconomica:prod.codigoActividad,
+                        codigoProductoSin:prod.codigoProducto,
+                        codigoProducto:prod.servicio_id,
+                        descripcion:prod.mensualidad+" "+prod.nombre,
+                        cantidad:1,
+                        unidadMedida:prod.unidadMedida,
+                        precioUnitario:prod.importe,
+                        montoDescuento:prod.descuento,
+                        subTotal:((1*prod.importe)-prod.descuento)
+                    })
+                })
+
+                let numero_factura = $('#numero_factura').val();
+                let cuf = "123456789";//cambiar
+                let cufd = "{{ session('scufd') }}";  //solo despues de que aga
+                let direccion = "{{ session('sdireccion') }}";//solo despues de que aga
+
+                var tzoffset = ((new Date()).getTimezoneOffset()*60000);
+
+                let fechaEmision = ((new Date(Date.now()-tzoffset)).toISOString()).slice(0,-1);
+                let nombreRazonSocial = $('#razon_factura').val();
+                let codigoTipoDocumentoIdentidad = $('#tipo_documento').val()
+                let numeroDocumento = $('#nit_factura').val();
+                let complemento = $('#complementoPersonaFac').val();
+                let montoTotal = $('#motoTotalFac').val();
+                let descuentoAdicional = $('#descuento_adicional').val();
+                let leyenda = "Ley N° 453: El proveedor deberá suministrar el servicio en las modalidades y términos ofertados o convenidos.";
+                let usuario = "{{ Auth::user()->nombre_usuario }}";
+                let nombreEstudiante = $('#nombreCompletoEstudiante').val();
+                let periodoFacturado = detalle[(detalle.length)-1].descripcion+" / "+$('#anio_vigente_cuota_pago').val();
+
+                var factura = [];
+                factura.push({
+                    cabecera: {
+                        nitEmisor:"178436029",
+                        razonSocialEmisor:'INSTITUTO TECNICO "EF-GIPET" S.R.L.',
+                        municipio:"La Paz",
+                        telefono:"73717199",
+                        numeroFactura:numero_factura,
+                        cuf:cuf,
+                        cufd:cufd,
+                        codigoSucursal:0,
+                        direccion:direccion ,
+                        codigoPuntoVenta:0,
+                        //codigoPuntoVenta:{{ Auth::user()->codigo_punto_venta }},
+                        fechaEmision:fechaEmision,
+                        nombreRazonSocial:nombreRazonSocial,
+                        codigoTipoDocumentoIdentidad:codigoTipoDocumentoIdentidad,
+                        numeroDocumento:numeroDocumento,
+                        complemento:complemento,
+                        codigoCliente:numeroDocumento,
+                        nombreEstudiante:nombreEstudiante,
+                        periodoFacturado:periodoFacturado,
+                        codigoMetodoPago:1,
+                        numeroTarjeta:null,
+                        montoTotal:montoTotal,
+                        montoTotalSujetoIva:montoTotal,
+                        codigoMoneda:1,
+                        tipoCambio:1,
+                        montoTotalMoneda:montoTotal,
+                        montoGiftCard:null,
+                        descuentoAdicional:descuentoAdicional,//ver llenado
+                        codigoExcepcion:0,
+                        cafc:null,
+                        leyenda:leyenda,
+                        usuario:usuario,
+                        codigoDocumentoSector:11
+                    }
+                })
+
+                detalle.forEach(function (prod1){
+                    factura.push({
+                        detalle:prod1
+                    })
+                })
+
+                var datos = {factura};
+
+                var datosPersona = {
+                    'persona_id':$('#persona_id').val(),
+                    'carnet':$('#cedulaPersona').val()
+                };
+
+                var datosRecepcion = {
+                    'uso_cafc'                  :$('input[name="uso_cafc"]:checked').val(),
+                    'codigo_cafc_contingencia'  :$('#codigo_cafc_contingencia').val()
+                };
+
+                $.ajax({
+                    url: "{{ url('Factura/emitirFactura') }}",
+                    data: {
+                        datos           : datos,
+                        datosPersona    :datosPersona,
+                        datosRecepcion  :datosRecepcion,
+                        modalidad       : $('#tipo_facturacion').val()
+                    },
+                    type: 'POST',
+                    dataType:'json',
+                    success: function(data) {
+
+                        console.log(data);
+
+                        if(data.estado === "VALIDADA"){
+                            Swal.fire({
+                                type: 'success',
+                                title: 'Excelente!',
+                                text: 'LA FACTURA FUE VALIDADA',
+                                timer: 3000
+                            })
+                            window.location.href = "{{ url('Factura/listadoPagos')}}"
+                        }else if(data.estado === "error_email"){
+                            Swal.fire({
+                                type: 'error',
+                                title: 'Error!',
+                                text: data.msg,
+                            })
+                        }else if(data.estado === "OFFLINE"){
+                            Swal.fire({
+                                type: 'warning',
+                                title: 'Exito!',
+                                text: 'LA FACTURA FUERA DE LINEA FUE REGISTRADA',
+                            })
+                            {{--  window.location.href = "{{ url('Factura/listadoPagos')}}"  --}}
+                            location.reload();
+                        }else{
+                            Swal.fire({
+                                type: 'error',
+                                title: 'Error!',
+                                text: 'LA FACTURA FUE RECHAZADA',
+                            })
+                        }
+                    }
+                });
+            }else{
+                $("#formularioGeneraFactura")[0].reportValidity();
+            }
+
         }
     </script>
 @endsection

@@ -63,9 +63,9 @@
 </table>
 <div class="row">
     <div class="col-md-6">
-        <button class="btn btn-success w-100" onclick="imprimeNota()">RECIBO</button>
+        <button class="btn btn-success w-100 btn-sm" onclick="imprimeNota()">RECIBO</button>
     </div>
     <div class="col-md-6">
-        <button class="btn btn-danger w-100" onclick="muestraDatosFactura()">FACTURA</button>
+        <button class="btn btn-dark w-100 btn-sm" onclick="muestraDatosFactura()">FACTURA</button>
     </div>
 </div>

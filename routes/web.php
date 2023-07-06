@@ -100,6 +100,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/migracion/migrarServicios', [MigracionController::class, 'migrarServicios']);
     Route::get('/migracion/migrarVehiculos', [MigracionController::class, 'migrarVehiculos']);
 
+    // FACTURA
+    Route::prefix('/factura')->group(function(){
+        Route::post('/arrayCuotasPagar', [FacturaController::class, 'arrayCuotasPagar']);
+        // Route::post('/ajaxListado', [PagoController::class, 'ajaxListado']);
+        // Route::get('/detalle/{pago_id}', [PagoController::class, 'detalle']);
+        // Route::post('/eliminarPago', [PagoController::class, 'eliminarPago']);
+    });
+
 
 
     // Route::prefix('/venta')->group(function () {
