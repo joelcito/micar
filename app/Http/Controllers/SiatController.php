@@ -10,8 +10,8 @@ use SoapFault;
 class SiatController extends Controller
 {
     public function __construct(){
-        // $this->codigoPuntoVenta = Auth::user()->codigo_punto_venta;
-        $this->codigoPuntoVenta = 0;
+        $this->codigoPuntoVenta = Auth::user()->codigo_punto_venta;
+        // $this->codigoPuntoVenta = 0;
         if(!session()->has('scuis')){
             $codigoCuis = json_decode($this->cuis());
             if($codigoCuis->estado === "success"){

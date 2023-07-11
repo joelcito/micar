@@ -285,31 +285,31 @@
                 <div class="row">
                     <div class="col-md-2">
                         <label for="">N Factura</label>
-                        <input type="number" class="form-control" id="numero_factura">
+                        <input type="number" class="form-control" id="numero_factura" value="1">
                     </div>
                     <div class="col-md-2">
                         <label for="">Tipo Docuemnto</label>
-                        <select name="" id="" class="form-control">
-                            <option value="">Cedula de Identidad</option>
-                            <option value="">Cedula de Identidad de Extranjero</option>
-                            <option value="">Pasaporte</option>
-                            <option value="">Otro documento de identidad</option>
-                            <option value="">Numero de identificacion Tributaria</option>
+                        <select name="tipo_documento" id="tipo_documento" class="form-control">
+                            <option value="1">Cedula de Identidad</option>
+                            <option value="2">Cedula de Identidad de Extranjero</option>
+                            <option value="3">Pasaporte</option>
+                            <option value="4">Otro documento de identidad</option>
+                            <option value="5">Numero de identificacion Tributaria</option>
                         </select>
                     </div>
                     <div class="col-md-2">
                         <label for="">Nit/Cedula</label>
-                        <input type="number" class="form-control">
+                        <input type="number" class="form-control" id="nit_factura" name="nit_factura">
                     </div>
                     <div class="col-md-2">
                         <label for="">Razon Social</label>
-                        <input type="text" class="form-control">
+                        <input type="text" class="form-control" id="razon_factura" name="razon_factura">
                     </div>
                     <div class="col-md-2">
                         <label for="">Tipo Factura</label>
-                        <select name="" id="" class="form-control">
-                            <option value="">En Linea</option>
-                            <option value="">Fuera de Linea</option>
+                        <select name="tipo_facturacion" id="tipo_facturacion" class="form-control">
+                            <option value="online">En Linea</option>
+                            <option value="offline">Fuera de Linea</option>
                         </select>
                     </div>
                     <div class="col-md-2">
@@ -340,6 +340,8 @@
             }
         })
 
+        var arrayProductos = [];
+
         $( document ).ready(function() {
             ajaxListado();
 
@@ -351,6 +353,7 @@
             $('#buscar_placa').on('keyup input', function() {
                 buscarVehiculo();
             });
+
         });
 
         function ajaxListado(){
@@ -440,7 +443,7 @@
             })
         }
 
-        function agregarServicio(placa, marca, ap, am, nombre, vehiculo){
+        function agregarServicio(placa, marca, ap, am, nombre, vehiculo, nit, razon_socal){
             $('#table_vehiculos').hide('toggle');
             $('#table_agrega_servicios').show('toggle');
             $('#bloque_cliente').show('toggle');
@@ -449,6 +452,9 @@
             $('#vehiculo').text(marca);
             $('#placa').text(placa);
             $('#vehiculo_id').val(vehiculo);
+
+            $('#nit_factura').val(nit);
+            $('#razon_factura').val(razon_socal);
         }
 
         function identificaSericio(selected){
@@ -609,11 +615,26 @@
         }
 
         function muestraDatosFactura(){
-
-
             $('#bloqueDatosFactura').show('toggle')
 
-            
+            $.ajax({
+                url: "{{ url('factura/arrayCuotasPagar') }}",
+                data:{
+                    vehiculo : $('#vehiculo_id').val()
+                },
+                type: 'POST',
+                dataType: 'json',
+                success: function(data) {
+                    if(data.estado === 'success'){
+                        console.log(JSON.parse(data.lista))
+                        arrayProductos = JSON.parse(data.lista)
+                    }
+                }
+            });
+
+
+
+
         }
 
         function emitirFactura(){
@@ -624,73 +645,73 @@
                 detalle = [];
                 arrayProductos.forEach(function (prod){
                     detalle.push({
-                        actividadEconomica:prod.codigoActividad,
-                        codigoProductoSin:prod.codigoProducto,
-                        codigoProducto:prod.servicio_id,
-                        descripcion:prod.mensualidad+" "+prod.nombre,
-                        cantidad:1,
-                        unidadMedida:prod.unidadMedida,
-                        precioUnitario:prod.importe,
-                        montoDescuento:prod.descuento,
-                        subTotal:((1*prod.importe)-prod.descuento)
+                        actividadEconomica  :   prod.codigoActividad,
+                        codigoProductoSin   :   prod.codigoProducto,
+                        codigoProducto      :   prod.servicio_id,
+                        descripcion         :   prod.descripcion,
+                        cantidad            :   prod.cantidad,
+                        unidadMedida        :   prod.unidadMedida,
+                        precioUnitario      :   prod.precio,
+                        montoDescuento      :   prod.descuento,
+                        subTotal            :   ((prod.cantidad*prod.precio)-prod.descuento)
                     })
                 })
 
-                let numero_factura = $('#numero_factura').val();
-                let cuf = "123456789";//cambiar
-                let cufd = "{{ session('scufd') }}";  //solo despues de que aga
-                let direccion = "{{ session('sdireccion') }}";//solo despues de que aga
+                console.log(detalle, arrayProductos)
 
-                var tzoffset = ((new Date()).getTimezoneOffset()*60000);
-
-                let fechaEmision = ((new Date(Date.now()-tzoffset)).toISOString()).slice(0,-1);
-                let nombreRazonSocial = $('#razon_factura').val();
-                let codigoTipoDocumentoIdentidad = $('#tipo_documento').val()
-                let numeroDocumento = $('#nit_factura').val();
-                let complemento = $('#complementoPersonaFac').val();
-                let montoTotal = $('#motoTotalFac').val();
-                let descuentoAdicional = $('#descuento_adicional').val();
-                let leyenda = "Ley N° 453: El proveedor deberá suministrar el servicio en las modalidades y términos ofertados o convenidos.";
-                let usuario = "{{ Auth::user()->nombre_usuario }}";
-                let nombreEstudiante = $('#nombreCompletoEstudiante').val();
-                let periodoFacturado = detalle[(detalle.length)-1].descripcion+" / "+$('#anio_vigente_cuota_pago').val();
+                let numero_factura                  = $('#numero_factura').val();
+                let cuf                             = "123456789";//cambiar
+                let cufd                            = "{{ session('scufd') }}";  //solo despues de que aga
+                let direccion                       = "{{ session('sdireccion') }}";//solo despues de que aga
+                var tzoffset                        = ((new Date()).getTimezoneOffset()*60000);
+                let fechaEmision                    = ((new Date(Date.now()-tzoffset)).toISOString()).slice(0,-1);
+                let nombreRazonSocial               = $('#razon_factura').val();
+                let codigoTipoDocumentoIdentidad    = $('#tipo_documento').val()
+                let numeroDocumento                 = $('#nit_factura').val();
+                let complemento                     = $('#complementoPersonaFac').val();
+                let montoTotal                      = $('#motoTotalFac').val();
+                let descuentoAdicional              = $('#descuento_adicional').val();
+                let leyenda                         = "Ley N° 453: El proveedor deberá suministrar el servicio en las modalidades y términos ofertados o convenidos.";
+                let usuario                         = "{{ Auth::user()->nombre_usuario }}";
+                let nombreEstudiante                = $('#nombreCompletoEstudiante').val();
+                let periodoFacturado                = detalle[(detalle.length)-1].descripcion+" / "+$('#anio_vigente_cuota_pago').val();
 
                 var factura = [];
+
                 factura.push({
                     cabecera: {
-                        nitEmisor:"178436029",
-                        razonSocialEmisor:'INSTITUTO TECNICO "EF-GIPET" S.R.L.',
-                        municipio:"La Paz",
-                        telefono:"73717199",
-                        numeroFactura:numero_factura,
-                        cuf:cuf,
-                        cufd:cufd,
-                        codigoSucursal:0,
-                        direccion:direccion ,
-                        codigoPuntoVenta:0,
-                        //codigoPuntoVenta:{{ Auth::user()->codigo_punto_venta }},
-                        fechaEmision:fechaEmision,
-                        nombreRazonSocial:nombreRazonSocial,
-                        codigoTipoDocumentoIdentidad:codigoTipoDocumentoIdentidad,
-                        numeroDocumento:numeroDocumento,
-                        complemento:complemento,
-                        codigoCliente:numeroDocumento,
-                        nombreEstudiante:nombreEstudiante,
-                        periodoFacturado:periodoFacturado,
-                        codigoMetodoPago:1,
-                        numeroTarjeta:null,
-                        montoTotal:montoTotal,
-                        montoTotalSujetoIva:montoTotal,
-                        codigoMoneda:1,
-                        tipoCambio:1,
-                        montoTotalMoneda:montoTotal,
-                        montoGiftCard:null,
-                        descuentoAdicional:descuentoAdicional,//ver llenado
-                        codigoExcepcion:0,
-                        cafc:null,
-                        leyenda:leyenda,
-                        usuario:usuario,
-                        codigoDocumentoSector:11
+                        nitEmisor                       :"5427648016",
+                        razonSocialEmisor               :'MICAELA QUIROZ ESCOBAR',
+                        municipio                       :"Santa Cruz",
+                        telefono                        :"73130500",
+                        numeroFactura                   :numero_factura,
+                        cuf                             :cuf,
+                        cufd                            :cufd,
+                        codigoSucursal                  :0,
+                        direccion                       :direccion ,
+                        codigoPuntoVenta                :0,
+                        fechaEmision                    :fechaEmision,
+                        nombreRazonSocial               :nombreRazonSocial,
+                        codigoTipoDocumentoIdentidad    :codigoTipoDocumentoIdentidad,
+                        numeroDocumento                 :numeroDocumento,
+                        complemento                     :complemento,
+                        codigoCliente                   :numeroDocumento,
+                        nombreEstudiante                :nombreEstudiante,
+                        periodoFacturado                :periodoFacturado,
+                        codigoMetodoPago                :1,
+                        numeroTarjeta                   :null,
+                        montoTotal                      :montoTotal,
+                        montoTotalSujetoIva             :montoTotal,
+                        codigoMoneda                    :1,
+                        tipoCambio                      :1,
+                        montoTotalMoneda                :montoTotal,
+                        montoGiftCard                   :null,
+                        descuentoAdicional              :descuentoAdicional,//ver llenado
+                        codigoExcepcion                 :0,
+                        cafc                            :null,
+                        leyenda                         :leyenda,
+                        usuario                         :usuario,
+                        codigoDocumentoSector           :1
                     }
                 })
 
@@ -702,9 +723,9 @@
 
                 var datos = {factura};
 
-                var datosPersona = {
-                    'persona_id':$('#persona_id').val(),
-                    'carnet':$('#cedulaPersona').val()
+                var datosVehiculo = {
+                    'vehiculo_id'   :$('#vehiculo_id').val(),
+                    //'carnet'        :$('#cedulaPersona').val()
                 };
 
                 var datosRecepcion = {
@@ -712,11 +733,12 @@
                     'codigo_cafc_contingencia'  :$('#codigo_cafc_contingencia').val()
                 };
 
+
                 $.ajax({
-                    url: "{{ url('Factura/emitirFactura') }}",
+                    url: "{{ url('factura/emitirFactura') }}",
                     data: {
-                        datos           : datos,
-                        datosPersona    :datosPersona,
+                        datos           :datos,
+                        datosVehiculo   :datosVehiculo,
                         datosRecepcion  :datosRecepcion,
                         modalidad       : $('#tipo_facturacion').val()
                     },
@@ -760,7 +782,41 @@
             }else{
                 $("#formularioGeneraFactura")[0].reportValidity();
             }
+        }
 
+        function funcionNueva(input, pago, total){
+            $.ajax({
+                url: "{{ url('factura/actualizaDescuento') }}",
+                data: {
+                    pago_id: pago,
+                    valor: input.value,
+                    },
+                type: 'POST',
+                dataType:'json',
+                success: function(data) {
+                    if(data.estado === 'success'){
+                        var k = (total-input.value).toFixed(2);
+                        $('#subTotalCalculdo_'+pago).text(k);
+                        $('#motoTotalFac').val((data.valor)-$('#descuento_adicional').val())
+                    }
+                }
+            });
+
+        }
+
+        function caluculaTotal(event){
+            $.ajax({
+                url: "{{ url('factura/sumaTotalMonto') }}",
+                data: {
+                    //anio: $('#anio_vigente_cuota_pago').val(),
+                    vehiculo: $('#vehiculo_id').val(),
+                },
+                type: 'POST',
+                dataType:'json',
+                success: function(data) {
+                    $('#motoTotalFac').val((data.valor)-$('#descuento_adicional').val())
+                }
+            });
         }
     </script>
 @endsection

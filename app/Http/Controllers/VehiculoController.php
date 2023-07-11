@@ -79,7 +79,7 @@ class VehiculoController extends Controller
             $pago->cantidad         = $request->input('cantidad');
             $pago->total            = $request->input('total');
             $pago->descuento        = 0;
-            $pago->importe          = $pago->total;
+            $pago->importe          = $request->input('total');
             $pago->fecha            = date('Y-m-d');
             $pago->estado           = "Parapagar";
             $pago->save();

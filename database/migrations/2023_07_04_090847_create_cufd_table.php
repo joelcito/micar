@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('cufd', function (Blueprint $table) {
             $table->id();
-            $table->string('codigo')->nullable();
+            $table->text('codigo')->nullable();
             $table->string('codigoControl')->nullable();
             $table->string('direccion')->nullable();
             $table->timestamp('fechaVigencia')->nullable();

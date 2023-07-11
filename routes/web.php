@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\FacturaController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MigracionController;
@@ -103,6 +104,12 @@ Route::middleware('auth')->group(function () {
     // FACTURA
     Route::prefix('/factura')->group(function(){
         Route::post('/arrayCuotasPagar', [FacturaController::class, 'arrayCuotasPagar']);
+        Route::post('/actualizaDescuento', [FacturaController::class, 'actualizaDescuento']);
+        Route::post('/sumaTotalMonto', [FacturaController::class, 'sumaTotalMonto']);
+        Route::post('/emitirFactura', [FacturaController::class, 'emitirFactura']);
+
+
+
         // Route::post('/ajaxListado', [PagoController::class, 'ajaxListado']);
         // Route::get('/detalle/{pago_id}', [PagoController::class, 'detalle']);
         // Route::post('/eliminarPago', [PagoController::class, 'eliminarPago']);

@@ -11,14 +11,22 @@
             <th>N°</th>
             <th>SERVICIO</th>
             <th>LAVADOR</th>
+            <th>PREC. UNI.</th>
             <th>CANTIDAD</th>
             <th>TOTAL</th>
-            <th width="150px">DESCUENTO</th>
-            <th width="150px">ACCIONES</th>
+            <th width="100px">DESCUENTO</th>
+            <th width="100px">SUB TOTAL</th>
+            <th width="50px">ACCIONES</th>
         </tr>
     </thead>
     <tbody>
+        @php
+            $total = 0;
+        @endphp
         @foreach ($pagos as $key => $p)
+        @php
+            $total+=$p->importe;
+        @endphp
         <tr>
             <td>{{ $key+1 }}</td>
             <td>
@@ -31,10 +39,20 @@
                     {{ $p->lavador->name }}
                 @endif
             </td>
+            <td>{{ $p->precio }}</td>
             <td>{{ $p->cantidad }}</td>
             <td>{{ $p->total }}</td>
             <td>
-                <input type="number" class="form-control">
+                @php
+                    if($p->descuento > 0)
+                        $valoInput = $p->descuento;
+                    else
+                        $valoInput = 0;
+                @endphp
+                <input type="number" class="form-control" id="pago_listado_{{ $p->id }}" onchange="funcionNueva(this,{{ $p->id }}, {{ $p->total }})" value="{{ $valoInput }}">
+            </td>
+            <td>
+                <span id="subTotalCalculdo_{{ $p->id }}">{{ $p->importe }}</span>
             </td>
             <td>
                 <center>
@@ -46,17 +64,17 @@
     </tbody>
     <tfoot>
         <tr>
-            <th colspan="6">
+            <th colspan="7">
                 <b>
                     DESCUENTO ADICIONAL
                 </b>
-                <input type="number" class="form-control">
+                <input type="number" class="form-control" id="descuento_adicional" value="0" onchange="caluculaTotal(event)" />
             </th>
-            <th>
+            <th colspan="2">
                 <b>
                     MONTO TOTAL
                 </b>
-                <input type="number" class="form-control">
+                <input type="number" class="form-control" readonly id="motoTotalFac" value="{{ $total }}">
             </th>
         </tr>
     </tfoot>
