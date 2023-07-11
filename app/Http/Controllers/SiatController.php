@@ -299,24 +299,18 @@ class SiatController extends Controller
 
     public function recepcionFactura($arch, $fecEnv, $hasArch){
         $this->verificarConeccion();
-        $wsdl                   = "https://pilotosiatservicios.impuestos.gob.bo/v2/ServicioFacturacionComputarizada?wsdl";
-        $codigoAmbiente         = $this->codigoAmbiente;
+        $wsdl                   = "https://pilotosiatservicios.impuestos.gob.bo/v2/ServicioFacturacionCompraVenta?wsdl";
 
+        $codigoAmbiente         = $this->codigoAmbiente;
         $codigoDocumentoSector  = $this->codigoDocumentoSector;     //NUEVO SECTOR EDUCATIIVO
         $codigoEmision          = 1;                                //NUEVO LINENA
-
         $codigoModalidad        = $this->codigoModalidad;
         $codigoPuntoVenta       = $this->codigoPuntoVenta;
-        // $codigoPuntoVenta       = 3;
         $codigoSistema          = $this->codigoSistema;
         $codigoSucursal         = $this->codigoSucursal;
-
         $cufd                   = session('scufd'); //NUEVO
-
         $cuis                   = session('scuis');
-
         $nit                    = $this->nit;
-
         $tipoFacturaDocumento   = 1;                        //NUEVO FACTURA CON DERECHO A CREDITO FISCAL
         $archivo                = $arch;
         $fechaEnvio             = $fecEnv;
@@ -1434,10 +1428,6 @@ class SiatController extends Controller
             }
             $data['!session()->has("scufd")'] = 'no';
         }
-
-        // dd($data);
-
-        // dd(session('scufd'), session()->has('scufd'), session()->has('scuis'), session()->all(), $data);
 
     }
 }

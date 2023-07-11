@@ -631,10 +631,6 @@
                     }
                 }
             });
-
-
-
-
         }
 
         function emitirFactura(){

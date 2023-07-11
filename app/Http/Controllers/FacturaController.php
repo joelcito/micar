@@ -218,7 +218,12 @@ class FacturaController extends Controller
 
             $temporal = $datos['factura'];
             $dar = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-                        <facturaComputarizadaSectorEducativo xsi:noNamespaceSchemaLocation="facturaComputarizadaSectorEducativo.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"></facturaComputarizadaSectorEducativo>';
+                        <facturaComputarizadaSectorEducativo xsi:noNamespaceSchemaLocation="facturaComputarizadaSectorEducativo.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                        </facturaComputarizadaSectorEducativo>';
+
+            $dar = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+                        <facturaElectronicaCompraVenta xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="facturaElectronicaCompraVenta.xsd">
+                        </facturaElectronicaCompraVenta>';
             $xml_temporal = new SimpleXMLElement($dar);
             $this->formato_xml($temporal, $xml_temporal);
 
@@ -237,30 +242,17 @@ class FacturaController extends Controller
             // GUARDAMOS EN LA FACTURA
             // dd($datos['factura'][0]['cabecera']['nombreRazonSocial']);
 
-            dd("haber");
-
-            $factura = new Factura();
-
-            $factura->user_id                   = Auth::user()->id;
-            $factura->persona_id                = $datosPersona['persona_id'];
-            $factura->carnet                    = $datosPersona['carnet'];
+            $factura                            = new Factura();
+            $factura->creador_id                = Auth::user()->id;
+            $factura->vehiculo_id               = $datosVehiculo['vehiculo_id'];
+            $factura->cliente_id                = $vehiculo->cliente_id;
             $factura->razon_social              = $datos['factura'][0]['cabecera']['nombreRazonSocial'];
-            $factura->nit                       = $datos['factura'][0]['cabecera']['numeroDocumento'];
+            $factura->carnet                    = $vehiculo->cliente->cedula;
+            $factura->nit                       = $datos['factura'][0]['cabecera']['numeroDocumento'];;
             $factura->fecha                     = $datos['factura'][0]['cabecera']['fechaEmision'];
             $factura->total                     = $datos['factura'][0]['cabecera']['montoTotal'];
             $factura->facturado                 = "Si";
-            if($tipo_factura === "online"){
-                $factura->numero                = $datos['factura'][0]['cabecera']['numeroFactura'];
-            }else{
-                if($datosRecepcion['uso_cafc'] === "si"){
-                    $factura->numero_cafc           = $datos['factura'][0]['cabecera']['numeroFactura'];
-                    $factura->uso_cafc              = "si";
-                }
-                else{
-                    $factura->numero                = $datos['factura'][0]['cabecera']['numeroFactura'];
-                }
-            }
-            $factura->anio_vigente              = date('Y');
+            $factura->numero                    = $datos['factura'][0]['cabecera']['numeroFactura'];
             $factura->cuf                       = $datos['factura'][0]['cabecera']['cuf'];
             $factura->codigo_metodo_pago_siat   = $datos['factura'][0]['cabecera']['codigoMetodoPago'];
             $factura->monto_total_subjeto_iva   = $datos['factura'][0]['cabecera']['montoTotalSujetoIva'];
@@ -270,11 +262,44 @@ class FacturaController extends Controller
 
             $factura->save();
 
+            // dd("haber", $datosVehiculo, $vehiculo, $tipo_factura);
+
+            // $factura = new Factura();
+
+            // $factura->user_id                   = Auth::user()->id;
+            // $factura->persona_id                = $datosPersona['persona_id'];
+            // $factura->carnet                    = $datosPersona['carnet'];
+            // $factura->razon_social              = $datos['factura'][0]['cabecera']['nombreRazonSocial'];
+            // $factura->nit                       = $datos['factura'][0]['cabecera']['numeroDocumento'];
+            // $factura->fecha                     = $datos['factura'][0]['cabecera']['fechaEmision'];
+            // $factura->total                     = $datos['factura'][0]['cabecera']['montoTotal'];
+            // $factura->facturado                 = "Si";
+            // if($tipo_factura === "online"){
+            //     $factura->numero                = $datos['factura'][0]['cabecera']['numeroFactura'];
+            // }else{
+            //     if($datosRecepcion['uso_cafc'] === "si"){
+            //         $factura->numero_cafc           = $datos['factura'][0]['cabecera']['numeroFactura'];
+            //         $factura->uso_cafc              = "si";
+            //     }
+            //     else{
+            //         $factura->numero                = $datos['factura'][0]['cabecera']['numeroFactura'];
+            //     }
+            // }
+            // $factura->anio_vigente              = date('Y');
+            // $factura->cuf                       = $datos['factura'][0]['cabecera']['cuf'];
+            // $factura->codigo_metodo_pago_siat   = $datos['factura'][0]['cabecera']['codigoMetodoPago'];
+            // $factura->monto_total_subjeto_iva   = $datos['factura'][0]['cabecera']['montoTotalSujetoIva'];
+            // $factura->descuento_adicional       = $datos['factura'][0]['cabecera']['descuentoAdicional'];
+            // $factura->productos_xml             = file_get_contents('assets/docs/facturaxml.xml');
+            // $factura->tipo_factura              = $tipo_factura;
+
+            // $factura->save();
+
             if($tipo_factura === "online"){
                 $siat = app(SiatController::class);
                 $for = json_decode($siat->recepcionFactura($archivoZip, $valoresCabecera['fechaEmision'],$hashArchivo));
 
-                // dd($for);
+                dd($for);
 
                 if($for->estado === "error"){
                     $codigo_descripcion = null;
