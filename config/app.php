@@ -196,6 +196,7 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         Maatwebsite\Excel\ExcelServiceProvider::class,
+        RobRichards\XMLSecLibs\XMLSecLibServiceProvider::class,
     ],
 
     /*
@@ -212,6 +213,7 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'XMLSecurityDSig' => RobRichards\XMLSecLibs\XMLSecurityDSig::class,
     ])->toArray(),
 
 ];

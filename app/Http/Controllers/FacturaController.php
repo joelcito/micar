@@ -5,9 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Factura;
 use App\Models\Pago;
 use App\Models\Vehiculo;
+use DOMDocument;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use SimpleXMLElement;
+use Spatie\XmlSigner\XmlSigner;
+
+use RobRichards\XMLSecLibs\XMLSecurityDSig;
+use RobRichards\XMLSecLibs\XMLSecurityKey;
 
 class FacturaController extends Controller
 {
@@ -217,17 +222,142 @@ class FacturaController extends Controller
 
 
             $temporal = $datos['factura'];
+            /*
+                $dar = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+                            <facturaComputarizadaSectorEducativo xsi:noNamespaceSchemaLocation="facturaComputarizadaSectorEducativo.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                            </facturaComputarizadaSectorEducativo>';
+            */
             $dar = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-                        <facturaComputarizadaSectorEducativo xsi:noNamespaceSchemaLocation="facturaComputarizadaSectorEducativo.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-                        </facturaComputarizadaSectorEducativo>';
-
-            $dar = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-                        <facturaElectronicaCompraVenta xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="facturaElectronicaCompraVenta.xsd">
+                        <facturaElectronicaCompraVenta xsi:noNamespaceSchemaLocation="facturaElectronicaCompraVenta.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
                         </facturaElectronicaCompraVenta>';
             $xml_temporal = new SimpleXMLElement($dar);
             $this->formato_xml($temporal, $xml_temporal);
 
             $xml_temporal->asXML("assets/docs/facturaxml.xml");
+
+
+            //  =========================   DE AQUI COMENZAMOS EL FIRMADO CHEEEEE ==============================
+
+
+
+
+                // Ruta del archivo XML a firmar
+                $xmlFilePath = "assets/docs/facturaxml.xml";
+
+                // Ruta del archivo .p12 y contraseña
+                $p12FilePath = "assets/certificate/softoken.p12";
+                $p12Password = "5427648Scz";
+
+                // Ruta del archivo .crt
+                $crtFilePath = "assets/certificate/certificado_MICAELA_QUIROZ_ESCOBAR.crt";
+
+                // Cargar el archivo XML
+                $xmlDoc = new DOMDocument();
+                $xmlDoc->load($xmlFilePath);
+
+                // Crear un objeto XMLSecurityDSig para la firma
+                $signature = new XMLSecurityDSig();
+
+                // Paso 1: Aplicar el algoritmo de canonicalización al documento XML
+                $signature->setCanonicalMethod(XMLSecurityDSig::C14N);
+
+                // Paso 2: Aplicar el algoritmo SHA256 para obtener el HASH
+                $hash = hash('sha256', $xmlDoc->C14N(true));
+
+                // Paso 3: Obtener una cadena en Base64 del HASH
+                $base64Hash = base64_encode(hex2bin($hash));
+
+                // Paso 4: Adicionar las etiquetas de signature al XML
+                $signature->addReference($xmlDoc, XMLSecurityDSig::SHA256);
+
+                // Paso 5: Agregar el valor obtenido en el paso 3 a la etiqueta Digest Value
+                $signature->addReferenceDigest($base64Hash);
+
+                // Paso 6: Tomar la sección de la firma y obtener un HASH del mismo aplicando el algoritmo SHA256
+                $signatureHash = hash('sha256', $signature->signNode->C14N(true));
+
+                // Paso 7: Encriptar el HASH obtenido utilizando el algoritmo RSA SHA256 con la llave privada
+                $privateKey = new XMLSecurityKey(XMLSecurityKey::RSA_SHA256, ['type' => 'private']);
+                $privateKey->loadKey($p12FilePath, true, $p12Password);
+                $encryptedHash = '';
+                $privateKey->signData($signatureHash, $encryptedHash);
+
+                // Paso 8: Aplicar a la cadena resultante el algoritmo Base64 para obtener una cadena
+                $base64EncryptedHash = base64_encode($encryptedHash);
+
+                // Paso 9: Adicionar a la etiqueta de Signature Value la cadena anterior
+                $signature->setSignatureValue($base64EncryptedHash);
+
+                // Paso 10: Colocar en la etiqueta X509 Certificate la llave pública
+                $publicKey = file_get_contents($crtFilePath);
+                $signature->setX509Certificate($publicKey);
+
+                // Firmar el documento XML
+                $signature->sign();
+
+                // Guardar el documento XML firmado
+                $signedXML = $signature->getSignedXML();
+                $signedXML->save("ruta/de/destino/firmado.xml");
+
+
+                /*
+
+                    // Ruta del archivo XML a firmar
+                    $xmlFilePath = "assets/docs/facturaxml.xml";
+
+                    // Ruta del archivo .p12 y contraseña
+                    $p12FilePath = "assets/certificate/softoken.p12";
+                    $p12Password = "5427648Scz";
+
+                    // Ruta del archivo .crt
+                    $crtFilePath = "assets/certificate/certificado_MICAELA_QUIROZ_ESCOBAR.crt";
+
+                    // Instanciar un objeto XmlSigner
+                    $xmlSigner = new XmlSigner();
+
+                    // Cargar el archivo XML
+                    $xmlSigner->load($xmlFilePath);
+
+                    // Paso 1: Aplicar el algoritmo de canonicalización al documento XML
+                    $xmlSigner->normalize();
+
+                    // Paso 2: Aplicar el algoritmo SHA256 para obtener el HASH
+                    $hash = $xmlSigner->digestAlgorithm('sha256')->getHash();
+
+                    // Paso 3: Obtener una cadena en Base64 del HASH
+                    $base64Hash = base64_encode($hash);
+
+                    // Paso 4: Adicionar las etiquetas de signature al XML
+                    $xmlSigner->addSignature($p12FilePath, $p12Password, $crtFilePath);
+
+                    // Paso 5: Agregar el valor obtenido en el paso 3 a la etiqueta Digest Value
+                    $xmlSigner->setDigestValue($base64Hash);
+
+                    // Paso 6: Tomar la sección de la firma y obtener un HASH del mismo aplicando el algoritmo SHA256
+                    $signatureHash = $xmlSigner->signatureAlgorithm('sha256')->getSignatureHash();
+
+                    // Paso 7: Encriptar el HASH obtenido utilizando el algoritmo RSA SHA256 con la llave privada
+                    $encryptedHash = $xmlSigner->encryptSignatureHash($signatureHash);
+
+                    // Paso 8: Aplicar a la cadena resultante el algoritmo Base64 para obtener una cadena
+                    $base64EncryptedHash = base64_encode($encryptedHash);
+
+                    // Paso 9: Adicionar a la etiqueta de Signature Value la cadena anterior
+                    $xmlSigner->setSignatureValue($base64EncryptedHash);
+
+                    // Paso 10: Colocar en la etiqueta X509 Certificate la llave pública
+                    $xmlSigner->setPublicKeyFromCertificate($crtFilePath);
+
+                    // Devolver el XML firmado
+                    $xmlFirmado = $xmlSigner->getSignedXml();
+
+                    // Hacer lo que necesites con el XML firmado
+                    echo $xmlFirmado;
+                    dd($xmlFirmado);
+
+             */
+
+            // ========================== FINAL DE AQUI COMENZAMOS EL FIRMADO CHEEEEE  ==========================
 
             // COMPRIMIMOS EL ARCHIVO A ZIP
             $gzdato = gzencode(file_get_contents('assets/docs/facturaxml.xml',9));
