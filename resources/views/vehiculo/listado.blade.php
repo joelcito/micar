@@ -649,7 +649,9 @@
                         unidadMedida        :   prod.unidadMedida,
                         precioUnitario      :   prod.precio,
                         montoDescuento      :   prod.descuento,
-                        subTotal            :   ((prod.cantidad*prod.precio)-prod.descuento)
+                        subTotal            :   ((prod.cantidad*prod.precio)-prod.descuento),
+                        numeroSerie         :   null,
+                        numeroImei          :   null
                     })
                 })
 
@@ -668,7 +670,7 @@
                 let montoTotal                      = $('#motoTotalFac').val();
                 let descuentoAdicional              = $('#descuento_adicional').val();
                 let leyenda                         = "Ley N° 453: El proveedor deberá suministrar el servicio en las modalidades y términos ofertados o convenidos.";
-                let usuario                         = "{{ Auth::user()->nombre_usuario }}";
+                let usuario                         = "{{ Auth::user()->name }}";
                 let nombreEstudiante                = $('#nombreCompletoEstudiante').val();
                 let periodoFacturado                = detalle[(detalle.length)-1].descripcion+" / "+$('#anio_vigente_cuota_pago').val();
 
@@ -690,17 +692,18 @@
                         nombreRazonSocial               :nombreRazonSocial,
                         codigoTipoDocumentoIdentidad    :codigoTipoDocumentoIdentidad,
                         numeroDocumento                 :numeroDocumento,
-                        complemento                     :complemento,
+                        complemento                     :null,
+                        // complemento                     :complemento,
                         codigoCliente                   :numeroDocumento,
-                        nombreEstudiante                :nombreEstudiante,
-                        periodoFacturado                :periodoFacturado,
                         codigoMetodoPago                :1,
                         numeroTarjeta                   :null,
                         montoTotal                      :montoTotal,
                         montoTotalSujetoIva             :montoTotal,
+
                         codigoMoneda                    :1,
                         tipoCambio                      :1,
                         montoTotalMoneda                :montoTotal,
+
                         montoGiftCard                   :null,
                         descuentoAdicional              :descuentoAdicional,//ver llenado
                         codigoExcepcion                 :0,

@@ -8,11 +8,12 @@ use App\Models\Vehiculo;
 use DOMDocument;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use League\CommonMark\Node\Block\Document;
 use SimpleXMLElement;
-use Spatie\XmlSigner\XmlSigner;
 
 use RobRichards\XMLSecLibs\XMLSecurityDSig;
 use RobRichards\XMLSecLibs\XMLSecurityKey;
+
 
 class FacturaController extends Controller
 {
@@ -236,126 +237,193 @@ class FacturaController extends Controller
             $xml_temporal->asXML("assets/docs/facturaxml.xml");
 
 
-            //  =========================   DE AQUI COMENZAMOS EL FIRMADO CHEEEEE ==============================
+            //  =========================   DE AQUI COMENZAMOS EL FIRMADO CHEEEEE ==============================\
 
 
 
 
-                // Ruta del archivo XML a firmar
-                $xmlFilePath = "assets/docs/facturaxml.xml";
+            $xmlData = file_get_contents('assets/docs/facturaxml.xml');
 
-                // Ruta del archivo .p12 y contraseña
-                $p12FilePath = "assets/certificate/softoken.p12";
-                $p12Password = "5427648Scz";
+            $privateKeyPath = 'assets/certificate/softoken.p12'; // Path to your .p12 file
+            $privateKeyPassword = '5427648Scz'; // Password for the .p12 file
 
-                // Ruta del archivo .crt
-                $crtFilePath = "assets/certificate/certificado_MICAELA_QUIROZ_ESCOBAR.crt";
+            // Load the private key and certificate from the .p12 file
+            $pkcs12 = file_get_contents($privateKeyPath);
+            if (!openssl_pkcs12_read($pkcs12, $certs, $privateKeyPassword)) {
+                throw new \Exception('Error loading the .p12 file');
+            }
 
-                // Cargar el archivo XML
-                $xmlDoc = new DOMDocument();
-                $xmlDoc->load($xmlFilePath);
+            $privateKey = new XMLSecurityKey(XMLSecurityKey::RSA_SHA1, ['type' => 'private']);
+            $privateKey->loadKey($certs['pkey']);
 
-                // Crear un objeto XMLSecurityDSig para la firma
-                $signature = new XMLSecurityDSig();
+            $dsig = new XMLSecurityDSig();
+            $dsig->setCanonicalMethod(XMLSecurityDSig::C14N);
+            $dsig->addReference(
+                new DomDocument($xmlData),
+                XMLSecurityDSig::SHA1,
+                ['http://www.w3.org/2000/09/xmldsig#enveloped-signature'],
+                ['force_uri' => true]
+            );
 
-                // Paso 1: Aplicar el algoritmo de canonicalización al documento XML
-                $signature->setCanonicalMethod(XMLSecurityDSig::C14N);
+            $dsig->sign($privateKey);
+            $dsig->add509Cert($certs['cert']);
 
-                // Paso 2: Aplicar el algoritmo SHA256 para obtener el HASH
-                $hash = hash('sha256', $xmlDoc->C14N(true));
+            $signedXml = $dsig->sigNode->ownerDocument->saveXML();
 
-                // Paso 3: Obtener una cadena en Base64 del HASH
-                $base64Hash = base64_encode(hex2bin($hash));
+            // Guardar el XML firmado en el directorio "signed_xml"
+            $signedXmlFilePath = public_path('assets/docs/signed.xml');
+            file_put_contents($signedXmlFilePath, $signedXml);
 
-                // Paso 4: Adicionar las etiquetas de signature al XML
-                $signature->addReference($xmlDoc, XMLSecurityDSig::SHA256);
-
-                // Paso 5: Agregar el valor obtenido en el paso 3 a la etiqueta Digest Value
-                $signature->addReferenceDigest($base64Hash);
-
-                // Paso 6: Tomar la sección de la firma y obtener un HASH del mismo aplicando el algoritmo SHA256
-                $signatureHash = hash('sha256', $signature->signNode->C14N(true));
-
-                // Paso 7: Encriptar el HASH obtenido utilizando el algoritmo RSA SHA256 con la llave privada
-                $privateKey = new XMLSecurityKey(XMLSecurityKey::RSA_SHA256, ['type' => 'private']);
-                $privateKey->loadKey($p12FilePath, true, $p12Password);
-                $encryptedHash = '';
-                $privateKey->signData($signatureHash, $encryptedHash);
-
-                // Paso 8: Aplicar a la cadena resultante el algoritmo Base64 para obtener una cadena
-                $base64EncryptedHash = base64_encode($encryptedHash);
-
-                // Paso 9: Adicionar a la etiqueta de Signature Value la cadena anterior
-                $signature->setSignatureValue($base64EncryptedHash);
-
-                // Paso 10: Colocar en la etiqueta X509 Certificate la llave pública
-                $publicKey = file_get_contents($crtFilePath);
-                $signature->setX509Certificate($publicKey);
-
-                // Firmar el documento XML
-                $signature->sign();
-
-                // Guardar el documento XML firmado
-                $signedXML = $signature->getSignedXML();
-                $signedXML->save("ruta/de/destino/firmado.xml");
+            dd("dices");
 
 
-                /*
 
-                    // Ruta del archivo XML a firmar
-                    $xmlFilePath = "assets/docs/facturaxml.xml";
 
-                    // Ruta del archivo .p12 y contraseña
-                    $p12FilePath = "assets/certificate/softoken.p12";
-                    $p12Password = "5427648Scz";
 
-                    // Ruta del archivo .crt
-                    $crtFilePath = "assets/certificate/certificado_MICAELA_QUIROZ_ESCOBAR.crt";
 
-                    // Instanciar un objeto XmlSigner
-                    $xmlSigner = new XmlSigner();
+            // Cargar el documento XML a firmar
+            $documento = new DOMDocument();
+            $documento->load('assets/docs/facturaxml.xml');
 
-                    // Cargar el archivo XML
-                    $xmlSigner->load($xmlFilePath);
+            // Leer el archivo .p12 y extraer la clave privada y el certificado
+            $p12 = file_get_contents('assets/certificate/softoken.p12');
+            $password = '5427648Scz'; // Contraseña del archivo .p12
 
-                    // Paso 1: Aplicar el algoritmo de canonicalización al documento XML
-                    $xmlSigner->normalize();
+            if (openssl_pkcs12_read($p12, $certs, $password)) {
+            $private_key = $certs['pkey'];
+            $certificate = $certs['cert'];
+            } else {
+            die('Error al leer el archivo .p12');
+            }
 
-                    // Paso 2: Aplicar el algoritmo SHA256 para obtener el HASH
-                    $hash = $xmlSigner->digestAlgorithm('sha256')->getHash();
+            // Crear el objeto OpenSSL para la firma digital
+            $private_key_resource = openssl_pkey_get_private($private_key);
 
-                    // Paso 3: Obtener una cadena en Base64 del HASH
-                    $base64Hash = base64_encode($hash);
+            // Generar el valor del DigestValue
+            $digestValue = base64_encode(hash('sha256', $documento->C14N(true), true));
 
-                    // Paso 4: Adicionar las etiquetas de signature al XML
-                    $xmlSigner->addSignature($p12FilePath, $p12Password, $crtFilePath);
+            // Crear el elemento XML de la firma digital
+            $firma = $documento->createElementNS('http://www.w3.org/2000/09/xmldsig#', 'Signature');
+            $documento->documentElement->appendChild($firma);
 
-                    // Paso 5: Agregar el valor obtenido en el paso 3 a la etiqueta Digest Value
-                    $xmlSigner->setDigestValue($base64Hash);
+            // Crear los elementos XML de la firma digital
+            $info = $documento->createElement('SignedInfo');
+            $firma->appendChild($info);
 
-                    // Paso 6: Tomar la sección de la firma y obtener un HASH del mismo aplicando el algoritmo SHA256
-                    $signatureHash = $xmlSigner->signatureAlgorithm('sha256')->getSignatureHash();
+            $canon = $documento->createElement('CanonicalizationMethod');
+            $info->appendChild($canon);
+            $canon->setAttribute('Algorithm', 'http://www.w3.org/TR/2001/REC-xml-c14n-20010315');
 
-                    // Paso 7: Encriptar el HASH obtenido utilizando el algoritmo RSA SHA256 con la llave privada
-                    $encryptedHash = $xmlSigner->encryptSignatureHash($signatureHash);
+            $sign = $documento->createElement('SignatureMethod');
+            $info->appendChild($sign);
+            $sign->setAttribute('Algorithm', 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256');
 
-                    // Paso 8: Aplicar a la cadena resultante el algoritmo Base64 para obtener una cadena
-                    $base64EncryptedHash = base64_encode($encryptedHash);
+            $ref = $documento->createElement('Reference');
+            $info->appendChild($ref);
+            $ref->setAttribute('URI', '');
 
-                    // Paso 9: Adicionar a la etiqueta de Signature Value la cadena anterior
-                    $xmlSigner->setSignatureValue($base64EncryptedHash);
+            $transforms = $documento->createElement('Transforms');
+            $ref->appendChild($transforms);
 
-                    // Paso 10: Colocar en la etiqueta X509 Certificate la llave pública
-                    $xmlSigner->setPublicKeyFromCertificate($crtFilePath);
+            $tran = $documento->createElement('Transform');
+            $transforms->appendChild($tran);
+            $tran->setAttribute('Algorithm', 'http://www.w3.org/2000/09/xmldsig#enveloped-signature');
 
-                    // Devolver el XML firmado
-                    $xmlFirmado = $xmlSigner->getSignedXml();
+            $tran = $documento->createElement('Transform');
+            $transforms->appendChild($tran);
+            $tran->setAttribute('Algorithm', 'http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithComments');
 
-                    // Hacer lo que necesites con el XML firmado
-                    echo $xmlFirmado;
-                    dd($xmlFirmado);
+            $digest = $documento->createElement('DigestMethod');
+            $ref->appendChild($digest);
+            $digest->setAttribute('Algorithm', 'http://www.w3.org/2001/04/xmlenc#sha256');
 
-             */
+            $digestValueElement = $documento->createElement('DigestValue', $digestValue);
+            $ref->appendChild($digestValueElement);
+
+            // Firmar el documento XML
+            openssl_sign($documento->C14N(), $signature, $private_key_resource, OPENSSL_ALGO_SHA256);
+            $signatureValue = $documento->createElement('SignatureValue', base64_encode($signature));
+            $firma->appendChild($signatureValue);
+
+            $keyInfo = $documento->createElement('KeyInfo');
+            $firma->appendChild($keyInfo);
+
+            $X509Data = $documento->createElement('X509Data');
+            $keyInfo->appendChild($X509Data);
+
+            $X509Cert = $documento->createElement('X509Certificate', base64_encode($certificate));
+            $X509Data->appendChild($X509Cert);
+
+            // openssl_sign($documento->C14N(), $signature, $private_key_resource, OPENSSL_ALGO_SHA256);
+            // $signatureValue = $documento->createElement('SignatureValue', base64_encode($signature));
+            // $firma->appendChild($signatureValue);
+
+            // Guardar el documento XML firmado
+            // $documento->save('assets/docs/facturaxml_firmado.xml');
+            $documento->save('assets/docs/facturaxml.xml');
+            dd("s");
+
+
+
+            /*
+// Paso 1: Cargar el contenido XML
+$xmlString = file_get_contents('assets/docs/facturaxml.xml');
+
+// Paso 2: Crear un objeto DOMDocument e cargar el contenido XML desde el string
+$xmlDoc = new \DOMDocument('1.0', 'UTF-8');
+$xmlDoc->loadXML($xmlString);
+
+// Paso 3: Aplicar algoritmo SHA256 para obtener el HASH del documento
+$canonicalXml = $xmlDoc->C14N();
+$digestValue = base64_encode(hash('sha256', $canonicalXml, true));
+
+// Paso 4: Crear etiqueta de firma y agregar Digest Value
+$signature = $xmlDoc->createElement('Signature');
+$digestValueElement = $xmlDoc->createElement('DigestValue', $digestValue);
+$signature->appendChild($digestValueElement);
+
+// Paso 5: Obtener el HASH de la sección de firma
+$signatureXml = $signature->C14N();
+$signatureHash = hash('sha256', $signatureXml, true);
+
+// Paso 6: Cargar el archivo .p12 y obtener la clave privada y el certificado público
+$p12File = 'assets/certificate/softoken.p12';
+$p12Password = '5427648Scz'; // Contraseña del archivo .p12
+
+$certs = [];
+if (openssl_pkcs12_read(file_get_contents($p12File), $certs, $p12Password)) {
+    $privateKey = $certs['pkey'];
+    $x509Certificate = $certs['cert'];
+} else {
+    die('No se pudo leer el archivo .p12 o la contraseña es incorrecta.');
+}
+
+// Paso 7: Encriptar el HASH con RSA SHA256 usando la clave privada
+openssl_sign($signatureHash, $signatureValue, $privateKey, OPENSSL_ALGO_SHA256);
+
+// Paso 8: Aplicar Base64 a la cadena resultante
+$signatureValue = base64_encode($signatureValue);
+
+// Paso 9: Agregar SignatureValue y X509Certificate
+$signatureValueElement = $xmlDoc->createElement('SignatureValue', $signatureValue);
+$signature->appendChild($signatureValueElement);
+
+$x509CertificateElement = $xmlDoc->createElement('X509Certificate', $x509Certificate);
+$signature->appendChild($x509CertificateElement);
+
+// Paso 10: Agregar la etiqueta Signature al XML
+$xmlDoc->documentElement->appendChild($signature);
+
+// Devolver el XML firmado
+$signedXml = $xmlDoc->saveXML();
+
+$rutaArchivoFirmado ='assets/docs/facturaxml.xml';
+
+file_put_contents($rutaArchivoFirmado, $signedXml);
+
+echo $signedXml;
+*/
+
 
             // ========================== FINAL DE AQUI COMENZAMOS EL FIRMADO CHEEEEE  ==========================
 
