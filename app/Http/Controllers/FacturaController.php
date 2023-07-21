@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Firma\Firmadores\FirmadorBoliviaSingle;
 use App\Models\Factura;
 use App\Models\Pago;
 use App\Models\Vehiculo;
-use DOMDocument;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use League\CommonMark\Node\Block\Document;
 use SimpleXMLElement;
-
-use RobRichards\XMLSecLibs\XMLSecurityDSig;
-use RobRichards\XMLSecLibs\XMLSecurityKey;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use PDF;
 
 
 class FacturaController extends Controller
@@ -33,8 +32,11 @@ class FacturaController extends Controller
                                 ->where('pagos.vehiculo_id',$vehiculo_d)
                                 ->get();
 
+            $pagos =    $servicios->pluck('id');
+
             $data['lista']  = json_encode($servicios);
             $data['estado'] = 'success';
+            $data['pagos'] = $pagos;
 
         }else{
             $data['estado'] = 'error';
@@ -111,17 +113,15 @@ class FacturaController extends Controller
             // );
 
             $datos              = $request->input('datos');
-            $datosVehiculo       = $request->input('datosVehiculo');
+            $datosVehiculo      = $request->input('datosVehiculo');
             $valoresCabecera    = $datos['factura'][0]['cabecera'];
             $puntoVenta         = Auth::user()->codigo_punto_venta;
-            // $puntoVenta         = 0;
             $tipo_factura       = $request->input('modalidad');
-
 
             $nitEmisor          = str_pad($valoresCabecera['nitEmisor'],13,"0",STR_PAD_LEFT);
             $fechaEmision       = str_replace(".","",str_replace(":","",str_replace("-","",str_replace("T", "",$valoresCabecera['fechaEmision']))));
             $sucursal           = str_pad(0,4,"0",STR_PAD_LEFT);
-            $modalidad          = 2;
+            $modalidad          = 1;
             $numeroFactura      = str_pad($valoresCabecera['numeroFactura'],10,"0",STR_PAD_LEFT);
 
             if($tipo_factura === "online"){
@@ -136,7 +136,7 @@ class FacturaController extends Controller
             }
 
             $tipoFactura        = 1;
-            $tipoFacturaSector  = 1;
+            $tipoFacturaSector  = str_pad(1,2,"0",STR_PAD_LEFT);;
             $puntoVenta         = str_pad($puntoVenta,4,"0",STR_PAD_LEFT);
 
             $cadena = $nitEmisor.$fechaEmision.$sucursal.$modalidad.$tipoEmision.$tipoFactura.$tipoFacturaSector.$numeroFactura.$puntoVenta;
@@ -239,191 +239,9 @@ class FacturaController extends Controller
 
             //  =========================   DE AQUI COMENZAMOS EL FIRMADO CHEEEEE ==============================\
 
-
-
-
-            $xmlData = file_get_contents('assets/docs/facturaxml.xml');
-
-            $privateKeyPath = 'assets/certificate/softoken.p12'; // Path to your .p12 file
-            $privateKeyPassword = '5427648Scz'; // Password for the .p12 file
-
-            // Load the private key and certificate from the .p12 file
-            $pkcs12 = file_get_contents($privateKeyPath);
-            if (!openssl_pkcs12_read($pkcs12, $certs, $privateKeyPassword)) {
-                throw new \Exception('Error loading the .p12 file');
-            }
-
-            $privateKey = new XMLSecurityKey(XMLSecurityKey::RSA_SHA1, ['type' => 'private']);
-            $privateKey->loadKey($certs['pkey']);
-
-            $dsig = new XMLSecurityDSig();
-            $dsig->setCanonicalMethod(XMLSecurityDSig::C14N);
-            $dsig->addReference(
-                new DomDocument($xmlData),
-                XMLSecurityDSig::SHA1,
-                ['http://www.w3.org/2000/09/xmldsig#enveloped-signature'],
-                ['force_uri' => true]
-            );
-
-            $dsig->sign($privateKey);
-            $dsig->add509Cert($certs['cert']);
-
-            $signedXml = $dsig->sigNode->ownerDocument->saveXML();
-
-            // Guardar el XML firmado en el directorio "signed_xml"
-            $signedXmlFilePath = public_path('assets/docs/signed.xml');
-            file_put_contents($signedXmlFilePath, $signedXml);
-
-            dd("dices");
-
-
-
-
-
-
-            // Cargar el documento XML a firmar
-            $documento = new DOMDocument();
-            $documento->load('assets/docs/facturaxml.xml');
-
-            // Leer el archivo .p12 y extraer la clave privada y el certificado
-            $p12 = file_get_contents('assets/certificate/softoken.p12');
-            $password = '5427648Scz'; // Contraseña del archivo .p12
-
-            if (openssl_pkcs12_read($p12, $certs, $password)) {
-            $private_key = $certs['pkey'];
-            $certificate = $certs['cert'];
-            } else {
-            die('Error al leer el archivo .p12');
-            }
-
-            // Crear el objeto OpenSSL para la firma digital
-            $private_key_resource = openssl_pkey_get_private($private_key);
-
-            // Generar el valor del DigestValue
-            $digestValue = base64_encode(hash('sha256', $documento->C14N(true), true));
-
-            // Crear el elemento XML de la firma digital
-            $firma = $documento->createElementNS('http://www.w3.org/2000/09/xmldsig#', 'Signature');
-            $documento->documentElement->appendChild($firma);
-
-            // Crear los elementos XML de la firma digital
-            $info = $documento->createElement('SignedInfo');
-            $firma->appendChild($info);
-
-            $canon = $documento->createElement('CanonicalizationMethod');
-            $info->appendChild($canon);
-            $canon->setAttribute('Algorithm', 'http://www.w3.org/TR/2001/REC-xml-c14n-20010315');
-
-            $sign = $documento->createElement('SignatureMethod');
-            $info->appendChild($sign);
-            $sign->setAttribute('Algorithm', 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256');
-
-            $ref = $documento->createElement('Reference');
-            $info->appendChild($ref);
-            $ref->setAttribute('URI', '');
-
-            $transforms = $documento->createElement('Transforms');
-            $ref->appendChild($transforms);
-
-            $tran = $documento->createElement('Transform');
-            $transforms->appendChild($tran);
-            $tran->setAttribute('Algorithm', 'http://www.w3.org/2000/09/xmldsig#enveloped-signature');
-
-            $tran = $documento->createElement('Transform');
-            $transforms->appendChild($tran);
-            $tran->setAttribute('Algorithm', 'http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithComments');
-
-            $digest = $documento->createElement('DigestMethod');
-            $ref->appendChild($digest);
-            $digest->setAttribute('Algorithm', 'http://www.w3.org/2001/04/xmlenc#sha256');
-
-            $digestValueElement = $documento->createElement('DigestValue', $digestValue);
-            $ref->appendChild($digestValueElement);
-
-            // Firmar el documento XML
-            openssl_sign($documento->C14N(), $signature, $private_key_resource, OPENSSL_ALGO_SHA256);
-            $signatureValue = $documento->createElement('SignatureValue', base64_encode($signature));
-            $firma->appendChild($signatureValue);
-
-            $keyInfo = $documento->createElement('KeyInfo');
-            $firma->appendChild($keyInfo);
-
-            $X509Data = $documento->createElement('X509Data');
-            $keyInfo->appendChild($X509Data);
-
-            $X509Cert = $documento->createElement('X509Certificate', base64_encode($certificate));
-            $X509Data->appendChild($X509Cert);
-
-            // openssl_sign($documento->C14N(), $signature, $private_key_resource, OPENSSL_ALGO_SHA256);
-            // $signatureValue = $documento->createElement('SignatureValue', base64_encode($signature));
-            // $firma->appendChild($signatureValue);
-
-            // Guardar el documento XML firmado
-            // $documento->save('assets/docs/facturaxml_firmado.xml');
-            $documento->save('assets/docs/facturaxml.xml');
-            dd("s");
-
-
-
-            /*
-// Paso 1: Cargar el contenido XML
-$xmlString = file_get_contents('assets/docs/facturaxml.xml');
-
-// Paso 2: Crear un objeto DOMDocument e cargar el contenido XML desde el string
-$xmlDoc = new \DOMDocument('1.0', 'UTF-8');
-$xmlDoc->loadXML($xmlString);
-
-// Paso 3: Aplicar algoritmo SHA256 para obtener el HASH del documento
-$canonicalXml = $xmlDoc->C14N();
-$digestValue = base64_encode(hash('sha256', $canonicalXml, true));
-
-// Paso 4: Crear etiqueta de firma y agregar Digest Value
-$signature = $xmlDoc->createElement('Signature');
-$digestValueElement = $xmlDoc->createElement('DigestValue', $digestValue);
-$signature->appendChild($digestValueElement);
-
-// Paso 5: Obtener el HASH de la sección de firma
-$signatureXml = $signature->C14N();
-$signatureHash = hash('sha256', $signatureXml, true);
-
-// Paso 6: Cargar el archivo .p12 y obtener la clave privada y el certificado público
-$p12File = 'assets/certificate/softoken.p12';
-$p12Password = '5427648Scz'; // Contraseña del archivo .p12
-
-$certs = [];
-if (openssl_pkcs12_read(file_get_contents($p12File), $certs, $p12Password)) {
-    $privateKey = $certs['pkey'];
-    $x509Certificate = $certs['cert'];
-} else {
-    die('No se pudo leer el archivo .p12 o la contraseña es incorrecta.');
-}
-
-// Paso 7: Encriptar el HASH con RSA SHA256 usando la clave privada
-openssl_sign($signatureHash, $signatureValue, $privateKey, OPENSSL_ALGO_SHA256);
-
-// Paso 8: Aplicar Base64 a la cadena resultante
-$signatureValue = base64_encode($signatureValue);
-
-// Paso 9: Agregar SignatureValue y X509Certificate
-$signatureValueElement = $xmlDoc->createElement('SignatureValue', $signatureValue);
-$signature->appendChild($signatureValueElement);
-
-$x509CertificateElement = $xmlDoc->createElement('X509Certificate', $x509Certificate);
-$signature->appendChild($x509CertificateElement);
-
-// Paso 10: Agregar la etiqueta Signature al XML
-$xmlDoc->documentElement->appendChild($signature);
-
-// Devolver el XML firmado
-$signedXml = $xmlDoc->saveXML();
-
-$rutaArchivoFirmado ='assets/docs/facturaxml.xml';
-
-file_put_contents($rutaArchivoFirmado, $signedXml);
-
-echo $signedXml;
-*/
-
+            $firmador = new FirmadorBoliviaSingle('assets/certificate/softoken.p12', "5427648Scz");
+            $xmlFirmado = $firmador->firmarRuta('assets/docs/facturaxml.xml');
+            file_put_contents('assets/docs/facturaxml.xml', $xmlFirmado);
 
             // ========================== FINAL DE AQUI COMENZAMOS EL FIRMADO CHEEEEE  ==========================
 
@@ -496,9 +314,6 @@ echo $signedXml;
             if($tipo_factura === "online"){
                 $siat = app(SiatController::class);
                 $for = json_decode($siat->recepcionFactura($archivoZip, $valoresCabecera['fechaEmision'],$hashArchivo));
-
-                dd($for);
-
                 if($for->estado === "error"){
                     $codigo_descripcion = null;
                     $codigo_trancaccion = null;
@@ -515,17 +330,13 @@ echo $signedXml;
                     $codigo_descripcion     = $for->resultado->RespuestaServicioFacturacion->codigoDescripcion;
                     $codigo_trancaccion     = $for->resultado->RespuestaServicioFacturacion->transaccion;
                 }
-
                 $data['estado'] = $codigo_descripcion;
-
             }else{
                 $codigo_descripcion = null;
                 $codigo_recepcion   = null;
                 $codigo_trancaccion = null;
                 $descripcion        = null;
-
                 $data['estado']     = 'OFFLINE';
-
             }
 
             // $siat = app(SiatController::class);
@@ -553,66 +364,69 @@ echo $signedXml;
             $facturaNew->codigo_recepcion   = $codigo_recepcion;
             $facturaNew->codigo_trancaccion = $codigo_trancaccion;
             $facturaNew->descripcion        = $descripcion;
-            // $facturaNew->cuis               = session('scuis');
+            $facturaNew->cuis               = session('scuis');
             // $facturaNew->cufd               = session('scufd');
             // $facturaNew->fechaVigencia      = session('sfechaVigenciaCufd');
-            $facturaNew->cuis               = session('scuis');
             $facturaNew->cufd               = $scufd;
-            $facturaNew->fechaVigencia      = $sfechaVigenciaCufd;
+            $facturaNew->fechaVigencia      = Carbon::parse($sfechaVigenciaCufd)->format('Y-m-d H:i:s');
             $facturaNew->save();
 
 
             // $data['estado'] = $facturaNew->codigo_descripcion;
 
-            for ($i=1; $i < count($datos['factura']) ; $i++) {
+            // dd($datos['factura'][1]['detalle'], $datosVehiculo['pagos']);
 
-                $servicio = $datos['factura'][$i]['detalle']['codigoProducto'];
-
-                // PREGUNTAMOS SI ES MENSUALIDAD
-                if($servicio === "2"){
-                    $arrayMen = explode(" ", $datos['factura'][$i]['detalle']['descripcion']);
-                    $pago = Pago::where('persona_id',$datosPersona['persona_id'])
-                                ->where('estado', 'paraPagar')
-                                ->where('anio_vigente', date('Y'))
-                                ->where('mensualidad', $arrayMen[0])
-                                ->first();
-
-                    if($pago){
-                        $pago->descuento    = ($datos['factura'][$i]['detalle']['montoDescuento'] == null)? 0 :  $datos['factura'][$i]['detalle']['montoDescuento'];
-                        $pago->subTotal     = ($datos['factura'][$i]['detalle']['subTotal'] == null)? 0 :  $datos['factura'][$i]['detalle']['subTotal'];
-                        $pago->estado       = "Pagado";
-                        $pago->fecha        = $valoresCabecera['fechaEmision'];
-                        $pago->factura_id   = $facturaNew->id;
-                        $pago->user_id      = Auth::user()->id;
-                        // $pago->cuis         = session('scuis');
-                        // $pago->cufd         = session('scufd');
-                        // $pago->fechaVigencia= session('sfechaVigenciaCufd');
-
-                        $pago->save();
-                    }
-                }else{
-                    $pago = Pago::where('persona_id',$datosPersona['persona_id'])
-                                ->where('estado', 'paraPagar')
-                                ->where('anio_vigente', date('Y'))
-                                ->where('servicio_id', $servicio)
-                                ->first();
-
-                    if($pago){
-                        $pago->descuento    = ($datos['factura'][$i]['detalle']['montoDescuento'] == null)? 0 :  $datos['factura'][$i]['detalle']['montoDescuento'];
-                        $pago->subTotal     = ($datos['factura'][$i]['detalle']['subTotal'] == null)? 0 :  $datos['factura'][$i]['detalle']['subTotal'];
-                        $pago->estado       = "Pagado";
-                        $pago->fecha        = $valoresCabecera['fechaEmision'];
-                        $pago->factura_id   = $facturaNew->id;
-                        $pago->user_id      = Auth::user()->id;
-                        // $pago->cuis         = session('scuis');
-                        // $pago->cufd         = session('scufd');
-                        // $pago->fechaVigencia= session('sfechaVigenciaCufd');
-
-                        $pago->save();
-                    }
-                }
-
+            foreach ($datosVehiculo['pagos'] as $key => $pago_id) {
+                $pago = Pago::find($pago_id);
+                // dd($datosVehiculo['pagos'], $pago_id, $pago);
+                $pago->estado       = "Pagado";
+                $pago->factura_id   = $facturaNew->id;
+                $pago->save();
             }
+
+
+            // for ($i=1; $i < count($datos['factura']) ; $i++) {
+
+            //     $servicio = $datos['factura'][$i]['detalle']['codigoProducto'];
+
+            //     // PREGUNTAMOS SI ES MENSUALIDAD
+            //     if($servicio === "2"){
+            //         $arrayMen = explode(" ", $datos['factura'][$i]['detalle']['descripcion']);
+            //         $pago = Pago::where('persona_id',$datosPersona['persona_id'])
+            //                     ->where('estado', 'paraPagar')
+            //                     ->where('anio_vigente', date('Y'))
+            //                     ->where('mensualidad', $arrayMen[0])
+            //                     ->first();
+
+            //         if($pago){
+            //             $pago->descuento    = ($datos['factura'][$i]['detalle']['montoDescuento'] == null)? 0 :  $datos['factura'][$i]['detalle']['montoDescuento'];
+            //             $pago->subTotal     = ($datos['factura'][$i]['detalle']['subTotal'] == null)? 0 :  $datos['factura'][$i]['detalle']['subTotal'];
+            //             $pago->estado       = "Pagado";
+            //             $pago->fecha        = $valoresCabecera['fechaEmision'];
+            //             $pago->factura_id   = $facturaNew->id;
+            //             $pago->user_id      = Auth::user()->id;
+
+            //             $pago->save();
+            //         }
+            //     }else{
+            //         $pago = Pago::where('persona_id',$datosPersona['persona_id'])
+            //                     ->where('estado', 'paraPagar')
+            //                     ->where('anio_vigente', date('Y'))
+            //                     ->where('servicio_id', $servicio)
+            //                     ->first();
+
+            //         if($pago){
+            //             $pago->descuento    = ($datos['factura'][$i]['detalle']['montoDescuento'] == null)? 0 :  $datos['factura'][$i]['detalle']['montoDescuento'];
+            //             $pago->subTotal     = ($datos['factura'][$i]['detalle']['subTotal'] == null)? 0 :  $datos['factura'][$i]['detalle']['subTotal'];
+            //             $pago->estado       = "Pagado";
+            //             $pago->fecha        = $valoresCabecera['fechaEmision'];
+            //             $pago->factura_id   = $facturaNew->id;
+            //             $pago->user_id      = Auth::user()->id;
+            //             $pago->save();
+            //         }
+            //     }
+
+            // }
 
 
             // ENVIAMOS EL CORREO DE LA FACTURA
@@ -636,6 +450,77 @@ echo $signedXml;
 
     }
 
+
+    public function numeroFactura(){
+        return Factura::where('facturado', 'Si')->max('numero');
+    }
+
+    public function anularFacturaNew(Request $request){
+        if($request->ajax()){
+            $idFactura  = $request->input('factura');
+            $moivo      = $request->input('motivo');
+            $fatura     = Factura::find($idFactura);
+            $siat       = app(SiatController::class);
+            $respuesta = json_decode($siat->anulacionFactura($moivo, $fatura->cuf));
+
+            // dd($respuesta);
+
+            if($respuesta->resultado->RespuestaServicioFacturacion->transaccion){
+                $fatura->estado = 'Anulado';
+                $pagos = Pago::where('factura_id', $fatura->id)
+                                ->get();
+                foreach($pagos as $p){
+                    Pago::destroy($p->id);
+                    // if($p->servicio_id == 2){
+                    //     $ePago              = Pago::find($p->id);
+                    //     $ePago->factura_id  = null;
+                    //     $ePago->importe     = 0;
+                    //     $ePago->faltante    = 0;
+                    //     $ePago->fecha       = null;
+                    //     $ePago->estado      = null;
+                    //     $ePago->save();
+                    // }else{
+                    //     Pago::destroy($p->id);
+                    // }
+                }
+            }else{
+                $fatura->descripcion = $respuesta->resultado->RespuestaServicioFacturacion->mensajesList->descripcion;
+            }
+            $data['estado'] = $respuesta->resultado->RespuestaServicioFacturacion->transaccion;
+            $data['descripcion'] = $respuesta->resultado->RespuestaServicioFacturacion->codigoDescripcion;
+            $fatura->save();
+        }else{
+
+        }
+        return $data;
+    }
+
+    public function generaPdfFacturaNew(Request $request, $factura_id){
+        $factura = Factura::find($factura_id);
+        $xml = $factura['productos_xml'];
+
+        $archivoXML = new SimpleXMLElement($xml);
+
+        $cabeza = (array) $archivoXML;
+
+        $cuf            = (string)$cabeza['cabecera']->cuf;
+        $numeroFactura  = (string)$cabeza['cabecera']->numeroFactura;
+
+        // Genera el texto para el código QR
+        $textoQR = 'https://pilotosiat.impuestos.gob.bo/consulta/QR?nit=5427648016&cuf='.$cuf.'&numero='.$numeroFactura.'&t=2';
+        // Genera la ruta temporal para guardar la imagen del código QR
+        $rutaImagenQR = storage_path('app/public/qr_code.png');
+        // Genera el código QR y guarda la imagen en la ruta temporal
+        QrCode::generate($textoQR, $rutaImagenQR);
+
+        $pdf = PDF::loadView('pdf.generaPdfFacturaNew', compact('factura', 'archivoXML','rutaImagenQR'))->setPaper('letter');
+        // unlink($rutaImagenQR);
+        return $pdf->stream('factura.pdf');
+    }
+
+
+
+    // ===================  FUNCIOENES PROTEGIDAS  ========================
     protected function calculaDigitoMod11($cadena, $numDig, $limMult, $x10){
 
         $mult = 0;
@@ -709,37 +594,4 @@ echo $signedXml;
         }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Factura  $factura
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Factura $factura)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Factura  $factura
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Factura $factura)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Factura  $factura
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Factura $factura)
-    {
-        //
-    }
 }

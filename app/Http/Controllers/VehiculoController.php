@@ -27,7 +27,11 @@ class VehiculoController extends Controller
         $siat = app(SiatController::class);
         $verificacionSiat = json_decode($siat->verificarComunicacion());
 
-        return view('vehiculo.listado')->with(compact('servicios', 'lavadores', 'clientes', 'verificacionSiat'));
+        // NUMOER DE FACTURA
+        $fac = app(FacturaController::class);
+        $numFac = $fac->numeroFactura()+1;
+
+        return view('vehiculo.listado')->with(compact('servicios', 'lavadores', 'clientes', 'verificacionSiat', 'numFac'));
     }
 
     public function ajaxListado(Request $request){

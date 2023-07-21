@@ -196,6 +196,10 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         Maatwebsite\Excel\ExcelServiceProvider::class,
+
+        // App\Firma\Firmadores\FirmadorBoliviaSingle::class
+        SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
     ],
 
     /*
@@ -212,6 +216,12 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        // 'FirmadorBoliviaSingle' => App\Librerias\Firmadores\FirmadorBoliviaSingle::class,
+        // 'FirmadorBoliviaSingle' => App\Firma\Firmadores\FirmadorBoliviaSingle::class,
+
+        'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
+        // 'PDF' => Barryvdh\DomPDF\Facade::class,
+
     ])->toArray(),
 
 ];

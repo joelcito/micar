@@ -9,7 +9,7 @@
 
 
 <!--begin::Modal - Add task-->
-<div class="modal fade" id="modal_registro_usuario" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="modalAnular" tabindex="-1" aria-hidden="true">
     <!--begin::Modal dialog-->
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <!--begin::Modal content-->
@@ -285,7 +285,7 @@
                 <div class="row">
                     <div class="col-md-2">
                         <label for="">N Factura</label>
-                        <input type="number" class="form-control" id="numero_factura" value="1">
+                        <input type="number" class="form-control" id="numero_factura" value="{{ $numFac }}">
                     </div>
                     <div class="col-md-2">
                         <label for="">Tipo Docuemnto</label>
@@ -341,6 +341,7 @@
         })
 
         var arrayProductos = [];
+        var arrayPagos     = [];
 
         $( document ).ready(function() {
             ajaxListado();
@@ -626,8 +627,9 @@
                 dataType: 'json',
                 success: function(data) {
                     if(data.estado === 'success'){
-                        console.log(JSON.parse(data.lista))
+                        arrayPagos = data.pagos;
                         arrayProductos = JSON.parse(data.lista)
+                        console.log(JSON.parse(data.lista))
                     }
                 }
             });
@@ -723,8 +725,8 @@
                 var datos = {factura};
 
                 var datosVehiculo = {
-                    'vehiculo_id'   :$('#vehiculo_id').val(),
-                    //'carnet'        :$('#cedulaPersona').val()
+                    'vehiculo_id'   :   $('#vehiculo_id').val(),
+                    'pagos'         :   arrayPagos
                 };
 
                 var datosRecepcion = {
@@ -749,12 +751,13 @@
 
                         if(data.estado === "VALIDADA"){
                             Swal.fire({
-                                type: 'success',
+                                icon: 'success',
                                 title: 'Excelente!',
                                 text: 'LA FACTURA FUE VALIDADA',
                                 timer: 3000
                             })
-                            window.location.href = "{{ url('Factura/listadoPagos')}}"
+                            arrayPagos = [];
+                            //window.location.href = "{{ url('pago/listado')}}"
                         }else if(data.estado === "error_email"){
                             Swal.fire({
                                 type: 'error',
@@ -817,6 +820,8 @@
                 }
             });
         }
+
+
     </script>
 @endsection
 

@@ -88,7 +88,7 @@ Route::middleware('auth')->group(function () {
 
     // PAGOS
     Route::prefix('/pago')->group(function(){
-        Route::get('/', [PagoController::class, 'listado']);
+        Route::get('/listado', [PagoController::class, 'listado']);
         Route::post('/ajaxListado', [PagoController::class, 'ajaxListado']);
         Route::get('/detalle/{pago_id}', [PagoController::class, 'detalle']);
         Route::post('/eliminarPago', [PagoController::class, 'eliminarPago']);
@@ -107,6 +107,9 @@ Route::middleware('auth')->group(function () {
         Route::post('/actualizaDescuento', [FacturaController::class, 'actualizaDescuento']);
         Route::post('/sumaTotalMonto', [FacturaController::class, 'sumaTotalMonto']);
         Route::post('/emitirFactura', [FacturaController::class, 'emitirFactura']);
+        Route::post('/anularFacturaNew', [FacturaController::class, 'anularFacturaNew']);
+        Route::get('/generaPdfFacturaNew/{factura_id}', [FacturaController::class, 'generaPdfFacturaNew']);
+
 
 
 

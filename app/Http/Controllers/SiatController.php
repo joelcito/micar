@@ -15,6 +15,7 @@ class SiatController extends Controller
         if(!session()->has('scuis')){
             $codigoCuis = json_decode($this->cuis());
             if($codigoCuis->estado === "success"){
+                // dd($codigoCuis);
                 session(['scuis'                => $codigoCuis->resultado->RespuestaCuis->codigo]);
                 session(['sfechaVigenciaCuis'   => $codigoCuis->resultado->RespuestaCuis->fechaVigencia]);
                 $data['$codigoCuis->estado === "success"'] = 'si';
@@ -461,27 +462,16 @@ class SiatController extends Controller
     // public function anulacionFactura($arch, $fecEnv, $hasArch){
     public function anulacionFactura($codMot, $cuf1){
         $this->verificarConeccion();
-
-        // dd(session()->all(), "haber");
-
-        $wsdl                   = "https://pilotosiatservicios.impuestos.gob.bo/v2/ServicioFacturacionComputarizada?wsdl";
-
+        $wsdl                   = "https://pilotosiatservicios.impuestos.gob.bo/v2/ServicioFacturacionCompraVenta?wsdl";
         $codigoAmbiente         = $this->codigoAmbiente;
         $codigoDocumentoSector  = $this->codigoDocumentoSector; //NUEVO SECTOR EDUCATIIVO
         $codigoEmision          = 1; //NUEVO LINENA
         $codigoModalidad        = $this->codigoModalidad;
-
         $codigoPuntoVenta       = $this->codigoPuntoVenta;
         $codigoSistema          = $this->codigoSistema;
         $codigoSucursal         = $this->codigoSucursal;
-
         $cufd                   = session('scufd'); //NUEVO
         $cuis                   = session('scuis');
-
-        // dd($cufd,$cuis);
-
-        // dd($cufd,$cuis);
-
         $nit                    = $this->nit;
         $tipoFacturaDocumento   = 1; //NUEVO FACTURA CON DERECHO A CREDITO FISCAL
         $codigoMotivo           = $codMot;

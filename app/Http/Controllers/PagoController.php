@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Factura;
 use App\Models\Pago;
 use App\Models\Venta;
 use Illuminate\Http\Request;
@@ -10,10 +11,6 @@ use Illuminate\Support\Facades\DB;
 class PagoController extends Controller
 {
     public function listado(Request $request){
-
-        // $pagos = Pago::all();
-
-        // return view('pago.listado')->with(compact('pagos'));
         return view('pago.listado');
     }
 
@@ -31,11 +28,14 @@ class PagoController extends Controller
     }
 
     protected function listadoArray(){
-        $pagos = Pago::select('ventas.pago_id', 'ventas.vehiculo_id','pagos.id', DB::raw('SUM(ventas.total) as total'))
-                       ->join('ventas', 'pagos.id','=','ventas.pago_id')
-                       ->groupBy('ventas.pago_id','ventas.vehiculo_id')
-                       ->orderBy('pagos.id', 'DESC')
-                       ->get();
+        // $pagos = Pago::select('ventas.pago_id', 'ventas.vehiculo_id','pagos.id', DB::raw('SUM(ventas.total) as total'))
+        //                ->join('ventas', 'pagos.id','=','ventas.pago_id')
+        //                ->groupBy('ventas.pago_id','ventas.vehiculo_id')
+        //                ->orderBy('pagos.id', 'DESC')
+        //                ->get();
+        $pagos = Factura::orderBy('id', 'desc')
+                        ->take(200)
+                        ->get();
         return view('pago.ajaxListado')->with(compact('pagos'))->render();
     }
 
