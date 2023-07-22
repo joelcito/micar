@@ -328,7 +328,7 @@
                         </a>
                     </div>
                     <!--end:Menu item-->
-                    <!--begin:Menu item-->
+                    {{--  <!--begin:Menu item-->
                     <div class="menu-item">
                         <!--begin:Menu link-->
                         <a class="menu-link" href="../../demo1/dist/pages/user-profile/campaigns.html">
@@ -375,7 +375,7 @@
                         </a>
                         <!--end:Menu link-->
                     </div>
-                    <!--end:Menu item-->
+                    <!--end:Menu item-->  --}}
                 </div>
                 <!--end:Menu sub-->
             </div>
