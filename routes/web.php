@@ -2,11 +2,13 @@
 
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\EventoSignificativoController;
 use App\Http\Controllers\FacturaController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MigracionController;
 use App\Http\Controllers\PagoController;
+use App\Http\Controllers\PuntoVentaCotroller;
 use App\Http\Controllers\RolController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VentaController;
@@ -109,19 +111,24 @@ Route::middleware('auth')->group(function () {
         Route::post('/emitirFactura', [FacturaController::class, 'emitirFactura']);
         Route::post('/anularFacturaNew', [FacturaController::class, 'anularFacturaNew']);
         Route::get('/generaPdfFacturaNew/{factura_id}', [FacturaController::class, 'generaPdfFacturaNew']);
-
-
-
-
         // Route::post('/ajaxListado', [PagoController::class, 'ajaxListado']);
         // Route::get('/detalle/{pago_id}', [PagoController::class, 'detalle']);
         // Route::post('/eliminarPago', [PagoController::class, 'eliminarPago']);
     });
 
+    Route::prefix('/puntoVenta')->group(function () {
+        Route::get('/listado', [PuntoVentaCotroller::class, 'listado']);
+        Route::post('/ajaxListado', [PuntoVentaCotroller::class, 'ajaxListado']);
+        Route::post('/guarda', [PuntoVentaCotroller::class, 'guarda']);
+        Route::post('/eliminaPuntoVenta', [PuntoVentaCotroller::class, 'eliminaPuntoVenta']);
+    });
 
-
-    // Route::prefix('/venta')->group(function () {
-    // });
+    Route::prefix('/eventoSignificativo')->group(function () {
+        Route::get('/listado', [EventoSignificativoController::class, 'listado']);
+        Route::post('/consultaEventos', [EventoSignificativoController::class, 'consultaEventos']);
+        Route::post('/guarda', [EventoSignificativoController::class, 'guarda']);
+        Route::post('/eliminaPuntoVenta', [EventoSignificativoController::class, 'eliminaPuntoVenta']);
+    });
 
 });
 
