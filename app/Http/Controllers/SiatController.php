@@ -368,7 +368,7 @@ class SiatController extends Controller
     public function recepcionPaqueteFactura($arch, $fechaenv,$hasarch, $cafcC, $canFact, $codEvent){
         // dd($arch, $fechaenv,$hasarch, $cafcC, $canFact, $codEvent);
         $this->verificarConeccion();
-        $wsdl                   = "https://pilotosiatservicios.impuestos.gob.bo/v2/ServicioFacturacionComputarizada?wsdl";
+        $wsdl                   = "https://pilotosiatservicios.impuestos.gob.bo/v2/ServicioFacturacionCompraVenta?wsdl";
         $codigoAmbiente         = $this->codigoAmbiente;
         $codigoDocumentoSector  = $this->codigoDocumentoSector;     // SECTOR EDUCATIVO
         $codigoEmision          = 2;                                // FUERA DE  LINEA (LINEA = 1 | FUERA DE LINEA = 2)
@@ -386,27 +386,6 @@ class SiatController extends Controller
         $cafc                   = $cafcC;
         $cantidadFacturas       = $canFact;
         $codigoEvento           = $codEvent;
-
-        // dd(
-        //     "wsdl => ".$wsdl,
-        //     "codigoAmbiente => ".$codigoAmbiente,
-        //     "codigoDocumentoSector => ".$codigoDocumentoSector,
-        //     "codigoEmision => ".$codigoEmision,
-        //     "codigoModalidad => ".$codigoModalidad,
-        //     "codigoPuntoVenta => ".$codigoPuntoVenta,
-        //     "codigoSistema => ".$codigoSistema,
-        //     "codigoSucursal => ".$codigoSucursal,
-        //     "cufd => ".$cufd,
-        //     "cuis => ".$cuis,
-        //     "nit => ".$nit,
-        //     "tipoFacturaDocumento => ".$tipoFacturaDocumento,
-        //     "archivo => ".$archivo,
-        //     "fechaEnvio => ".$fechaEnvio,
-        //     "hashArchivo => ".$hashArchivo,
-        //     "cafc => ".$cafc,
-        //     "cantidadFacturas => ".$cantidadFacturas,
-        //     "codigoEvento => ".$codigoEvento
-        // );
 
         $parametros         =  array(
             'SolicitudServicioRecepcionPaquete' => array(

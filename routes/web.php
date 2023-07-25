@@ -112,6 +112,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/anularFacturaNew', [FacturaController::class, 'anularFacturaNew']);
         Route::get('/generaPdfFacturaNew/{factura_id}', [FacturaController::class, 'generaPdfFacturaNew']);
         Route::post('/muestraTableFacturaPaquete', [FacturaController::class, 'muestraTableFacturaPaquete']);
+        Route::post('/mandarFacturasPaquete', [FacturaController::class, 'mandarFacturasPaquete']);
     });
 
     Route::prefix('/puntoVenta')->group(function () {

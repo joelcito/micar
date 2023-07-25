@@ -65,7 +65,7 @@
                             </div>
                             <div class="col-md-3">
                                 <div class="fv-row mb-7">
-                                    <button class="btn btn-success btn-block mt-4 btn-sm" onclick="buscarEventosSignificativos()" type="button"><i class="fa fa-search"></i>Buscar</button>
+                                    <button class="btn btn-success w-100 mt-4 btn-sm" onclick="buscarEventosSignificativos()" type="button"><i class="fa fa-search"></i>Buscar</button>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -81,11 +81,6 @@
                     <hr>
                     <div id="tablas_facturas_offline" style="display: none">
 
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <button class="btn btn-success w-100" onclick="anularFactura()">Anular Factura</button>
-                        </div>
                     </div>
                 </div>
                 <!--end::Modal body-->
@@ -448,6 +443,25 @@
                 }
             })
             console.log(valor);
+        }
+
+        function mandarFacturasPaquete(){
+            let arraye = $('#formularioEnvioPaquete').serializeArray();
+            // Agregar un nuevo elemento al array
+            arraye.push({ name: 'contingencia', value: $('#evento_significativo_contingencia_select').val() });
+            $.ajax({
+                url: "{{ url('factura/mandarFacturasPaquete') }}",
+                method: "POST",
+                data:arraye,
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data)
+                    if(data.estado === "success"){
+                        {{--  location.reload()  --}}
+                    }else{
+                    }
+                }
+            })
         }
     </script>
 @endsection

@@ -12,7 +12,8 @@ use Illuminate\Support\Facades\Auth;
 use SimpleXMLElement;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use PDF;
-
+use Illuminate\Support\Str;
+use PharData;
 
 class FacturaController extends Controller
 {
@@ -506,6 +507,118 @@ class FacturaController extends Controller
         $pdf = PDF::loadView('pdf.generaPdfFacturaNew', compact('factura', 'archivoXML','rutaImagenQR'))->setPaper('letter');
         // unlink($rutaImagenQR);
         return $pdf->stream('factura.pdf');
+    }
+
+    public function muestraTableFacturaPaquete(Request $request){
+        if($request->ajax()){
+            $facturas = Factura::where('tipo_factura', 'offline')
+                                ->where('facturado', "Si")
+                                // ->where('codigo_descripcion', "!=", 'VALIDADA')
+                                ->WhereNull('codigo_descripcion')
+                                ->get();
+            $data['listado'] = view('pago.ajaxMuestraTableFacturaPaquete')->with(compact('facturas'))->render();
+            $data['estado'] = "success";
+        }else{
+            $data['estado'] = "error";
+        }
+        return $data;
+    }
+
+    public function mandarFacturasPaquete(Request $request){
+        if($request->ajax()){
+            $datos = $request->all();
+            $checkboxes = collect($datos)->filter(function ($value, $key) {
+                return Str::startsWith($key, 'check_');
+            })->toArray();
+
+            $codigo_evento_significativo    = $request->input('contingencia');
+            $siat                           = app(SiatController::class);
+            $codigo_cafc_contingencia       = NULL;
+            // $codigo_cafc_contingencia       = "111DE8BD3981C";
+            $fechaActual                    = date('Y-m-d\TH:i:s.v');
+            $fechaEmicion                   = $fechaActual;
+
+            $contado = 0;
+
+            $rutaCarpeta = "assets/docs/paquete";
+            // Obtener lista de archivos en la carpeta
+            $archivos = glob($rutaCarpeta . '/*');
+            // Eliminar cada archivo
+            foreach ($archivos as $archivo) {
+                if (is_file($archivo))
+                    unlink($archivo);
+            }
+            $file = public_path('assets/docs/paquete.tar.gz');
+            if (file_exists($file))
+                unlink($file);
+
+            $file = public_path('assets/docs/paquete.tar');
+            if (file_exists($file))
+                unlink($file);
+
+            foreach($checkboxes as $key => $chek){
+                $ar = explode("_",$key);
+                $factura = Factura::find($ar[1]);
+
+                $xml                            = $factura->productos_xml;
+                // $uso_cafc                       = $request->input("uso_cafc");
+                $archivoXML                     = new SimpleXMLElement($xml);
+
+                // GUARDAMOS EN LA CARPETA EL XML
+                $archivoXML->asXML("assets/docs/paquete/facturaxmlContingencia$ar[1].xml");
+                $contado++;
+            }
+
+            // Ruta de la carpeta que deseas comprimir
+            $rutaCarpeta = "assets/docs/paquete";
+
+            // Nombre y ruta del archivo TAR resultante
+            $archivoTar = "assets/docs/paquete.tar";
+
+            // Crear el archivo TAR utilizando la biblioteca PharData
+            $tar = new PharData($archivoTar);
+            $tar->buildFromDirectory($rutaCarpeta);
+
+            // Ruta y nombre del archivo comprimido en formato Gzip
+            $archivoGzip = "assets/docs/paquete.tar.gz";
+
+            // Comprimir el archivo TAR en formato Gzip
+            $comandoGzip = "gzip -c $archivoTar > $archivoGzip";
+            exec($comandoGzip);
+
+            // Leer el contenido del archivo comprimido
+            $contenidoArchivo = file_get_contents($archivoGzip);
+
+            // Calcular el HASH (SHA256) del contenido del archivo
+            $hashArchivo = hash('sha256', $contenidoArchivo);
+
+            $res = json_decode($siat->recepcionPaqueteFactura($contenidoArchivo, $fechaEmicion, $hashArchivo, $codigo_cafc_contingencia, $contado, $codigo_evento_significativo));
+
+            if($res->resultado->RespuestaServicioFacturacion->transaccion){
+                $validad = json_decode($siat->validacionRecepcionPaqueteFactura(2,$res->resultado->RespuestaServicioFacturacion->codigoRecepcion));
+                if($validad->resultado->RespuestaServicioFacturacion->transaccion){
+                    foreach($checkboxes as $key => $chek){
+                        $data['estado'] = "success";
+                        $ar = explode("_",$key);
+                        $factura = Factura::find($ar[1]);
+                        $factura->codigo_descripcion = $validad->resultado->RespuestaServicioFacturacion->codigoDescripcion;
+                        $factura->codigo_recepcion  = $validad->resultado->RespuestaServicioFacturacion->codigoRecepcion;
+                        $factura->save();
+                    }
+                }else{
+                    $data['estado'] = "error";
+                }
+                dd($res, $validad);
+            }else{
+                dd($res);
+            }
+            $data['estado'] = "success";
+        }else{
+            $data['estado'] = "error";
+        }
+
+        return $data;
+
     }
 
 
