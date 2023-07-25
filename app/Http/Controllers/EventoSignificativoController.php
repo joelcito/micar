@@ -34,7 +34,6 @@ class EventoSignificativoController extends Controller
                     $data['listado'] = view('eventosignificativo.ajaxListado')->with(compact('eventos'))->render();
                 }else{
                     //NO EXISTE REGISTRO DE EVENTO SIGNIFICATIVO EN LA BASE DE DATOS DEL SIN
-                    // dd($respuesta->resultado->RespuestaListaEventos->mensajesList->descripcion);
                     $data['estado'] = 'error';
                     $data['msg'] = $respuesta->resultado->RespuestaListaEventos->mensajesList->descripcion;
                 }

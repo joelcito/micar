@@ -31,13 +31,13 @@
                 <!--begin::Modal body-->
                 <div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
 
-                    <form id="formularioServicio">
+                    <form id="formularioNewEvento">
                         @csrf
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="fv-row mb-7">
                                     <label class="required fw-semibold fs-6 mb-2">Tipo de Evento</label>
-                                    <select name="" id="" class="form-control">
+                                    <select name="codigoEvento" id="codigoEvento" class="form-control">
                                         @foreach ($eventosparametricas as $eve)
                                             <option value="{{ $eve['codigoClasificador'] }}">{{ $eve['descripcion'] }}</option>
                                         @endforeach
@@ -64,7 +64,7 @@
                     </form>
                     <div class="row mt-2">
                         <div class="col-md-12">
-                            <button class="btn btn-success w-100" onclick="guardarPuntoVenta()">Guardar</button>
+                            <button class="btn btn-success w-100" onclick="agregarEventoSignificativo()">Guardar</button>
                         </div>
                     </div>
                 </div>
@@ -192,6 +192,35 @@
             $('#nombre').val('')
             $('#descripcion').val('')
             $('#modalPuntoVenta').modal('show')
+        }
+
+        function agregarEventoSignificativo(){
+            if($("#formularioNewEvento")[0].checkValidity()){
+                let dato = $("#formularioNewEvento").serializeArray();
+                $.ajax({
+                    url: "{{ url('eventoSignificativo/registro') }}",
+                    data: dato,
+                    type: 'POST',
+                    dateType: 'json',
+                    success: function(data) {
+                        if(data.estado === "success"){
+                            Swal.fire(
+                                'Exito!',
+                                "Se registro con exito con el codigo "+data.msg,
+                                'success'
+                            )
+                        }else{
+                            Swal.fire(
+                                'Error!',
+                                data.msg,
+                                'error'
+                            )
+                        }
+                    }
+                });
+            }else{
+                $("#formularioNewEvento")[0].reportValidity();
+            }
         }
 
         // function eliminaPuntoVenta(puntoVenta){

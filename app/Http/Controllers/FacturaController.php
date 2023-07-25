@@ -102,16 +102,6 @@ class FacturaController extends Controller
     public function emitirFactura(Request $request){
         if($request->ajax()){
 
-            // dd($request->all());
-
-            // dd(
-            //     "este chee",
-            //     $request->all(),
-            //     $request->input('datos')['factura'][0]['cabecera']['numeroDocumento'],
-            //     $request->input('datos')['factura'][0]['cabecera']['nombreRazonSocial'],
-            //     $request->input('modalidad')
-            // );
-
             $datos              = $request->input('datos');
             $datosVehiculo      = $request->input('datosVehiculo');
             $valoresCabecera    = $datos['factura'][0]['cabecera'];
@@ -128,11 +118,11 @@ class FacturaController extends Controller
                 $tipoEmision        = 1;
             }
             else{
-                // $datosRecepcion       = $request->input('datosRecepcion');
+                $datosRecepcion       = $request->input('datosRecepcion');
                 // if($datosRecepcion['uso_cafc'] === "si"){
                 //     $datos['factura'][0]['cafc'] = $datosRecepcion['codigo_cafc_contingencia'];
                 // }
-                // $tipoEmision        = 2;
+                $tipoEmision        = 2;
             }
 
             $tipoFactura        = 1;
@@ -178,16 +168,16 @@ class FacturaController extends Controller
                 $sdireccion             = session('sdireccion');
                 $sfechaVigenciaCufd     = session('sfechaVigenciaCufd');
             }else{
-                // $cufdController             = app(CufdController::class);
-                // $datosCufdOffLine           = $cufdController->sacarCufdVigenteFueraLinea();
-                // if($datosCufdOffLine['estado'] === "success"){
-                //     $scufd                  = $datosCufdOffLine['scufd'];
-                //     $scodigoControl         = $datosCufdOffLine['scodigoControl'];
-                //     $sdireccion             = $datosCufdOffLine['sdireccion'];
-                //     $sfechaVigenciaCufd     = $datosCufdOffLine['sfechaVigenciaCufd'];
-                // }else{
+                $cufdController             = app(CufdController::class);
+                $datosCufdOffLine           = $cufdController->sacarCufdVigenteFueraLinea();
+                if($datosCufdOffLine['estado'] === "success"){
+                    $scufd                  = $datosCufdOffLine['scufd'];
+                    $scodigoControl         = $datosCufdOffLine['scodigoControl'];
+                    $sdireccion             = $datosCufdOffLine['sdireccion'];
+                    $sfechaVigenciaCufd     = $datosCufdOffLine['sfechaVigenciaCufd'];
+                }else{
 
-                // }
+                }
             }
 
             $cufPro                                         = $this->generarBase16($cadenaConM11).$scodigoControl;

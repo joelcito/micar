@@ -58,14 +58,23 @@
                         @endif
                     </td>
                     <td class="text-end">
-                        {{--  <a  class="btn btn-info btn-icon btn-sm" href="{{ url('/pago/detalle',[$p->id]) }}"><i class="fa fa-eye"></i></a>  --}}
                         <a  class="btn btn-primary btn-icon btn-sm"href="{{ url('factura/generaPdfFacturaNew', [$p->id]) }}" target="_blank"><i class="fa fa-file-pdf"></i></a>
-
                         <a href="https://pilotosiat.impuestos.gob.bo/consulta/QR?nit=5427648016&cuf={{ $p->cuf }}&numero={{ $p->numero }}&t=2" target="_blank" class="btn btn-dark btn-icon btn-sm"><i class="fa fa-file"></i></a>
+                        @if ($p->estado != 'Anulado')
+                            @if ($p->tipo_factura === "online")
+                                @if ($p->productos_xml != null)
+                                    <button  class="btn btn-danger btn-icon btn-sm" type="button" onclick="modalAnular('{{ $p->id }}')"><i class="fa fa-trash"></i></button>
+                                @else
 
-                        <button  class="btn btn-danger btn-icon btn-sm" type="submit" onclick="modalAnular('{{ $p->id }}')"><i class="fa fa-trash"></i></button>
-                        {{--  <button class="btn btn-warning btn-icon btn-sm"><i class="fa fa-edit"></i></button>  --}}
-                        {{--  <button class="btn btn-danger btn-icon btn-sm" onclick="eliminar('{{ $p->id }}')"><i class="fa fa-trash"></i></button>  --}}
+                                @endif
+                            @else
+                                @if ($p->codigo_descripcion != 'VALIDADA' && $p->codigo_descripcion != 'PENDIENTE')
+                                    <button class="btn btn-info btn-icon btn-sm" onclick="modalRecepcionFacuraContingenciaFueraLinea()"><i class="fa fa-upload" aria-hidden="true"></i></button>
+                                @else
+                                    <button  class="btn btn-danger btn-icon btn-sm" type="button" onclick="modalAnular('{{ $p->id }}')"><i class="fa fa-trash"></i></button>
+                                @endif
+                            @endif
+                        @endif
                     </td>
                 </tr>
             @empty

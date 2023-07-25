@@ -111,9 +111,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/emitirFactura', [FacturaController::class, 'emitirFactura']);
         Route::post('/anularFacturaNew', [FacturaController::class, 'anularFacturaNew']);
         Route::get('/generaPdfFacturaNew/{factura_id}', [FacturaController::class, 'generaPdfFacturaNew']);
-        // Route::post('/ajaxListado', [PagoController::class, 'ajaxListado']);
-        // Route::get('/detalle/{pago_id}', [PagoController::class, 'detalle']);
-        // Route::post('/eliminarPago', [PagoController::class, 'eliminarPago']);
+        Route::post('/muestraTableFacturaPaquete', [FacturaController::class, 'muestraTableFacturaPaquete']);
     });
 
     Route::prefix('/puntoVenta')->group(function () {
@@ -126,8 +124,8 @@ Route::middleware('auth')->group(function () {
     Route::prefix('/eventoSignificativo')->group(function () {
         Route::get('/listado', [EventoSignificativoController::class, 'listado']);
         Route::post('/consultaEventos', [EventoSignificativoController::class, 'consultaEventos']);
-        Route::post('/guarda', [EventoSignificativoController::class, 'guarda']);
-        Route::post('/eliminaPuntoVenta', [EventoSignificativoController::class, 'eliminaPuntoVenta']);
+        Route::post('/registro', [EventoSignificativoController::class, 'registro']);
+        Route::post('/buscarEventosSignificativos', [EventoSignificativoController::class, 'buscarEventosSignificativos']);
     });
 
 });
