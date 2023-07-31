@@ -29,6 +29,7 @@ class VehiculoController extends Controller
 
         // NUMOER DE FACTURA
         $fac = app(FacturaController::class);
+        // dd($fac->numeroFactura());
         $numFac = $fac->numeroFactura()+1;
 
         return view('vehiculo.listado')->with(compact('servicios', 'lavadores', 'clientes', 'verificacionSiat', 'numFac'));
@@ -172,14 +173,20 @@ class VehiculoController extends Controller
         }
         return json_encode($data);
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
+
+    public function obtenerNitRazonSocial(Request $request){
+        if($request->ajax()){
+            $cliente_id = $request->input('id');
+            $cliente = Cliente::find($cliente_id);
+
+            $data['nit']            = $cliente->nit;
+            $data['razon_social']   = $cliente->razon_social;
+
+            $data['estado']         = 'success';
+        }else{
+            $data['estado'] = 'error';
+        }
+        return $data;
     }
 
     /**

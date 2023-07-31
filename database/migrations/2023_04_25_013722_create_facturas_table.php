@@ -33,6 +33,7 @@ return new class extends Migration
             $table->decimal('total',12,2)->nullable();
             $table->string('facturado',5)->nullable();
             $table->string('numero',10)->nullable();
+            $table->string('numero_cafc',10)->nullable();
             $table->string('numero_recibo',10)->nullable();
             $table->string('codigo_control',10)->nullable();
 
@@ -49,6 +50,7 @@ return new class extends Migration
             $table->string('cufd')->nullable();
             $table->dateTime('fechaVigencia')->nullable();
             $table->string('tipo_factura')->nullable();
+            $table->string('uso_cafc')->nullable();
 
             $table->string('estado')->nullable();
             $table->datetime('deleted_at')->nullable();

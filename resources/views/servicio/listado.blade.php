@@ -311,6 +311,27 @@
                 }
             })
         }
+
+        function bloqueCAFC(){
+            console.log()
+        }
+
+        // Agregar un evento para verificar el radio seleccionado al cambiar
+        $('input[name="uso_cafc"]').on('change', function() {
+            verificarRadioSeleccionado();
+        });
+
+        function verificarRadioSeleccionado() {
+            // Obtener el valor del radio seleccionado
+            var valorSeleccionado = $('input[name="uso_cafc"]:checked').val();
+
+            // Hacer algo con el valor seleccionado
+            if (valorSeleccionado === 'No') {
+                console.log('El radio seleccionado es "No"');
+            } else if (valorSeleccionado === 'Si') {
+                console.log('El radio seleccionado es "Si"');
+            }
+        }
     </script>
 @endsection
 

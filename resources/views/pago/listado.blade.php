@@ -388,6 +388,8 @@
         }
 
         function modalRecepcionFacuraContingenciaFueraLinea(){
+            $('#evento_significativo_contingencia_select').val('')
+            $('#tablas_facturas_offline').hide('toggle');
             $('#modmodalContingenciaFueraLinea').modal('show')
         }
 
@@ -434,11 +436,6 @@
                         $('#tablas_facturas_offline').html(data.listado);
                         $('#tablas_facturas_offline').show('toggle');
                     }else{
-                        {{--  Swal.fire({
-                            icon:   'error',
-                            title:  'Error!',
-                            text:   "Algo fallo"
-                        })  --}}
                     }
                 }
             })
@@ -455,10 +452,9 @@
                 data:arraye,
                 dataType: 'json',
                 success: function (data) {
-                    console.log(data)
                     if(data.estado === "success"){
-                        {{--  location.reload()  --}}
-                    }else{
+                        ajaxListado();
+                        $('#modmodalContingenciaFueraLinea').modal('hide')
                     }
                 }
             })

@@ -307,13 +307,24 @@
                     </div>
                     <div class="col-md-2">
                         <label for="">Tipo Factura</label>
-                        <select name="tipo_facturacion" id="tipo_facturacion" class="form-control">
+                        <select name="tipo_facturacion" id="tipo_facturacion" class="form-control" onchange="bloqueCAFC()">
                             <option value="online">En Linea</option>
                             <option value="offline">Fuera de Linea</option>
                         </select>
                     </div>
-                    <div class="col-md-2">
-                        <h4>Aqui para el cafc</h4>
+                    <div class="col-md-2" style="">
+                        <label for="">Uso del CAFC?</label>
+                        <div class="row mt-5">
+                            <div class="col-md-6">
+                                <label for="radioNo">No</label>
+                                <input type="radio" name="uso_cafc" id="radioNo" value="No" checked>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="radioSi">Si</label>
+                                <input type="radio" name="uso_cafc" id="radioSi" value="Si">
+                                <input type="text" id="codigo_cafc_contingencia" name="codigo_cafc_contingencia">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </form>
@@ -445,7 +456,23 @@
             })
         }
 
-        function agregarServicio(placa, marca, ap, am, nombre, vehiculo, nit, razon_socal){
+        function sacaNitRazonSocial(cliente){
+            $.ajax({
+                url: "{{ url('vehiculo/obtenerNitRazonSocial') }}",
+                type: 'POST',
+                data:{id:cliente},
+                dataType: 'json',
+                success: function(data) {
+                    if(data.estado === 'success'){
+                        $('#nit_factura').val(data.nit);
+                        $('#razon_factura').val(data.razon_social);
+                    }
+                }
+            });
+        }
+
+        // function agregarServicio(placa, marca, ap, am, nombre, vehiculo, nit, razon_socal, cliente){
+        function agregarServicio(placa, marca, ap, am, nombre, vehiculo, cliente){
             $('#table_vehiculos').hide('toggle');
             $('#table_agrega_servicios').show('toggle');
             $('#bloque_cliente').show('toggle');
@@ -454,9 +481,7 @@
             $('#vehiculo').text(marca);
             $('#placa').text(placa);
             $('#vehiculo_id').val(vehiculo);
-
-            $('#nit_factura').val(nit);
-            $('#razon_factura').val(razon_socal);
+            sacaNitRazonSocial(cliente);
 
             arrayPagos = [];
         }
@@ -762,18 +787,18 @@
                             //window.location.href = "{{ url('pago/listado')}}"
                         }else if(data.estado === "error_email"){
                             Swal.fire({
-                                type: 'error',
+                                icon: 'error',
                                 title: 'Error!',
                                 text: data.msg,
                             })
                         }else if(data.estado === "OFFLINE"){
                             Swal.fire({
-                                type: 'warning',
+                                icon: 'warning',
                                 title: 'Exito!',
                                 text: 'LA FACTURA FUERA DE LINEA FUE REGISTRADA',
                             })
-                            {{--  window.location.href = "{{ url('pago/listado')}}"  --}}
-                            location.reload();
+                            // window.location.href = "{{ url('pago/listado')}}"
+                            // location.reload();
                         }else{
                             Swal.fire({
                                 type: 'error',
@@ -821,6 +846,58 @@
                     $('#motoTotalFac').val((data.valor)-$('#descuento_adicional').val())
                 }
             });
+        }
+
+        function bloqueCAFC(){
+            console.log($('#tipo_facturacion').val())
+        }
+
+        // Agregar un evento para verificar el radio seleccionado al cambiar
+        $('input[name="uso_cafc"]').on('change', function() {
+            verificarRadioSeleccionado();
+        });
+
+        function verificarRadioSeleccionado() {
+            var valorSeleccionado = $('input[name="uso_cafc"]:checked').val();
+            if (valorSeleccionado === 'No') {
+                console.log('El radio seleccionado es "No"');
+                $.ajax({
+                    url: "{{ url('factura/sacaNumeroFactura') }}",
+                    method: "POST",
+                    dataType: 'json',
+                    success: function (data) {
+                        if(data.estado === "success"){
+                            $("#numero_factura").val(data.numero);
+                            $("#codigo_cafc_contingencia").val("");
+                        }else{
+                            Swal.fire({
+                                icon:   'error',
+                                title:  'Error!',
+                                text:   "Algo fallo"
+                            })
+                        }
+                    }
+                })
+            } else if (valorSeleccionado === 'Si') {
+                console.log('El radio seleccionado es "Si"');
+                $.ajax({
+                    url: "{{ url('factura/sacaNumeroCafcUltimo') }}",
+                    method: "POST",
+                    dataType: 'json',
+                    success: function (data) {
+                        if(data.estado === "success"){
+                            $("#numero_factura").val(data.numero);
+                            $("#codigo_cafc_contingencia").val("10122205E166E");
+                        }else{
+                            Swal.fire({
+                                icon:   'error',
+                                title:  'Error!',
+                                text:   "Algo fallo"
+                            })
+                        }
+                    }
+                })
+            }
         }
 
 

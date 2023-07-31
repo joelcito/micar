@@ -86,6 +86,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/vehiculo/eliminarVenta', [VehiculoController::class, 'eliminarVenta']);
     Route::get('/vehiculo/imprimeNota/{pago_id}', [VehiculoController::class, 'imprimeNota']);
     Route::post('/vehiculo/buscarVehiculo', [VehiculoController::class, 'buscarVehiculo']);
+    Route::post('/vehiculo/obtenerNitRazonSocial', [VehiculoController::class, 'obtenerNitRazonSocial']);
 
 
     // PAGOS
@@ -114,6 +115,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/generaPdfFacturaNew/{factura_id}', [FacturaController::class, 'generaPdfFacturaNew']);
         Route::post('/muestraTableFacturaPaquete', [FacturaController::class, 'muestraTableFacturaPaquete']);
         Route::post('/mandarFacturasPaquete', [FacturaController::class, 'mandarFacturasPaquete']);
+        Route::post('/sacaNumeroCafcUltimo', [FacturaController::class, 'sacaNumeroCafcUltimo']);
+        Route::post('/sacaNumeroFactura', [FacturaController::class, 'sacaNumeroFactura']);
         Route::get('/pruebas', [FacturaController::class, 'pruebas']);
     });
 

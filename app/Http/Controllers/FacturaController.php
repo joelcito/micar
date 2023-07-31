@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Firma\Firmadores\FirmadorBoliviaSingle;
+use App\Models\Cliente;
 use App\Models\Factura;
 use App\Models\Pago;
 use App\Models\Vehiculo;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use SimpleXMLElement;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use PDF;
@@ -103,6 +105,8 @@ class FacturaController extends Controller
     public function emitirFactura(Request $request){
         if($request->ajax()){
 
+            // dd($request->all());
+
             $datos              = $request->input('datos');
             $datosVehiculo      = $request->input('datosVehiculo');
             $valoresCabecera    = $datos['factura'][0]['cabecera'];
@@ -120,9 +124,10 @@ class FacturaController extends Controller
             }
             else{
                 $datosRecepcion       = $request->input('datosRecepcion');
-                // if($datosRecepcion['uso_cafc'] === "si"){
-                //     $datos['factura'][0]['cafc'] = $datosRecepcion['codigo_cafc_contingencia'];
-                // }
+                // dd($datosRecepcion);
+                if($datosRecepcion['uso_cafc'] === "Si"){
+                    $datos['factura'][0]['cabecera']['cafc'] = $datosRecepcion['codigo_cafc_contingencia'];
+                }
                 $tipoEmision        = 2;
             }
 
@@ -134,14 +139,16 @@ class FacturaController extends Controller
 
             // VERIFICAMOS SI EXISTE LOS DATOS SUFICINTES APRA EL MANDAO DEL CORREO
             $vehiculo = Vehiculo::find($datosVehiculo['vehiculo_id']);
-            if(!($vehiculo && $vehiculo->cliente->correo != null && $vehiculo->cliente->correo != '')){
+            $cliente = Cliente::find($vehiculo->cliente->id);
+            if(!($cliente && $cliente->correo != null && $cliente->correo != '')){
                 $data['estado'] = "error_email";
                 $data['msg']    = "La persona no tiene correo";
                 return $data;
             }
-            $vehiculo->nit              = $request->input('datos')['factura'][0]['cabecera']['numeroDocumento'];
-            $vehiculo->razon_social     = $request->input('datos')['factura'][0]['cabecera']['nombreRazonSocial'];
-            $vehiculo->save();
+            $cliente->nit              = $request->input('datos')['factura'][0]['cabecera']['numeroDocumento'];
+            $cliente->razon_social     = $request->input('datos')['factura'][0]['cabecera']['nombreRazonSocial'];
+            $cliente->save();
+
 
             // CODIGO DEL VIDEO PARACE QUE SIRVE NOMAS
             // ini_set('soap.wsdl_cache_enable',0);
@@ -183,16 +190,10 @@ class FacturaController extends Controller
 
             $cufPro                                         = $this->generarBase16($cadenaConM11).$scodigoControl;
 
-            // dd($cufPro, $scodigoControl, $this->generarBase16($cadenaConM11), $cadenaConM11);
-
-            // dd($datos['factura'][0]['cabecera']['codigoPuntoVenta']);
-
             $datos['factura'][0]['cabecera']['cuf']                 = $cufPro;
             $datos['factura'][0]['cabecera']['cufd']                = $scufd;
             $datos['factura'][0]['cabecera']['direccion']           = $sdireccion;
             $datos['factura'][0]['cabecera']['codigoPuntoVenta']    = $puntoVenta;
-
-            // dd($datos);
 
             // $datos['factura'][0]['cabecera']['codigoPuntoVenta']    = 3;
             // $datos['factura'][0]['cabecera']['codigoPuntoVenta']    = 1;
@@ -259,12 +260,21 @@ class FacturaController extends Controller
             $factura->fecha                     = $datos['factura'][0]['cabecera']['fechaEmision'];
             $factura->total                     = $datos['factura'][0]['cabecera']['montoTotal'];
             $factura->facturado                 = "Si";
-            $factura->numero                    = $datos['factura'][0]['cabecera']['numeroFactura'];
             $factura->cuf                       = $datos['factura'][0]['cabecera']['cuf'];
             $factura->codigo_metodo_pago_siat   = $datos['factura'][0]['cabecera']['codigoMetodoPago'];
             $factura->monto_total_subjeto_iva   = $datos['factura'][0]['cabecera']['montoTotalSujetoIva'];
             $factura->descuento_adicional       = $datos['factura'][0]['cabecera']['descuentoAdicional'];
             $factura->productos_xml             = file_get_contents('assets/docs/facturaxml.xml');
+            if($tipo_factura === "online"){
+                $factura->numero                    = $datos['factura'][0]['cabecera']['numeroFactura'];
+            }else{
+                if($datosRecepcion['uso_cafc'] === "Si"){
+                    $factura->numero_cafc           = $datos['factura'][0]['cabecera']['numeroFactura'];
+                    $factura->uso_cafc              = "si";
+                }else{
+                    $factura->numero                    = $datos['factura'][0]['cabecera']['numeroFactura'];
+                }
+            }
             $factura->tipo_factura              = $tipo_factura;
 
             $factura->save();
@@ -443,7 +453,9 @@ class FacturaController extends Controller
 
 
     public function numeroFactura(){
-        return Factura::where('facturado', 'Si')->max('numero');
+        return Factura::where('facturado', 'Si')
+                        // ->max('numero');
+                        ->max(DB::raw('CAST(numero AS UNSIGNED)'));
     }
 
     public function anularFacturaNew(Request $request){
@@ -515,6 +527,7 @@ class FacturaController extends Controller
                                 ->where('facturado', "Si")
                                 // ->where('codigo_descripcion', "!=", 'VALIDADA')
                                 ->WhereNull('codigo_descripcion')
+                                ->orderBy('id', 'desc')
                                 ->get();
             $data['listado'] = view('pago.ajaxMuestraTableFacturaPaquete')->with(compact('facturas'))->render();
             $data['estado'] = "success";
@@ -527,14 +540,15 @@ class FacturaController extends Controller
     public function mandarFacturasPaquete(Request $request){
         if($request->ajax()){
             $datos = $request->all();
+            // dd($datos);
             $checkboxes = collect($datos)->filter(function ($value, $key) {
                 return Str::startsWith($key, 'check_');
             })->toArray();
 
             $codigo_evento_significativo    = $request->input('contingencia');
             $siat                           = app(SiatController::class);
-            $codigo_cafc_contingencia       = NULL;
-            // $codigo_cafc_contingencia       = "111DE8BD3981C";
+            // $codigo_cafc_contingencia       = NULL;
+            $codigo_cafc_contingencia       = "10122205E166E";
             $fechaActual                    = date('Y-m-d\TH:i:s.v');
             $fechaEmicion                   = $fechaActual;
 
@@ -609,33 +623,87 @@ class FacturaController extends Controller
             // Calcular el HASH (SHA256) del contenido del archivo
             $hashArchivo = hash('sha256', $contenidoArchivo);
 
-            $res = json_decode($siat->recepcionPaqueteFactura($contenidoArchivo, $fechaEmicion, $hashArchivo, $codigo_cafc_contingencia, $contado, $codigo_evento_significativo));
 
-            if($res->resultado->RespuestaServicioFacturacion->transaccion){
-                $validad = json_decode($siat->validacionRecepcionPaqueteFactura(2,$res->resultado->RespuestaServicioFacturacion->codigoRecepcion));
-                if($validad->resultado->RespuestaServicioFacturacion->transaccion){
-                    foreach($checkboxes as $key => $chek){
-                        $data['estado'] = "success";
-                        $ar = explode("_",$key);
-                        $factura = Factura::find($ar[1]);
-                        $factura->codigo_descripcion = $validad->resultado->RespuestaServicioFacturacion->codigoDescripcion;
-                        $factura->codigo_recepcion  = $validad->resultado->RespuestaServicioFacturacion->codigoRecepcion;
-                        $factura->save();
+            try {
+                // Código que puede lanzar el error
+                // Por ejemplo, puedes tener algo como:
+                // $resultado = obtenerResultado();
+                $res = json_decode($siat->recepcionPaqueteFactura($contenidoArchivo, $fechaEmicion, $hashArchivo, $codigo_cafc_contingencia, $contado, $codigo_evento_significativo));
+                if($res->resultado->RespuestaServicioFacturacion->transaccion){
+                    $validad = json_decode($siat->validacionRecepcionPaqueteFactura(2,$res->resultado->RespuestaServicioFacturacion->codigoRecepcion));
+                    if($validad->resultado->RespuestaServicioFacturacion->transaccion){
+                        foreach($checkboxes as $key => $chek){
+                            $data['estado'] = "success";
+                            $ar = explode("_",$key);
+                            $factura = Factura::find($ar[1]);
+                            $factura->codigo_descripcion = $validad->resultado->RespuestaServicioFacturacion->codigoDescripcion;
+                            $factura->codigo_recepcion  = $validad->resultado->RespuestaServicioFacturacion->codigoRecepcion;
+                            $factura->save();
+                        }
+                    }else{
+                        foreach($checkboxes as $key => $chek){
+                            $ar = explode("_",$key);
+                            $factura = Factura::find($ar[1]);
+                            $factura->codigo_descripcion    = $validad->resultado->RespuestaServicioFacturacion->codigoDescripcion;
+                            $factura->codigo_recepcion      = $validad->resultado->RespuestaServicioFacturacion->codigoRecepcion;
+                            $factura->descripcion           = $validad->resultado->RespuestaServicioFacturacion->mensajesList;
+                            $factura->save();
+                        }
+                        $data['estado'] = "error";
                     }
+                    // dd($res, $validad, "habert");
                 }else{
+                    // dd($res);
                     $data['estado'] = "error";
                 }
-                // dd($res, $validad);
-            }else{
-                // dd($res);
+                // Intentar acceder a la propiedad RespuestaServicioFacturacion
+                // $valor = $resultado->RespuestaServicioFacturacion;
+            } catch (\Throwable $e) {
+                // Capturar y manejar el error
+                // Aquí puedes realizar acciones para tratar el error, como registrar un mensaje de error, mostrar un mensaje al usuario, etc.
+                // Puedes acceder al mensaje de error específico usando $e->getMessage()
+                // También puedes acceder al número de línea y el archivo donde ocurrió el error usando $e->getLine() y $e->getFile()
+                echo "Error capturado: " . $e->getMessage();
+                $data['estado'] = "error";
             }
-            $data['estado'] = "success";
+
+            // $data['estado'] = "success";
         }else{
             $data['estado'] = "error";
         }
 
         return $data;
 
+    }
+
+    public function sacaNumeroCafcUltimo(Request $request){
+        if($request->ajax()){
+
+            $maxValue = Factura::where('uso_cafc', 'si')->max(DB::raw('CAST(numero_cafc AS UNSIGNED)'));
+            if($maxValue === null)
+                $numero = 1;
+            else
+                $numero = $maxValue + 1;
+
+            $data['numero'] = $numero;
+            $data['estado'] = 'success';
+
+        }else{
+            $data['estado'] = 'error';
+        }
+
+        return $data;
+    }
+
+    public function sacaNumeroFactura(Request $request){
+        if($request->ajax()){
+            $numero         = $this->numeroFactura() + 1;
+            $data['numero'] = $numero;
+            $data['estado'] = 'success';
+        }else{
+            $data['estado'] = 'error';
+        }
+        return $data;
     }
 
     // ********************  PRUEBAS FACUTRAS SINCRONIZACION   *****************************
@@ -656,46 +724,48 @@ class FacturaController extends Controller
             $sincronizarParametricaTipoDocumentoIdentidad   = json_decode($siat->sincronizarParametricaTipoDocumentoIdentidad());
             $sincronizarParametricaTipoDocumentoSector      = json_decode($siat->sincronizarParametricaTipoDocumentoSector());
             $sincronizarParametricaTipoEmision              = json_decode($siat->sincronizarParametricaTipoEmision());
-            $sincronizarParametricaTipoHabitacion             = json_decode($siat->sincronizarParametricaTipoHabitacion());
-            $sincronizarParametricaTipoMetodoPago             = json_decode($siat->sincronizarParametricaTipoMetodoPago());
-            $sincronizarParametricaTipoMoneda             = json_decode($siat->sincronizarParametricaTipoMoneda());
-            $sincronizarParametricaTipoPuntoVenta             = json_decode($siat->sincronizarParametricaTipoPuntoVenta());
+            $sincronizarParametricaTipoHabitacion           = json_decode($siat->sincronizarParametricaTipoHabitacion());
+            $sincronizarParametricaTipoMetodoPago           = json_decode($siat->sincronizarParametricaTipoMetodoPago());
+            $sincronizarParametricaTipoMoneda               = json_decode($siat->sincronizarParametricaTipoMoneda());
+            $sincronizarParametricaTipoPuntoVenta           = json_decode($siat->sincronizarParametricaTipoPuntoVenta());
             $sincronizarParametricaTiposFactura             = json_decode($siat->sincronizarParametricaTiposFactura());
             $sincronizarParametricaUnidadMedida             = json_decode($siat->sincronizarParametricaUnidadMedida());
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            $verificacionSiat = json_decode($siat->sincronizarParametricaPaisOrigen());
-            $verificacionSiat = json_decode($siat->sincronizarParametricaTipoDocumentoIdentidad());
-            $verificacionSiat = json_decode($siat->sincronizarParametricaTipoEmision());
-            $verificacionSiat = json_decode($siat->sincronizarParametricaTipoHabitacion());
-            $verificacionSiat = json_decode($siat->sincronizarParametricaTipoMetodoPago());
-            $verificacionSiat = json_decode($siat->sincronizarParametricaTipoMoneda());
-            $verificacionSiat1 = json_decode($siat->sincronizarParametricaTipoPuntoVenta());
-            $verificacionSiat2 = json_decode($siat->sincronizarParametricaTiposFactura());
-            $verificacionSiat3 = json_decode($siat->sincronizarParametricaUnidadMedida());
-
-            var_dump($verificacionSiat1);
+            var_dump($sincronizarActividades);
             echo "<br><br><br>";
-            var_dump($verificacionSiat2);
+            var_dump($sincronizarFechaHora);
             echo "<br><br><br>";
-            var_dump($verificacionSiat3);
+            var_dump($sincronizarListaActividadesDocumentoSector);
+            echo "<br><br><br>";
+            var_dump($sincronizarListaLeyendasFactura);
+            echo "<br><br><br>";
+            var_dump($sincronizarListaMensajesServicios);
+            echo "<br><br><br>";
+            var_dump($sincronizarListaProductosServicios);
+            echo "<br><br><br>";
+            var_dump($sincronizarParametricaEventosSignificativos);
+            echo "<br><br><br>";
+            var_dump($sincronizarParametricaMotivoAnulacion);
+            echo "<br><br><br>";
+            var_dump($sincronizarParametricaPaisOrigen);
+            echo "<br><br><br>";
+            var_dump($sincronizarParametricaTipoDocumentoIdentidad);
+            echo "<br><br><br>";
+            var_dump($sincronizarParametricaTipoDocumentoSector);
+            echo "<br><br><br>";
+            var_dump($sincronizarParametricaTipoEmision);
+            echo "<br><br><br>";
+            var_dump($sincronizarParametricaTipoHabitacion);
+            echo "<br><br><br>";
+            var_dump($sincronizarParametricaTipoMetodoPago);
+            echo "<br><br><br>";
+            var_dump($sincronizarParametricaTipoMoneda);
+            echo "<br><br><br>";
+            var_dump($sincronizarParametricaTipoPuntoVenta);
+            echo "<br><br><br>";
+            var_dump($sincronizarParametricaTiposFactura);
+            echo "<br><br><br>";
+            var_dump($sincronizarParametricaUnidadMedida);
             echo "****************** => <h1>".$i."</h1><= ******************";
             sleep(3);
         }

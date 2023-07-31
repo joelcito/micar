@@ -34,6 +34,11 @@ class PagoController extends Controller
         //                ->orderBy('pagos.id', 'DESC')
         //                ->get();
         $pagos = Factura::orderBy('id', 'desc')
+
+                        // ->whereNull('estado') // solopara las anuaciones rapidas
+                        // ->where('codigo_descripcion','!=' , '')
+                        // ->where('codigo_descripcion','!=' , 'OBSERVADA')
+
                         ->take(200)
                         ->get();
         return view('pago.ajaxListado')->with(compact('pagos'))->render();
