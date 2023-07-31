@@ -75,7 +75,7 @@ Route::middleware('auth')->group(function () {
     // CLIENTETS
     Route::get('/cliente', [ClienteController::class, 'listado']);
     Route::get('/cliente/nuevo', [ClienteController::class, 'nuevo']);
-    // Route::post('/cliente/guarda', [ClienteController::class, 'guarda']);
+    Route::post('/cliente/guarda', [ClienteController::class, 'guarda']);
     Route::post('/cliente/ajaxListado', [ClienteController::class, 'ajaxListado']);
     // Route::post('/cliente/eliminar', [ClienteController::class, 'eliminar']);
 
@@ -102,6 +102,7 @@ Route::middleware('auth')->group(function () {
     // MIGRACIONES
     Route::get('/migracion/migrarServicios', [MigracionController::class, 'migrarServicios']);
     Route::get('/migracion/migrarVehiculos', [MigracionController::class, 'migrarVehiculos']);
+    Route::get('/migracion/migracionClienteVehiculo', [MigracionController::class, 'migracionClienteVehiculo']);
 
     // FACTURA
     Route::prefix('/factura')->group(function(){
@@ -113,6 +114,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/generaPdfFacturaNew/{factura_id}', [FacturaController::class, 'generaPdfFacturaNew']);
         Route::post('/muestraTableFacturaPaquete', [FacturaController::class, 'muestraTableFacturaPaquete']);
         Route::post('/mandarFacturasPaquete', [FacturaController::class, 'mandarFacturasPaquete']);
+        Route::get('/pruebas', [FacturaController::class, 'pruebas']);
     });
 
     Route::prefix('/puntoVenta')->group(function () {

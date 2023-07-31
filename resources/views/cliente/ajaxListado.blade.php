@@ -25,7 +25,7 @@
                         <a class="text-gray-800 text-hover-primary">{{ $c->nombres }}</a>
                     </td>
                     <td class="text-end">
-                        <button class="btn btn-warning btn-icon btn-sm" onclick="editarCategoria('{{ $c->id }}', '{{ $c->nombre }}', '{{ $c->descripcion }}')"><i class="fa fa-edit"></i></button>
+                        <button class="btn btn-warning btn-icon btn-sm" onclick="editarCliente('{{ $c->id }}', '{{ $c->nombres }}', '{{ $c->ap_paterno }}', '{{ $c->ap_materno }}', '{{ $c->cedula }}', '{{ $c->complemento }}', '{{ $c->nit }}', '{{ $c->razon_social }}', '{{ $c->correo }}', '{{ $c->celular }}')"><i class="fa fa-edit"></i></button>
                         <button class="btn btn-danger btn-icon btn-sm" onclick="eliminrCategoria('{{ $c->id}}')"><i class="fa fa-trash"></i></button>
                     </td>
                 </tr>
@@ -37,10 +37,6 @@
 <!--end::Table-->
     <script>
         $('#tabla_user').DataTable({
-            {{--  responsive: true,
-            language: {
-                url: '{{ asset('datatableEs.json') }}',
-            },
-            order: [[ 0, "desc" ]]  --}}
+            ordering: false
         });
     </script>

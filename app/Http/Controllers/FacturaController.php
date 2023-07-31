@@ -365,7 +365,7 @@ class FacturaController extends Controller
 
             // $data['estado'] = $facturaNew->codigo_descripcion;
 
-            // dd($datos['factura'][1]['detalle'], $datosVehiculo['pagos']);
+            // dd($datos['factura'][1]['detalle'], $datosVehiculo);
 
             foreach ($datosVehiculo['pagos'] as $key => $pago_id) {
                 $pago = Pago::find($pago_id);
@@ -541,6 +541,10 @@ class FacturaController extends Controller
             $contado = 0;
 
             $rutaCarpeta = "assets/docs/paquete";
+            // Verificar si la carpeta existe
+            if (!file_exists($rutaCarpeta))
+                mkdir($rutaCarpeta, true);
+
             // Obtener lista de archivos en la carpeta
             $archivos = glob($rutaCarpeta . '/*');
             // Eliminar cada archivo
@@ -583,8 +587,21 @@ class FacturaController extends Controller
             $archivoGzip = "assets/docs/paquete.tar.gz";
 
             // Comprimir el archivo TAR en formato Gzip
-            $comandoGzip = "gzip -c $archivoTar > $archivoGzip";
-            exec($comandoGzip);
+            // $comandoGzip = "gzip -c $archivoTar > $archivoGzip";
+            // exec($comandoGzip);
+
+            // ESTE ES OTRO CHEEE
+            // Abre el archivo .gz en modo de escritura
+            $gz = gzopen($archivoGzip, 'wb');
+            // Abre el archivo .tar en modo de lectura
+            $archivo = fopen($archivoTar, 'rb');
+            // Lee el contenido del archivo .tar y escribe en el archivo .gz
+            while (!feof($archivo)) {
+                gzwrite($gz, fread($archivo, 8192));
+            }
+            // Cierra los archivos
+            fclose($archivo);
+            gzclose($gz);
 
             // Leer el contenido del archivo comprimido
             $contenidoArchivo = file_get_contents($archivoGzip);
@@ -608,9 +625,9 @@ class FacturaController extends Controller
                 }else{
                     $data['estado'] = "error";
                 }
-                dd($res, $validad);
+                // dd($res, $validad);
             }else{
-                dd($res);
+                // dd($res);
             }
             $data['estado'] = "success";
         }else{
@@ -620,6 +637,70 @@ class FacturaController extends Controller
         return $data;
 
     }
+
+    // ********************  PRUEBAS FACUTRAS SINCRONIZACION   *****************************
+    public function pruebas(){
+        $siat = app(SiatController::class);
+
+        for ($i = 1; $i <= 50 ; $i++) {
+
+            $sincronizarActividades                         = json_decode($siat->sincronizarActividades());
+            $sincronizarFechaHora                           = json_decode($siat->sincronizarFechaHora());
+            $sincronizarListaActividadesDocumentoSector     = json_decode($siat->sincronizarListaActividadesDocumentoSector());
+            $sincronizarListaLeyendasFactura                = json_decode($siat->sincronizarListaLeyendasFactura());
+            $sincronizarListaMensajesServicios              = json_decode($siat->sincronizarListaMensajesServicios());
+            $sincronizarListaProductosServicios             = json_decode($siat->sincronizarListaProductosServicios());
+            $sincronizarParametricaEventosSignificativos    = json_decode($siat->sincronizarParametricaEventosSignificativos());
+            $sincronizarParametricaMotivoAnulacion          = json_decode($siat->sincronizarParametricaMotivoAnulacion());
+            $sincronizarParametricaPaisOrigen               = json_decode($siat->sincronizarParametricaPaisOrigen());
+            $sincronizarParametricaTipoDocumentoIdentidad   = json_decode($siat->sincronizarParametricaTipoDocumentoIdentidad());
+            $sincronizarParametricaTipoDocumentoSector      = json_decode($siat->sincronizarParametricaTipoDocumentoSector());
+            $sincronizarParametricaTipoEmision              = json_decode($siat->sincronizarParametricaTipoEmision());
+            $sincronizarParametricaTipoHabitacion             = json_decode($siat->sincronizarParametricaTipoHabitacion());
+            $sincronizarParametricaTipoMetodoPago             = json_decode($siat->sincronizarParametricaTipoMetodoPago());
+            $sincronizarParametricaTipoMoneda             = json_decode($siat->sincronizarParametricaTipoMoneda());
+            $sincronizarParametricaTipoPuntoVenta             = json_decode($siat->sincronizarParametricaTipoPuntoVenta());
+            $sincronizarParametricaTiposFactura             = json_decode($siat->sincronizarParametricaTiposFactura());
+            $sincronizarParametricaUnidadMedida             = json_decode($siat->sincronizarParametricaUnidadMedida());
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            $verificacionSiat = json_decode($siat->sincronizarParametricaPaisOrigen());
+            $verificacionSiat = json_decode($siat->sincronizarParametricaTipoDocumentoIdentidad());
+            $verificacionSiat = json_decode($siat->sincronizarParametricaTipoEmision());
+            $verificacionSiat = json_decode($siat->sincronizarParametricaTipoHabitacion());
+            $verificacionSiat = json_decode($siat->sincronizarParametricaTipoMetodoPago());
+            $verificacionSiat = json_decode($siat->sincronizarParametricaTipoMoneda());
+            $verificacionSiat1 = json_decode($siat->sincronizarParametricaTipoPuntoVenta());
+            $verificacionSiat2 = json_decode($siat->sincronizarParametricaTiposFactura());
+            $verificacionSiat3 = json_decode($siat->sincronizarParametricaUnidadMedida());
+
+            var_dump($verificacionSiat1);
+            echo "<br><br><br>";
+            var_dump($verificacionSiat2);
+            echo "<br><br><br>";
+            var_dump($verificacionSiat3);
+            echo "****************** => <h1>".$i."</h1><= ******************";
+            sleep(3);
+        }
+    }
+    // ********************  PRUEBAS FACUTRAS SINCRONIZACION   *****************************
 
 
 

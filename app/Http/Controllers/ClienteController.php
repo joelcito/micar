@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cliente;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ClienteController extends Controller
 {
@@ -27,17 +28,38 @@ class ClienteController extends Controller
     }
 
     protected function listadoArray(){
-        $clientes = Cliente::all();
+        // $clientes = Cliente::all();
+        $clientes = Cliente::orderBy('id', 'desc')->limit(100)->get();
         return view('cliente.ajaxListado')->with(compact('clientes'))->render();
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
+    public function guarda(Request $request){
+        if($request->ajax()){
+            $cliente_id  = $request->input('cliente_id');
+            if($cliente_id === "0"){
+                $cliente                = new Cliente();
+                $cliente->creador_id    = Auth::user()->id;
+            }else{
+                $cliente                    = Cliente::find($cliente_id);
+                $cliente->modificador_id    = Auth::user()->id;
+            }
+
+            $cliente->nombres       = $request->input('nombres');
+            $cliente->ap_paterno    = $request->input('ap_paterno');
+            $cliente->ap_materno    = $request->input('ap_materno');
+            $cliente->cedula        = $request->input('cedula');
+            $cliente->complemento   = $request->input('complemento');
+            $cliente->nit           = $request->input('nit');
+            $cliente->razon_social  = $request->input('razon_social');
+            $cliente->correo        = $request->input('correo');
+            $cliente->celular       = $request->input('celular');
+            $cliente->save();
+
+            $data['estado'] = 'success';
+            $data['listado'] = $this->listadoArray();
+        }else{
+            $data['estado'] = 'error';
+        }
+        return $data;
     }
 
     /**

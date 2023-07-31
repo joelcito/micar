@@ -23,8 +23,11 @@ return new class extends Migration
             $table->unsignedBigInteger('eliminador_id')->nullable();
             $table->string('ap_paterno',50)->nullable();
             $table->string('ap_materno',50)->nullable();
-            $table->string('nombres',50)->nullable();
+            $table->string('nombres')->nullable();
             $table->string('cedula',20)->nullable();
+            $table->string('complemento',10)->nullable();
+            $table->string('nit')->nullable();
+            $table->string('razon_social')->nullable();
             $table->string('correo',100)->nullable();
             $table->string('celular',10)->nullable();
             $table->date('fecha_nacimiento')->nullable();

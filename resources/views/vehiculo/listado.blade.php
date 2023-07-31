@@ -353,6 +353,7 @@
 
             $('#buscar_placa').on('keyup input', function() {
                 buscarVehiculo();
+                $('#table_vehiculos').show('toggle');
             });
 
         });
@@ -456,6 +457,8 @@
 
             $('#nit_factura').val(nit);
             $('#razon_factura').val(razon_socal);
+
+            arrayPagos = [];
         }
 
         function identificaSericio(selected){
@@ -756,7 +759,6 @@
                                 text: 'LA FACTURA FUE VALIDADA',
                                 timer: 3000
                             })
-                            arrayPagos = [];
                             //window.location.href = "{{ url('pago/listado')}}"
                         }else if(data.estado === "error_email"){
                             Swal.fire({
@@ -770,7 +772,7 @@
                                 title: 'Exito!',
                                 text: 'LA FACTURA FUERA DE LINEA FUE REGISTRADA',
                             })
-                            {{--  window.location.href = "{{ url('Factura/listadoPagos')}}"  --}}
+                            {{--  window.location.href = "{{ url('pago/listado')}}"  --}}
                             location.reload();
                         }else{
                             Swal.fire({

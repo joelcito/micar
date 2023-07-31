@@ -194,7 +194,9 @@ class SiatController extends Controller
         return json_encode($data, JSON_UNESCAPED_UNICODE);
     }
 
-    public function sincronizarListaProductosServicios(){
+    //  ****************************** SINCRONIZAR  ******************************
+
+    public function sincronizarActividades(){
         $this->verificarConeccion();
         $wsdl               = "https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionSincronizacion?wsdl";
         $codigoAmbiente     = $this->codigoAmbiente;
@@ -231,7 +233,111 @@ class SiatController extends Controller
                 'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | SOAP_COMPRESSION_DEFLATE
             ]);
 
-            $resultado = $client->sincronizarListaProductosServicios($parametros);
+            $resultado = $client->sincronizarActividades($parametros);
+
+            $data['estado'] = 'success';
+            $data['resultado'] = $resultado;
+        } catch (SoapFault $fault) {
+            $resultado = false;
+            $data['estado'] = 'error';
+            $data['resultado'] = $resultado;
+        }
+
+        // dd($data);
+
+        return json_encode($data, JSON_UNESCAPED_UNICODE);
+    }
+
+    public function sincronizarFechaHora(){
+        $this->verificarConeccion();
+        $wsdl               = "https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionSincronizacion?wsdl";
+        $codigoAmbiente     = $this->codigoAmbiente;
+        $codigoPuntoVenta   = $this->codigoPuntoVenta;
+        $codigoSistema      = $this->codigoSistema;
+        $codigoSucursal     = $this->codigoSucursal;
+        $cuis               = session('scuis');
+        $nit                = $this->nit;
+
+        $parametros         =  array(
+            'SolicitudSincronizacion' => array(
+                'codigoAmbiente'    => $codigoAmbiente,
+                'codigoPuntoVenta'  => $codigoPuntoVenta,
+                'codigoSistema'     => $codigoSistema,
+                'codigoSucursal'    => $codigoSucursal,
+                'cuis'              => $cuis,
+                'nit'               => $nit
+            )
+        );
+
+        $aoptions = array(
+            'http' => array(
+                'header' => $this->header,
+                'timeout' => $this->timeout
+            ),
+        );
+
+        $context = stream_context_create($aoptions);
+
+        try {
+            $client = new \SoapClient($wsdl,[
+                'stream_context' => $context,
+                'cache_wsdl' => WSDL_CACHE_NONE,
+                'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | SOAP_COMPRESSION_DEFLATE
+            ]);
+
+            $resultado = $client->sincronizarFechaHora($parametros);
+
+            $data['estado'] = 'success';
+            $data['resultado'] = $resultado;
+        } catch (SoapFault $fault) {
+            $resultado = false;
+            $data['estado'] = 'error';
+            $data['resultado'] = $resultado;
+        }
+
+        // dd($data);
+
+        return json_encode($data, JSON_UNESCAPED_UNICODE);
+    }
+
+    public function sincronizarListaActividadesDocumentoSector(){
+        $this->verificarConeccion();
+        $wsdl               = "https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionSincronizacion?wsdl";
+        $codigoAmbiente     = $this->codigoAmbiente;
+        $codigoPuntoVenta   = $this->codigoPuntoVenta;
+        $codigoSistema      = $this->codigoSistema;
+        $codigoSucursal     = $this->codigoSucursal;
+        $cuis               = session('scuis');
+        $nit                = $this->nit;
+
+        $parametros         =  array(
+            'SolicitudSincronizacion' => array(
+                'codigoAmbiente'    => $codigoAmbiente,
+                'codigoPuntoVenta'  => $codigoPuntoVenta,
+                'codigoSistema'     => $codigoSistema,
+                'codigoSucursal'    => $codigoSucursal,
+                'cuis'              => $cuis,
+                'nit'               => $nit
+            )
+        );
+
+        $aoptions = array(
+            'http' => array(
+                'header' => $this->header,
+                'timeout' => $this->timeout
+            ),
+        );
+
+        $context = stream_context_create($aoptions);
+
+        try {
+            $client = new \SoapClient($wsdl,[
+                'stream_context' => $context,
+                'cache_wsdl' => WSDL_CACHE_NONE,
+                'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | SOAP_COMPRESSION_DEFLATE
+            ]);
+
+            $resultado = $client->sincronizarListaActividadesDocumentoSector($parametros);
 
             $data['estado'] = 'success';
             $data['resultado'] = $resultado;
@@ -297,6 +403,716 @@ class SiatController extends Controller
 
         return json_encode($data, JSON_UNESCAPED_UNICODE);
     }
+
+    public function sincronizarListaMensajesServicios(){
+        $this->verificarConeccion();
+        $wsdl               = "https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionSincronizacion?wsdl";
+        $codigoAmbiente     = $this->codigoAmbiente;
+        $codigoPuntoVenta   = $this->codigoPuntoVenta;
+        $codigoSistema      = $this->codigoSistema;
+        $codigoSucursal     = $this->codigoSucursal;
+        $cuis               = session('scuis');
+        $nit                = $this->nit;
+
+        $parametros         =  array(
+            'SolicitudSincronizacion' => array(
+                'codigoAmbiente'    => $codigoAmbiente,
+                'codigoPuntoVenta'  => $codigoPuntoVenta,
+                'codigoSistema'     => $codigoSistema,
+                'codigoSucursal'    => $codigoSucursal,
+                'cuis'              => $cuis,
+                'nit'               => $nit
+            )
+        );
+
+        $aoptions = array(
+            'http' => array(
+                'header' => $this->header,
+                'timeout' => $this->timeout
+            ),
+        );
+
+        $context = stream_context_create($aoptions);
+
+        try {
+            $client = new \SoapClient($wsdl,[
+                'stream_context' => $context,
+                'cache_wsdl' => WSDL_CACHE_NONE,
+                'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | SOAP_COMPRESSION_DEFLATE
+            ]);
+
+            $resultado = $client->sincronizarListaMensajesServicios($parametros);
+
+            $data['estado'] = 'success';
+            $data['resultado'] = $resultado;
+        } catch (SoapFault $fault) {
+            $resultado = false;
+            $data['estado'] = 'error';
+            $data['resultado'] = $resultado;
+        }
+
+        // dd($data);
+
+        return json_encode($data, JSON_UNESCAPED_UNICODE);
+    }
+
+    public function sincronizarListaProductosServicios(){
+        $this->verificarConeccion();
+        $wsdl               = "https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionSincronizacion?wsdl";
+        $codigoAmbiente     = $this->codigoAmbiente;
+        $codigoPuntoVenta   = $this->codigoPuntoVenta;
+        $codigoSistema      = $this->codigoSistema;
+        $codigoSucursal     = $this->codigoSucursal;
+        $cuis               = session('scuis');
+        $nit                = $this->nit;
+
+        $parametros         =  array(
+            'SolicitudSincronizacion' => array(
+                'codigoAmbiente'    => $codigoAmbiente,
+                'codigoPuntoVenta'  => $codigoPuntoVenta,
+                'codigoSistema'     => $codigoSistema,
+                'codigoSucursal'    => $codigoSucursal,
+                'cuis'              => $cuis,
+                'nit'               => $nit
+            )
+        );
+
+        $aoptions = array(
+            'http' => array(
+                'header' => $this->header,
+                'timeout' => $this->timeout
+            ),
+        );
+
+        $context = stream_context_create($aoptions);
+
+        try {
+            $client = new \SoapClient($wsdl,[
+                'stream_context' => $context,
+                'cache_wsdl' => WSDL_CACHE_NONE,
+                'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | SOAP_COMPRESSION_DEFLATE
+            ]);
+
+            $resultado = $client->sincronizarListaProductosServicios($parametros);
+
+            $data['estado'] = 'success';
+            $data['resultado'] = $resultado;
+        } catch (SoapFault $fault) {
+            $resultado = false;
+            $data['estado'] = 'error';
+            $data['resultado'] = $resultado;
+        }
+
+        // dd($data);
+
+        return json_encode($data, JSON_UNESCAPED_UNICODE);
+    }
+
+    public function sincronizarParametricaEventosSignificativos(){
+        $this->verificarConeccion();
+        $wsdl                   = "https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionSincronizacion?wsdl";
+        $codigoAmbiente         = $this->codigoAmbiente;
+        $codigoPuntoVenta       = $this->codigoPuntoVenta;
+        $codigoSistema          = $this->codigoSistema;
+        $codigoSucursal         = $this->codigoSucursal;
+        $cuis                   = session('scuis');
+        $nit                    = $this->nit;
+
+        $parametros         =  array(
+            'SolicitudSincronizacion' => array(
+                'codigoAmbiente'    => $codigoAmbiente,
+                'codigoPuntoVenta'  => $codigoPuntoVenta,
+                'codigoSistema'     => $codigoSistema,
+                'codigoSucursal'    => $codigoSucursal,
+                'cuis'              => $cuis,
+                'nit'               => $nit
+            )
+        );
+
+        $aoptions = array(
+            'http' => array(
+                'header' => $this->header,
+                'timeout' => $this->timeout
+            ),
+        );
+
+        $context = stream_context_create($aoptions);
+
+        try {
+            $client = new \SoapClient($wsdl,[
+                'stream_context' => $context,
+                'cache_wsdl' => WSDL_CACHE_NONE,
+                'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | SOAP_COMPRESSION_DEFLATE
+            ]);
+
+            $resultado = $client->sincronizarParametricaEventosSignificativos($parametros);
+
+            $data['estado'] = 'success';
+            $data['resultado'] = $resultado;
+        } catch (SoapFault $fault) {
+            $resultado = false;
+            $data['estado'] = 'error';
+            $data['resultado'] = $resultado;
+        }
+        return json_encode($data, JSON_UNESCAPED_UNICODE);
+    }
+
+    public function sincronizarParametricaMotivoAnulacion(){
+        $this->verificarConeccion();
+        $wsdl                   = "https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionSincronizacion?wsdl";
+        $codigoAmbiente         = $this->codigoAmbiente;
+        $codigoPuntoVenta       = $this->codigoPuntoVenta;
+        $codigoSistema          = $this->codigoSistema;
+        $codigoSucursal         = $this->codigoSucursal;
+        $cuis                   = session('scuis');
+        $nit                    = $this->nit;
+
+        $parametros         =  array(
+            'SolicitudSincronizacion' => array(
+                'codigoAmbiente'    => $codigoAmbiente,
+                'codigoPuntoVenta'  => $codigoPuntoVenta,
+                'codigoSistema'     => $codigoSistema,
+                'codigoSucursal'    => $codigoSucursal,
+                'cuis'              => $cuis,
+                'nit'               => $nit
+            )
+        );
+
+        $aoptions = array(
+            'http' => array(
+                'header' => $this->header,
+                'timeout' => $this->timeout
+            ),
+        );
+
+        $context = stream_context_create($aoptions);
+
+        try {
+            $client = new \SoapClient($wsdl,[
+                'stream_context' => $context,
+                'cache_wsdl' => WSDL_CACHE_NONE,
+                'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | SOAP_COMPRESSION_DEFLATE
+            ]);
+
+            $resultado = $client->sincronizarParametricaMotivoAnulacion($parametros);
+
+            $data['estado'] = 'success';
+            $data['resultado'] = $resultado;
+        } catch (SoapFault $fault) {
+            $resultado = false;
+            $data['estado'] = 'error';
+            $data['resultado'] = $resultado;
+        }
+        return json_encode($data, JSON_UNESCAPED_UNICODE);
+    }
+
+    public function sincronizarParametricaPaisOrigen(){
+        $this->verificarConeccion();
+        $wsdl                   = "https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionSincronizacion?wsdl";
+        $codigoAmbiente         = $this->codigoAmbiente;
+        $codigoPuntoVenta       = $this->codigoPuntoVenta;
+        $codigoSistema          = $this->codigoSistema;
+        $codigoSucursal         = $this->codigoSucursal;
+        $cuis                   = session('scuis');
+        $nit                    = $this->nit;
+
+
+        $parametros         =  array(
+            'SolicitudSincronizacion' => array(
+                'codigoAmbiente'    => $codigoAmbiente,
+                'codigoPuntoVenta'  => $codigoPuntoVenta,
+                'codigoSistema'     => $codigoSistema,
+                'codigoSucursal'    => $codigoSucursal,
+                'cuis'              => $cuis,
+                'nit'               => $nit
+            )
+        );
+
+        $aoptions = array(
+            'http' => array(
+                'header' => $this->header,
+                'timeout' => $this->timeout
+            ),
+        );
+
+        $context = stream_context_create($aoptions);
+
+        try {
+            $client = new \SoapClient($wsdl,[
+                'stream_context' => $context,
+                'cache_wsdl' => WSDL_CACHE_NONE,
+                'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | SOAP_COMPRESSION_DEFLATE
+            ]);
+
+            $resultado = $client->sincronizarParametricaPaisOrigen($parametros);
+
+            $data['estado'] = 'success';
+            $data['resultado'] = $resultado;
+        } catch (SoapFault $fault) {
+            $resultado = false;
+            $data['estado'] = 'error';
+            $data['resultado'] = $resultado;
+        }
+        return json_encode($data, JSON_UNESCAPED_UNICODE);
+    }
+
+    public function sincronizarParametricaTipoDocumentoIdentidad(){
+        $this->verificarConeccion();
+        $wsdl                   = "https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionSincronizacion?wsdl";
+        $codigoAmbiente         = $this->codigoAmbiente;
+        $codigoPuntoVenta       = $this->codigoPuntoVenta;
+        $codigoSistema          = $this->codigoSistema;
+        $codigoSucursal         = $this->codigoSucursal;
+        $cuis                   = session('scuis');
+        $nit                    = $this->nit;
+
+        $parametros         =  array(
+            'SolicitudSincronizacion' => array(
+                'codigoAmbiente'    => $codigoAmbiente,
+                'codigoPuntoVenta'  => $codigoPuntoVenta,
+                'codigoSistema'     => $codigoSistema,
+                'codigoSucursal'    => $codigoSucursal,
+                'cuis'              => $cuis,
+                'nit'               => $nit
+            )
+        );
+
+        $aoptions = array(
+            'http' => array(
+                'header' => $this->header,
+                'timeout' => $this->timeout
+            ),
+        );
+
+        $context = stream_context_create($aoptions);
+
+        try {
+            $client = new \SoapClient($wsdl,[
+                'stream_context' => $context,
+                'cache_wsdl' => WSDL_CACHE_NONE,
+                'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | SOAP_COMPRESSION_DEFLATE
+            ]);
+
+            $resultado = $client->sincronizarParametricaTipoDocumentoIdentidad($parametros);
+
+            $data['estado'] = 'success';
+            $data['resultado'] = $resultado;
+        } catch (SoapFault $fault) {
+            $resultado = false;
+            $data['estado'] = 'error';
+            $data['resultado'] = $resultado;
+        }
+        return json_encode($data, JSON_UNESCAPED_UNICODE);
+    }
+
+    public function sincronizarParametricaTipoDocumentoSector(){
+        $this->verificarConeccion();
+        $wsdl                   = "https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionSincronizacion?wsdl";
+        $codigoAmbiente         = $this->codigoAmbiente;
+        $codigoPuntoVenta       = $this->codigoPuntoVenta;
+        $codigoSistema          = $this->codigoSistema;
+        $codigoSucursal         = $this->codigoSucursal;
+        $cuis                   = session('scuis');
+        $nit                    = $this->nit;
+
+        $parametros         =  array(
+            'SolicitudSincronizacion' => array(
+                'codigoAmbiente'    => $codigoAmbiente,
+                'codigoPuntoVenta'  => $codigoPuntoVenta,
+                'codigoSistema'     => $codigoSistema,
+                'codigoSucursal'    => $codigoSucursal,
+                'cuis'              => $cuis,
+                'nit'               => $nit
+            )
+        );
+
+        $aoptions = array(
+            'http' => array(
+                'header' => $this->header,
+                'timeout' => $this->timeout
+            ),
+        );
+
+        $context = stream_context_create($aoptions);
+
+        try {
+            $client = new \SoapClient($wsdl,[
+                'stream_context' => $context,
+                'cache_wsdl' => WSDL_CACHE_NONE,
+                'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | SOAP_COMPRESSION_DEFLATE
+            ]);
+
+            $resultado = $client->sincronizarParametricaTipoDocumentoSector($parametros);
+
+            $data['estado'] = 'success';
+            $data['resultado'] = $resultado;
+        } catch (SoapFault $fault) {
+            $resultado = false;
+            $data['estado'] = 'error';
+            $data['resultado'] = $resultado;
+        }
+        return json_encode($data, JSON_UNESCAPED_UNICODE);
+    }
+
+    public function sincronizarParametricaTipoEmision(){
+        $this->verificarConeccion();
+        $wsdl                   = "https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionSincronizacion?wsdl";
+        $codigoAmbiente         = $this->codigoAmbiente;
+        $codigoPuntoVenta       = $this->codigoPuntoVenta;
+        $codigoSistema          = $this->codigoSistema;
+        $codigoSucursal         = $this->codigoSucursal;
+        $cuis                   = session('scuis');
+        $nit                    = $this->nit;
+
+        $parametros         =  array(
+            'SolicitudSincronizacion' => array(
+                'codigoAmbiente'    => $codigoAmbiente,
+                'codigoPuntoVenta'  => $codigoPuntoVenta,
+                'codigoSistema'     => $codigoSistema,
+                'codigoSucursal'    => $codigoSucursal,
+                'cuis'              => $cuis,
+                'nit'               => $nit
+            )
+        );
+
+        $aoptions = array(
+            'http' => array(
+                'header' => $this->header,
+                'timeout' => $this->timeout
+            ),
+        );
+
+        $context = stream_context_create($aoptions);
+
+        try {
+            $client = new \SoapClient($wsdl,[
+                'stream_context' => $context,
+                'cache_wsdl' => WSDL_CACHE_NONE,
+                'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | SOAP_COMPRESSION_DEFLATE
+            ]);
+
+            $resultado = $client->sincronizarParametricaTipoEmision($parametros);
+
+            $data['estado'] = 'success';
+            $data['resultado'] = $resultado;
+        } catch (SoapFault $fault) {
+            $resultado = false;
+            $data['estado'] = 'error';
+            $data['resultado'] = $resultado;
+        }
+        return json_encode($data, JSON_UNESCAPED_UNICODE);
+    }
+
+    public function sincronizarParametricaTipoHabitacion(){
+        $this->verificarConeccion();
+        $wsdl                   = "https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionSincronizacion?wsdl";
+        $codigoAmbiente         = $this->codigoAmbiente;
+        $codigoPuntoVenta       = $this->codigoPuntoVenta;
+        $codigoSistema          = $this->codigoSistema;
+        $codigoSucursal         = $this->codigoSucursal;
+        $cuis                   = session('scuis');
+        $nit                    = $this->nit;
+
+        $parametros         =  array(
+            'SolicitudSincronizacion' => array(
+                'codigoAmbiente'    => $codigoAmbiente,
+                'codigoPuntoVenta'  => $codigoPuntoVenta,
+                'codigoSistema'     => $codigoSistema,
+                'codigoSucursal'    => $codigoSucursal,
+                'cuis'              => $cuis,
+                'nit'               => $nit
+            )
+        );
+
+        $aoptions = array(
+            'http' => array(
+                'header' => $this->header,
+                'timeout' => $this->timeout
+            ),
+        );
+
+        $context = stream_context_create($aoptions);
+
+        try {
+            $client = new \SoapClient($wsdl,[
+                'stream_context' => $context,
+                'cache_wsdl' => WSDL_CACHE_NONE,
+                'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | SOAP_COMPRESSION_DEFLATE
+            ]);
+
+            $resultado = $client->sincronizarParametricaTipoHabitacion($parametros);
+
+            $data['estado'] = 'success';
+            $data['resultado'] = $resultado;
+        } catch (SoapFault $fault) {
+            $resultado = false;
+            $data['estado'] = 'error';
+            $data['resultado'] = $resultado;
+        }
+        return json_encode($data, JSON_UNESCAPED_UNICODE);
+    }
+
+    public function sincronizarParametricaTipoMetodoPago(){
+        $this->verificarConeccion();
+        $wsdl                   = "https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionSincronizacion?wsdl";
+        $codigoAmbiente         = $this->codigoAmbiente;
+        $codigoPuntoVenta       = $this->codigoPuntoVenta;
+        $codigoSistema          = $this->codigoSistema;
+        $codigoSucursal         = $this->codigoSucursal;
+        $cuis                   = session('scuis');
+        $nit                    = $this->nit;
+
+        $parametros         =  array(
+            'SolicitudSincronizacion' => array(
+                'codigoAmbiente'    => $codigoAmbiente,
+                'codigoPuntoVenta'  => $codigoPuntoVenta,
+                'codigoSistema'     => $codigoSistema,
+                'codigoSucursal'    => $codigoSucursal,
+                'cuis'              => $cuis,
+                'nit'               => $nit
+            )
+        );
+
+        $aoptions = array(
+            'http' => array(
+                'header' => $this->header,
+                'timeout' => $this->timeout
+            ),
+        );
+
+        $context = stream_context_create($aoptions);
+
+        try {
+            $client = new \SoapClient($wsdl,[
+                'stream_context' => $context,
+                'cache_wsdl' => WSDL_CACHE_NONE,
+                'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | SOAP_COMPRESSION_DEFLATE
+            ]);
+
+            $resultado = $client->sincronizarParametricaTipoMetodoPago($parametros);
+
+            $data['estado'] = 'success';
+            $data['resultado'] = $resultado;
+        } catch (SoapFault $fault) {
+            $resultado = false;
+            $data['estado'] = 'error';
+            $data['resultado'] = $resultado;
+        }
+        return json_encode($data, JSON_UNESCAPED_UNICODE);
+    }
+
+    public function sincronizarParametricaTipoMoneda(){
+        $this->verificarConeccion();
+        $wsdl                   = "https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionSincronizacion?wsdl";
+        $codigoAmbiente         = $this->codigoAmbiente;
+        $codigoPuntoVenta       = $this->codigoPuntoVenta;
+        $codigoSistema          = $this->codigoSistema;
+        $codigoSucursal         = $this->codigoSucursal;
+        $cuis                   = session('scuis');
+        $nit                    = $this->nit;
+
+        $parametros         =  array(
+            'SolicitudSincronizacion' => array(
+                'codigoAmbiente'    => $codigoAmbiente,
+                'codigoPuntoVenta'  => $codigoPuntoVenta,
+                'codigoSistema'     => $codigoSistema,
+                'codigoSucursal'    => $codigoSucursal,
+                'cuis'              => $cuis,
+                'nit'               => $nit
+            )
+        );
+
+        $aoptions = array(
+            'http' => array(
+                'header' => $this->header,
+                'timeout' => $this->timeout
+            ),
+        );
+
+        $context = stream_context_create($aoptions);
+
+        try {
+            $client = new \SoapClient($wsdl,[
+                'stream_context' => $context,
+                'cache_wsdl' => WSDL_CACHE_NONE,
+                'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | SOAP_COMPRESSION_DEFLATE
+            ]);
+
+            $resultado = $client->sincronizarParametricaTipoMoneda($parametros);
+
+            $data['estado'] = 'success';
+            $data['resultado'] = $resultado;
+        } catch (SoapFault $fault) {
+            $resultado = false;
+            $data['estado'] = 'error';
+            $data['resultado'] = $resultado;
+        }
+        return json_encode($data, JSON_UNESCAPED_UNICODE);
+    }
+
+    public function sincronizarParametricaTipoPuntoVenta(){
+        $this->verificarConeccion();
+        $wsdl                   = "https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionSincronizacion?wsdl";
+        $codigoAmbiente         = $this->codigoAmbiente;
+        $codigoPuntoVenta       = $this->codigoPuntoVenta;
+        $codigoSistema          = $this->codigoSistema;
+        $codigoSucursal         = $this->codigoSucursal;
+        $cuis                   = session('scuis');
+        $nit                    = $this->nit;
+
+        $parametros         =  array(
+            'SolicitudSincronizacion' => array(
+                'codigoAmbiente'    => $codigoAmbiente,
+                'codigoPuntoVenta'  => $codigoPuntoVenta,
+                'codigoSistema'     => $codigoSistema,
+                'codigoSucursal'    => $codigoSucursal,
+                'cuis'              => $cuis,
+                'nit'               => $nit
+            )
+        );
+
+        $aoptions = array(
+            'http' => array(
+                'header' => $this->header,
+                'timeout' => $this->timeout
+            ),
+        );
+
+        $context = stream_context_create($aoptions);
+
+        try {
+            $client = new \SoapClient($wsdl,[
+                'stream_context' => $context,
+                'cache_wsdl' => WSDL_CACHE_NONE,
+                'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | SOAP_COMPRESSION_DEFLATE
+            ]);
+
+            $resultado = $client->sincronizarParametricaTipoPuntoVenta($parametros);
+
+            $data['estado'] = 'success';
+            $data['resultado'] = $resultado;
+        } catch (SoapFault $fault) {
+            $resultado = false;
+            $data['estado'] = 'error';
+            $data['resultado'] = $resultado;
+        }
+        return json_encode($data, JSON_UNESCAPED_UNICODE);
+    }
+
+    public function sincronizarParametricaTiposFactura(){
+        $this->verificarConeccion();
+        $wsdl                   = "https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionSincronizacion?wsdl";
+        $codigoAmbiente         = $this->codigoAmbiente;
+        $codigoPuntoVenta       = $this->codigoPuntoVenta;
+        $codigoSistema          = $this->codigoSistema;
+        $codigoSucursal         = $this->codigoSucursal;
+        $cuis                   = session('scuis');
+        $nit                    = $this->nit;
+
+        $parametros         =  array(
+            'SolicitudSincronizacion' => array(
+                'codigoAmbiente'    => $codigoAmbiente,
+                'codigoPuntoVenta'  => $codigoPuntoVenta,
+                'codigoSistema'     => $codigoSistema,
+                'codigoSucursal'    => $codigoSucursal,
+                'cuis'              => $cuis,
+                'nit'               => $nit
+            )
+        );
+
+        $aoptions = array(
+            'http' => array(
+                'header' => $this->header,
+                'timeout' => $this->timeout
+            ),
+        );
+
+        $context = stream_context_create($aoptions);
+
+        try {
+            $client = new \SoapClient($wsdl,[
+                'stream_context' => $context,
+                'cache_wsdl' => WSDL_CACHE_NONE,
+                'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | SOAP_COMPRESSION_DEFLATE
+            ]);
+
+            $resultado = $client->sincronizarParametricaTiposFactura($parametros);
+
+            $data['estado'] = 'success';
+            $data['resultado'] = $resultado;
+        } catch (SoapFault $fault) {
+            $resultado = false;
+            $data['estado'] = 'error';
+            $data['resultado'] = $resultado;
+        }
+        return json_encode($data, JSON_UNESCAPED_UNICODE);
+    }
+
+    public function sincronizarParametricaUnidadMedida(){
+        $this->verificarConeccion();
+        $wsdl                   = "https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionSincronizacion?wsdl";
+        $codigoAmbiente         = $this->codigoAmbiente;
+        $codigoPuntoVenta       = $this->codigoPuntoVenta;
+        $codigoSistema          = $this->codigoSistema;
+        $codigoSucursal         = $this->codigoSucursal;
+        $cuis                   = session('scuis');
+        $nit                    = $this->nit;
+
+        $parametros         =  array(
+            'SolicitudSincronizacion' => array(
+                'codigoAmbiente'    => $codigoAmbiente,
+                'codigoPuntoVenta'  => $codigoPuntoVenta,
+                'codigoSistema'     => $codigoSistema,
+                'codigoSucursal'    => $codigoSucursal,
+                'cuis'              => $cuis,
+                'nit'               => $nit
+            )
+        );
+
+        $aoptions = array(
+            'http' => array(
+                'header' => $this->header,
+                'timeout' => $this->timeout
+            ),
+        );
+
+        $context = stream_context_create($aoptions);
+
+        try {
+            $client = new \SoapClient($wsdl,[
+                'stream_context' => $context,
+                'cache_wsdl' => WSDL_CACHE_NONE,
+                'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | SOAP_COMPRESSION_DEFLATE
+            ]);
+
+            $resultado = $client->sincronizarParametricaUnidadMedida($parametros);
+
+            $data['estado'] = 'success';
+            $data['resultado'] = $resultado;
+        } catch (SoapFault $fault) {
+            $resultado = false;
+            $data['estado'] = 'error';
+            $data['resultado'] = $resultado;
+        }
+        return json_encode($data, JSON_UNESCAPED_UNICODE);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public function recepcionFactura($arch, $fecEnv, $hasArch){
         $this->verificarConeccion();
@@ -656,497 +1472,6 @@ class SiatController extends Controller
         return json_encode($data, JSON_UNESCAPED_UNICODE);
     }
 
-    public function sincronizarParametricaPaisOrigen(){
-        $this->verificarConeccion();
-        $wsdl                   = "https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionSincronizacion?wsdl";
-        $codigoAmbiente         = $this->codigoAmbiente;
-        $codigoPuntoVenta       = $this->codigoPuntoVenta;
-        $codigoSistema          = $this->codigoSistema;
-        $codigoSucursal         = $this->codigoSucursal;
-        $cuis                   = session('scuis');
-        $nit                    = $this->nit;
-
-
-        $parametros         =  array(
-            'SolicitudSincronizacion' => array(
-                'codigoAmbiente'    => $codigoAmbiente,
-                'codigoPuntoVenta'  => $codigoPuntoVenta,
-                'codigoSistema'     => $codigoSistema,
-                'codigoSucursal'    => $codigoSucursal,
-                'cuis'              => $cuis,
-                'nit'               => $nit
-            )
-        );
-
-        $aoptions = array(
-            'http' => array(
-                'header' => $this->header,
-                'timeout' => $this->timeout
-            ),
-        );
-
-        $context = stream_context_create($aoptions);
-
-        try {
-            $client = new \SoapClient($wsdl,[
-                'stream_context' => $context,
-                'cache_wsdl' => WSDL_CACHE_NONE,
-                'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | SOAP_COMPRESSION_DEFLATE
-            ]);
-
-            $resultado = $client->sincronizarParametricaPaisOrigen($parametros);
-
-            $data['estado'] = 'success';
-            $data['resultado'] = $resultado;
-        } catch (SoapFault $fault) {
-            $resultado = false;
-            $data['estado'] = 'error';
-            $data['resultado'] = $resultado;
-        }
-        return json_encode($data, JSON_UNESCAPED_UNICODE);
-    }
-
-    public function sincronizarParametricaTipoDocumentoIdentidad(){
-        $this->verificarConeccion();
-        $wsdl                   = "https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionSincronizacion?wsdl";
-        $codigoAmbiente         = $this->codigoAmbiente;
-        $codigoPuntoVenta       = $this->codigoPuntoVenta;
-        $codigoSistema          = $this->codigoSistema;
-        $codigoSucursal         = $this->codigoSucursal;
-        $cuis                   = session('scuis');
-        $nit                    = $this->nit;
-
-        $parametros         =  array(
-            'SolicitudSincronizacion' => array(
-                'codigoAmbiente'    => $codigoAmbiente,
-                'codigoPuntoVenta'  => $codigoPuntoVenta,
-                'codigoSistema'     => $codigoSistema,
-                'codigoSucursal'    => $codigoSucursal,
-                'cuis'              => $cuis,
-                'nit'               => $nit
-            )
-        );
-
-        $aoptions = array(
-            'http' => array(
-                'header' => $this->header,
-                'timeout' => $this->timeout
-            ),
-        );
-
-        $context = stream_context_create($aoptions);
-
-        try {
-            $client = new \SoapClient($wsdl,[
-                'stream_context' => $context,
-                'cache_wsdl' => WSDL_CACHE_NONE,
-                'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | SOAP_COMPRESSION_DEFLATE
-            ]);
-
-            $resultado = $client->sincronizarParametricaTipoDocumentoIdentidad($parametros);
-
-            $data['estado'] = 'success';
-            $data['resultado'] = $resultado;
-        } catch (SoapFault $fault) {
-            $resultado = false;
-            $data['estado'] = 'error';
-            $data['resultado'] = $resultado;
-        }
-        return json_encode($data, JSON_UNESCAPED_UNICODE);
-    }
-
-    public function sincronizarParametricaTipoEmision(){
-        $this->verificarConeccion();
-        $wsdl                   = "https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionSincronizacion?wsdl";
-        $codigoAmbiente         = $this->codigoAmbiente;
-        $codigoPuntoVenta       = $this->codigoPuntoVenta;
-        $codigoSistema          = $this->codigoSistema;
-        $codigoSucursal         = $this->codigoSucursal;
-        $cuis                   = session('scuis');
-        $nit                    = $this->nit;
-
-        $parametros         =  array(
-            'SolicitudSincronizacion' => array(
-                'codigoAmbiente'    => $codigoAmbiente,
-                'codigoPuntoVenta'  => $codigoPuntoVenta,
-                'codigoSistema'     => $codigoSistema,
-                'codigoSucursal'    => $codigoSucursal,
-                'cuis'              => $cuis,
-                'nit'               => $nit
-            )
-        );
-
-        $aoptions = array(
-            'http' => array(
-                'header' => $this->header,
-                'timeout' => $this->timeout
-            ),
-        );
-
-        $context = stream_context_create($aoptions);
-
-        try {
-            $client = new \SoapClient($wsdl,[
-                'stream_context' => $context,
-                'cache_wsdl' => WSDL_CACHE_NONE,
-                'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | SOAP_COMPRESSION_DEFLATE
-            ]);
-
-            $resultado = $client->sincronizarParametricaTipoEmision($parametros);
-
-            $data['estado'] = 'success';
-            $data['resultado'] = $resultado;
-        } catch (SoapFault $fault) {
-            $resultado = false;
-            $data['estado'] = 'error';
-            $data['resultado'] = $resultado;
-        }
-        return json_encode($data, JSON_UNESCAPED_UNICODE);
-    }
-
-    public function sincronizarParametricaTipoHabitacion(){
-        $this->verificarConeccion();
-        $wsdl                   = "https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionSincronizacion?wsdl";
-        $codigoAmbiente         = $this->codigoAmbiente;
-        $codigoPuntoVenta       = $this->codigoPuntoVenta;
-        $codigoSistema          = $this->codigoSistema;
-        $codigoSucursal         = $this->codigoSucursal;
-        $cuis                   = session('scuis');
-        $nit                    = $this->nit;
-
-        $parametros         =  array(
-            'SolicitudSincronizacion' => array(
-                'codigoAmbiente'    => $codigoAmbiente,
-                'codigoPuntoVenta'  => $codigoPuntoVenta,
-                'codigoSistema'     => $codigoSistema,
-                'codigoSucursal'    => $codigoSucursal,
-                'cuis'              => $cuis,
-                'nit'               => $nit
-            )
-        );
-
-        $aoptions = array(
-            'http' => array(
-                'header' => $this->header,
-                'timeout' => $this->timeout
-            ),
-        );
-
-        $context = stream_context_create($aoptions);
-
-        try {
-            $client = new \SoapClient($wsdl,[
-                'stream_context' => $context,
-                'cache_wsdl' => WSDL_CACHE_NONE,
-                'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | SOAP_COMPRESSION_DEFLATE
-            ]);
-
-            $resultado = $client->sincronizarParametricaTipoHabitacion($parametros);
-
-            $data['estado'] = 'success';
-            $data['resultado'] = $resultado;
-        } catch (SoapFault $fault) {
-            $resultado = false;
-            $data['estado'] = 'error';
-            $data['resultado'] = $resultado;
-        }
-        return json_encode($data, JSON_UNESCAPED_UNICODE);
-    }
-
-    public function sincronizarParametricaTipoMetodoPago(){
-        $this->verificarConeccion();
-        $wsdl                   = "https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionSincronizacion?wsdl";
-        $codigoAmbiente         = $this->codigoAmbiente;
-        $codigoPuntoVenta       = $this->codigoPuntoVenta;
-        $codigoSistema          = $this->codigoSistema;
-        $codigoSucursal         = $this->codigoSucursal;
-        $cuis                   = session('scuis');
-        $nit                    = $this->nit;
-
-        $parametros         =  array(
-            'SolicitudSincronizacion' => array(
-                'codigoAmbiente'    => $codigoAmbiente,
-                'codigoPuntoVenta'  => $codigoPuntoVenta,
-                'codigoSistema'     => $codigoSistema,
-                'codigoSucursal'    => $codigoSucursal,
-                'cuis'              => $cuis,
-                'nit'               => $nit
-            )
-        );
-
-        $aoptions = array(
-            'http' => array(
-                'header' => $this->header,
-                'timeout' => $this->timeout
-            ),
-        );
-
-        $context = stream_context_create($aoptions);
-
-        try {
-            $client = new \SoapClient($wsdl,[
-                'stream_context' => $context,
-                'cache_wsdl' => WSDL_CACHE_NONE,
-                'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | SOAP_COMPRESSION_DEFLATE
-            ]);
-
-            $resultado = $client->sincronizarParametricaTipoMetodoPago($parametros);
-
-            $data['estado'] = 'success';
-            $data['resultado'] = $resultado;
-        } catch (SoapFault $fault) {
-            $resultado = false;
-            $data['estado'] = 'error';
-            $data['resultado'] = $resultado;
-        }
-        return json_encode($data, JSON_UNESCAPED_UNICODE);
-    }
-
-    public function sincronizarParametricaTipoMoneda(){
-        $this->verificarConeccion();
-        $wsdl                   = "https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionSincronizacion?wsdl";
-        $codigoAmbiente         = $this->codigoAmbiente;
-        $codigoPuntoVenta       = $this->codigoPuntoVenta;
-        $codigoSistema          = $this->codigoSistema;
-        $codigoSucursal         = $this->codigoSucursal;
-        $cuis                   = session('scuis');
-        $nit                    = $this->nit;
-
-        $parametros         =  array(
-            'SolicitudSincronizacion' => array(
-                'codigoAmbiente'    => $codigoAmbiente,
-                'codigoPuntoVenta'  => $codigoPuntoVenta,
-                'codigoSistema'     => $codigoSistema,
-                'codigoSucursal'    => $codigoSucursal,
-                'cuis'              => $cuis,
-                'nit'               => $nit
-            )
-        );
-
-        $aoptions = array(
-            'http' => array(
-                'header' => $this->header,
-                'timeout' => $this->timeout
-            ),
-        );
-
-        $context = stream_context_create($aoptions);
-
-        try {
-            $client = new \SoapClient($wsdl,[
-                'stream_context' => $context,
-                'cache_wsdl' => WSDL_CACHE_NONE,
-                'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | SOAP_COMPRESSION_DEFLATE
-            ]);
-
-            $resultado = $client->sincronizarParametricaTipoMoneda($parametros);
-
-            $data['estado'] = 'success';
-            $data['resultado'] = $resultado;
-        } catch (SoapFault $fault) {
-            $resultado = false;
-            $data['estado'] = 'error';
-            $data['resultado'] = $resultado;
-        }
-        return json_encode($data, JSON_UNESCAPED_UNICODE);
-    }
-
-    public function sincronizarParametricaTipoPuntoVenta(){
-        $this->verificarConeccion();
-        $wsdl                   = "https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionSincronizacion?wsdl";
-        $codigoAmbiente         = $this->codigoAmbiente;
-        $codigoPuntoVenta       = $this->codigoPuntoVenta;
-        $codigoSistema          = $this->codigoSistema;
-        $codigoSucursal         = $this->codigoSucursal;
-        $cuis                   = session('scuis');
-        $nit                    = $this->nit;
-
-        $parametros         =  array(
-            'SolicitudSincronizacion' => array(
-                'codigoAmbiente'    => $codigoAmbiente,
-                'codigoPuntoVenta'  => $codigoPuntoVenta,
-                'codigoSistema'     => $codigoSistema,
-                'codigoSucursal'    => $codigoSucursal,
-                'cuis'              => $cuis,
-                'nit'               => $nit
-            )
-        );
-
-        $aoptions = array(
-            'http' => array(
-                'header' => $this->header,
-                'timeout' => $this->timeout
-            ),
-        );
-
-        $context = stream_context_create($aoptions);
-
-        try {
-            $client = new \SoapClient($wsdl,[
-                'stream_context' => $context,
-                'cache_wsdl' => WSDL_CACHE_NONE,
-                'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | SOAP_COMPRESSION_DEFLATE
-            ]);
-
-            $resultado = $client->sincronizarParametricaTipoPuntoVenta($parametros);
-
-            $data['estado'] = 'success';
-            $data['resultado'] = $resultado;
-        } catch (SoapFault $fault) {
-            $resultado = false;
-            $data['estado'] = 'error';
-            $data['resultado'] = $resultado;
-        }
-        return json_encode($data, JSON_UNESCAPED_UNICODE);
-    }
-
-    public function sincronizarParametricaTiposFactura(){
-        $this->verificarConeccion();
-        $wsdl                   = "https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionSincronizacion?wsdl";
-        $codigoAmbiente         = $this->codigoAmbiente;
-        $codigoPuntoVenta       = $this->codigoPuntoVenta;
-        $codigoSistema          = $this->codigoSistema;
-        $codigoSucursal         = $this->codigoSucursal;
-        $cuis                   = session('scuis');
-        $nit                    = $this->nit;
-
-        $parametros         =  array(
-            'SolicitudSincronizacion' => array(
-                'codigoAmbiente'    => $codigoAmbiente,
-                'codigoPuntoVenta'  => $codigoPuntoVenta,
-                'codigoSistema'     => $codigoSistema,
-                'codigoSucursal'    => $codigoSucursal,
-                'cuis'              => $cuis,
-                'nit'               => $nit
-            )
-        );
-
-        $aoptions = array(
-            'http' => array(
-                'header' => $this->header,
-                'timeout' => $this->timeout
-            ),
-        );
-
-        $context = stream_context_create($aoptions);
-
-        try {
-            $client = new \SoapClient($wsdl,[
-                'stream_context' => $context,
-                'cache_wsdl' => WSDL_CACHE_NONE,
-                'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | SOAP_COMPRESSION_DEFLATE
-            ]);
-
-            $resultado = $client->sincronizarParametricaTiposFactura($parametros);
-
-            $data['estado'] = 'success';
-            $data['resultado'] = $resultado;
-        } catch (SoapFault $fault) {
-            $resultado = false;
-            $data['estado'] = 'error';
-            $data['resultado'] = $resultado;
-        }
-        return json_encode($data, JSON_UNESCAPED_UNICODE);
-    }
-
-    public function sincronizarParametricaUnidadMedida(){
-        $this->verificarConeccion();
-        $wsdl                   = "https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionSincronizacion?wsdl";
-        $codigoAmbiente         = $this->codigoAmbiente;
-        $codigoPuntoVenta       = $this->codigoPuntoVenta;
-        $codigoSistema          = $this->codigoSistema;
-        $codigoSucursal         = $this->codigoSucursal;
-        $cuis                   = session('scuis');
-        $nit                    = $this->nit;
-
-        $parametros         =  array(
-            'SolicitudSincronizacion' => array(
-                'codigoAmbiente'    => $codigoAmbiente,
-                'codigoPuntoVenta'  => $codigoPuntoVenta,
-                'codigoSistema'     => $codigoSistema,
-                'codigoSucursal'    => $codigoSucursal,
-                'cuis'              => $cuis,
-                'nit'               => $nit
-            )
-        );
-
-        $aoptions = array(
-            'http' => array(
-                'header' => $this->header,
-                'timeout' => $this->timeout
-            ),
-        );
-
-        $context = stream_context_create($aoptions);
-
-        try {
-            $client = new \SoapClient($wsdl,[
-                'stream_context' => $context,
-                'cache_wsdl' => WSDL_CACHE_NONE,
-                'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | SOAP_COMPRESSION_DEFLATE
-            ]);
-
-            $resultado = $client->sincronizarParametricaUnidadMedida($parametros);
-
-            $data['estado'] = 'success';
-            $data['resultado'] = $resultado;
-        } catch (SoapFault $fault) {
-            $resultado = false;
-            $data['estado'] = 'error';
-            $data['resultado'] = $resultado;
-        }
-        return json_encode($data, JSON_UNESCAPED_UNICODE);
-    }
-
-    public function sincronizarParametricaEventosSignificativos(){
-        $this->verificarConeccion();
-        $wsdl                   = "https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionSincronizacion?wsdl";
-        $codigoAmbiente         = $this->codigoAmbiente;
-        $codigoPuntoVenta       = $this->codigoPuntoVenta;
-        $codigoSistema          = $this->codigoSistema;
-        $codigoSucursal         = $this->codigoSucursal;
-        $cuis                   = session('scuis');
-        $nit                    = $this->nit;
-
-        $parametros         =  array(
-            'SolicitudSincronizacion' => array(
-                'codigoAmbiente'    => $codigoAmbiente,
-                'codigoPuntoVenta'  => $codigoPuntoVenta,
-                'codigoSistema'     => $codigoSistema,
-                'codigoSucursal'    => $codigoSucursal,
-                'cuis'              => $cuis,
-                'nit'               => $nit
-            )
-        );
-
-        $aoptions = array(
-            'http' => array(
-                'header' => $this->header,
-                'timeout' => $this->timeout
-            ),
-        );
-
-        $context = stream_context_create($aoptions);
-
-        try {
-            $client = new \SoapClient($wsdl,[
-                'stream_context' => $context,
-                'cache_wsdl' => WSDL_CACHE_NONE,
-                'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | SOAP_COMPRESSION_DEFLATE
-            ]);
-
-            $resultado = $client->sincronizarParametricaEventosSignificativos($parametros);
-
-            $data['estado'] = 'success';
-            $data['resultado'] = $resultado;
-        } catch (SoapFault $fault) {
-            $resultado = false;
-            $data['estado'] = 'error';
-            $data['resultado'] = $resultado;
-        }
-        return json_encode($data, JSON_UNESCAPED_UNICODE);
-    }
-
     public function consultaEventoSignificativo($fecha){
         $this->verificarConeccion();
         $wsdl                   = "https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionOperaciones?wsdl";
@@ -1278,7 +1603,7 @@ class SiatController extends Controller
     // public function validacionRecepcionPaqueteFactura($codMotEvent, $cufdEvent, $desc, $fechaIni, $fechaFin){
     public function validacionRecepcionPaqueteFactura($codEmision, $codRecepcion){
         $this->verificarConeccion();
-        $wsdl                   = "https://pilotosiatservicios.impuestos.gob.bo/v2/ServicioFacturacionComputarizada?wsdl";
+        $wsdl                   = "https://pilotosiatservicios.impuestos.gob.bo/v2/ServicioFacturacionCompraVenta?wsdl";
         $codigoAmbiente         = $this->codigoAmbiente;
         $codigoDocumentoSector  = $this->codigoDocumentoSector;                           //SECTOR EDUCATIVO
         $codigoEmision          = $codEmision;                  //NUEVO LINENA 1 LINEA | 2 FUENRA DE LINEA

@@ -9,7 +9,7 @@
 
     <!--end::Modal - New Card-->
     <!--begin::Modal - Add task-->
-    <div class="modal fade" id="kt_modal_add_categoria" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="modalCliente" tabindex="-1" aria-hidden="true">
         <!--begin::Modal dialog-->
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <!--begin::Modal content-->
@@ -31,29 +31,73 @@
                 <!--end::Modal header-->
                 <!--begin::Modal body-->
                 <div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
-
-                    <form id="formularioCategoria">
+                    <form id="formularioCliente">
                         @csrf
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="fv-row mb-7">
+                                    <label class="required fw-semibold fs-6 mb-2">Nombres</label>
+                                    <input type="text" class="form-control" required name="nombres" id="nombres">
+                                    <input type="hidden" name="cliente_id" id="cliente_id" value="0">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="fv-row mb-7">
+                                    <label class="required fw-semibold fs-6 mb-2">Ap Paterno</label>
+                                    <input type="text" class="form-control" required name="ap_paterno" id="ap_paterno">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="fv-row mb-7">
+                                    <label class="required fw-semibold fs-6 mb-2">Ap Materno</label>
+                                    <input type="text" class="form-control" required name="ap_materno" id="ap_materno">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="fv-row mb-7">
+                                    <label class="required fw-semibold fs-6 mb-2">Cedula</label>
+                                    <input type="number" class="form-control" required name="cedula" id="cedula">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="fv-row mb-7">
+                                    <label class="required fw-semibold fs-6 mb-2">Complemento</label>
+                                    <input type="text" class="form-control" required name="complemento" id="complemento">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="fv-row mb-7">
+                                    <label class="required fw-semibold fs-6 mb-2">Nit</label>
+                                    <input type="text" class="form-control" required name="nit" id="nit">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="fv-row mb-7">
+                                    <label class="required fw-semibold fs-6 mb-2">Razon Social</label>
+                                    <input type="text" class="form-control" required name="razon_social" id="razon_social">
+                                </div>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="fv-row mb-7">
-                                    <label class="required fw-semibold fs-6 mb-2">Nombre</label>
-                                    <input type="text" class="form-control form-control-solid" required name="nombre" id="nombre" placeholder="LAVADO">
-                                    <input type="hidden" name="categoria_id" id="categoria_id">
+                                    <label class="required fw-semibold fs-6 mb-2">Correo</label>
+                                    <input type="email" class="form-control" required name="correo" id="correo">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="fv-row mb-7">
-                                    <label class="required fw-semibold fs-6 mb-2">Descripcion</label>
-                                    <input type="text" class="form-control form-control-solid" required name="descripcion" id="descripcion" placeholder="LAVADO ESPECIFICO">
+                                    <label class="required fw-semibold fs-6 mb-2">Celular</label>
+                                    <input type="number" class="form-control" required name="celular" id="celular">
                                 </div>
                             </div>
                         </div>
                     </form>
-
                     <div class="row">
                         <div class="col-md-12">
-                            <button class="btn btn-success w-100" onclick="guardarCategoria()">Guardar</button>
+                            <button class="btn btn-success w-100" onclick="guardarCliente()">Guardar</button>
                         </div>
                     </div>
                 </div>
@@ -87,16 +131,9 @@
             <div class="card-toolbar">
                 <!--begin::Toolbar-->
                 <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">
-                    <button type="button" class="btn btn-primary" onclick="nuevoCategoria()">
-                        <i class="ki-duotone ki-plus fs-2"></i>Nueva Categoria
+                    <button type="button" class="btn btn-primary" onclick="nuevoCliente()">
+                        <i class="ki-duotone ki-plus fs-2"></i>Nueva Cliente
                     </button>
-                </div>
-                <!--end::Toolbar-->
-                <!--begin::Group actions-->
-                <div class="d-flex justify-content-end align-items-center d-none" data-kt-user-table-toolbar="selected">
-                    <div class="fw-bold me-5">
-                    <span class="me-2" data-kt-user-table-select="selected_count"></span>Selected</div>
-                    <button type="button" class="btn btn-danger" data-kt-user-table-select="delete_selected">Delete Selected</button>
                 </div>
                 <!--end::Group actions-->
                 <!--begin::Modal - Adjust Balance-->
@@ -217,11 +254,11 @@
             });
         }
 
-        function guardarCategoria(){
-            if($("#formularioCategoria")[0].checkValidity()){
-                datos = $("#formularioCategoria").serializeArray()
+        function guardarCliente(){
+            if($("#formularioCliente")[0].checkValidity()){
+                datos = $("#formularioCliente").serializeArray()
                 $.ajax({
-                    url: "{{ url('categoria/guarda') }}",
+                    url: "{{ url('cliente/guarda') }}",
                     data:datos,
                     type: 'POST',
                     dataType: 'json',
@@ -231,33 +268,47 @@
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Correcto!',
-                                text: 'Se cambio  con exito!',
+                                text: 'Se registro con exito!',
                                 timer: 1500
                             })
-                            $('#kt_modal_add_categoria').modal('hide');
+                            $('#modalCliente').modal('hide');
                         }
                     }
                 });
             }else{
-    			$("#formularioCategoria")[0].reportValidity()
+    			$("#formularioCliente")[0].reportValidity()
             }
         }
 
-        function editarCategoria(categoria, nombre, descripcion){
-            $('#nombre').val(nombre);
-            $('#descripcion').val(descripcion);
-            $('#categoria_id').val(categoria)
+        function editarCliente(cliente, nombre, ap_paterno, ap_materno, cedula, complemento, nit, razon_social, correo, celular){
+            $('#nombres').val(nombre);
+            $('#cliente_id').val(cliente);
+            $('#ap_paterno').val(ap_paterno);
+            $('#ap_materno').val(ap_materno);
+            $('#cedula').val(cedula);
+            $('#complemento').val(complemento);
+            $('#nit').val(nit);
+            $('#razon_social').val(razon_social);
+            $('#correo').val(correo);
+            $('#celular').val(celular);
 
-            $('#kt_modal_add_categoria').modal('show');
+            $('#modalCliente').modal('show');
 
         }
 
-        function nuevoCategoria(){
-            $('#nombre').val('');
-            $('#descripcion').val('');
-            $('#categoria_id').val(0)
+        function nuevoCliente(){
+            $('#nombres').val('');
+            $('#ap_paterno').val('');
+            $('#ap_materno').val('');
+            $('#cedula').val('');
+            $('#complemento').val('');
+            $('#nit').val('');
+            $('#razon_social').val('');
+            $('#correo').val('');
+            $('#celular').val('');
+            $('#cliente_id').val(0)
 
-            $('#kt_modal_add_categoria').modal('show');
+            $('#modalCliente').modal('show');
         }
 
         function eliminrCategoria(categoria){
