@@ -233,8 +233,6 @@ class FacturaController extends Controller
             $hashArchivo = hash("sha256", file_get_contents('assets/docs/facturaxml.xml'));
 
             // GUARDAMOS EN LA FACTURA
-            // dd($datos['factura'][0]['cabecera']['nombreRazonSocial']);
-
             $factura                            = new Factura();
             $factura->creador_id                = Auth::user()->id;
             $factura->vehiculo_id               = $datosVehiculo['vehiculo_id'];
@@ -261,41 +259,8 @@ class FacturaController extends Controller
                 }
             }
             $factura->tipo_factura              = $tipo_factura;
-
             $factura->save();
 
-            // dd("haber", $datosVehiculo, $vehiculo, $tipo_factura);
-
-            // $factura = new Factura();
-
-            // $factura->user_id                   = Auth::user()->id;
-            // $factura->persona_id                = $datosPersona['persona_id'];
-            // $factura->carnet                    = $datosPersona['carnet'];
-            // $factura->razon_social              = $datos['factura'][0]['cabecera']['nombreRazonSocial'];
-            // $factura->nit                       = $datos['factura'][0]['cabecera']['numeroDocumento'];
-            // $factura->fecha                     = $datos['factura'][0]['cabecera']['fechaEmision'];
-            // $factura->total                     = $datos['factura'][0]['cabecera']['montoTotal'];
-            // $factura->facturado                 = "Si";
-            // if($tipo_factura === "online"){
-            //     $factura->numero                = $datos['factura'][0]['cabecera']['numeroFactura'];
-            // }else{
-            //     if($datosRecepcion['uso_cafc'] === "si"){
-            //         $factura->numero_cafc           = $datos['factura'][0]['cabecera']['numeroFactura'];
-            //         $factura->uso_cafc              = "si";
-            //     }
-            //     else{
-            //         $factura->numero                = $datos['factura'][0]['cabecera']['numeroFactura'];
-            //     }
-            // }
-            // $factura->anio_vigente              = date('Y');
-            // $factura->cuf                       = $datos['factura'][0]['cabecera']['cuf'];
-            // $factura->codigo_metodo_pago_siat   = $datos['factura'][0]['cabecera']['codigoMetodoPago'];
-            // $factura->monto_total_subjeto_iva   = $datos['factura'][0]['cabecera']['montoTotalSujetoIva'];
-            // $factura->descuento_adicional       = $datos['factura'][0]['cabecera']['descuentoAdicional'];
-            // $factura->productos_xml             = file_get_contents('assets/docs/facturaxml.xml');
-            // $factura->tipo_factura              = $tipo_factura;
-
-            // $factura->save();
 
             if($tipo_factura === "online"){
                 $siat = app(SiatController::class);
@@ -360,8 +325,6 @@ class FacturaController extends Controller
 
             // $data['estado'] = $facturaNew->codigo_descripcion;
 
-            // dd($datos['factura'][1]['detalle'], $datosVehiculo);
-
             foreach ($datosVehiculo['pagos'] as $key => $pago_id) {
                 $pago = Pago::find($pago_id);
                 // dd($datosVehiculo['pagos'], $pago_id, $pago);
@@ -369,51 +332,6 @@ class FacturaController extends Controller
                 $pago->factura_id   = $facturaNew->id;
                 $pago->save();
             }
-
-
-            // for ($i=1; $i < count($datos['factura']) ; $i++) {
-
-            //     $servicio = $datos['factura'][$i]['detalle']['codigoProducto'];
-
-            //     // PREGUNTAMOS SI ES MENSUALIDAD
-            //     if($servicio === "2"){
-            //         $arrayMen = explode(" ", $datos['factura'][$i]['detalle']['descripcion']);
-            //         $pago = Pago::where('persona_id',$datosPersona['persona_id'])
-            //                     ->where('estado', 'paraPagar')
-            //                     ->where('anio_vigente', date('Y'))
-            //                     ->where('mensualidad', $arrayMen[0])
-            //                     ->first();
-
-            //         if($pago){
-            //             $pago->descuento    = ($datos['factura'][$i]['detalle']['montoDescuento'] == null)? 0 :  $datos['factura'][$i]['detalle']['montoDescuento'];
-            //             $pago->subTotal     = ($datos['factura'][$i]['detalle']['subTotal'] == null)? 0 :  $datos['factura'][$i]['detalle']['subTotal'];
-            //             $pago->estado       = "Pagado";
-            //             $pago->fecha        = $valoresCabecera['fechaEmision'];
-            //             $pago->factura_id   = $facturaNew->id;
-            //             $pago->user_id      = Auth::user()->id;
-
-            //             $pago->save();
-            //         }
-            //     }else{
-            //         $pago = Pago::where('persona_id',$datosPersona['persona_id'])
-            //                     ->where('estado', 'paraPagar')
-            //                     ->where('anio_vigente', date('Y'))
-            //                     ->where('servicio_id', $servicio)
-            //                     ->first();
-
-            //         if($pago){
-            //             $pago->descuento    = ($datos['factura'][$i]['detalle']['montoDescuento'] == null)? 0 :  $datos['factura'][$i]['detalle']['montoDescuento'];
-            //             $pago->subTotal     = ($datos['factura'][$i]['detalle']['subTotal'] == null)? 0 :  $datos['factura'][$i]['detalle']['subTotal'];
-            //             $pago->estado       = "Pagado";
-            //             $pago->fecha        = $valoresCabecera['fechaEmision'];
-            //             $pago->factura_id   = $facturaNew->id;
-            //             $pago->user_id      = Auth::user()->id;
-            //             $pago->save();
-            //         }
-            //     }
-
-            // }
-
 
             // ENVIAMOS EL CORREO DE LA FACTURA
             // $nombre = $persona->nombres." ".$persona->apellido_paterno." ".$persona->apellido_materno;
@@ -706,6 +624,24 @@ class FacturaController extends Controller
         if($request->ajax()){
             $numero         = $this->numeroFactura() + 1;
             $data['numero'] = $numero;
+            $data['estado'] = 'success';
+        }else{
+            $data['estado'] = 'error';
+        }
+        return $data;
+    }
+
+    public function verificaNit(Request $request){
+        if($request->ajax()){
+            $nit = $request->input('nit');
+            $siat = app(SiatController::class);
+            $dato = json_decode($siat->verificarNit($nit));
+            if($dato->estado === "success" ){
+                $data['verificacion']   = $dato->resultado->RespuestaVerificarNit->transaccion;
+                $data['msg']            = $dato->resultado->RespuestaVerificarNit->mensajesList->descripcion;
+            }else{
+                $data['msg']            = "ERROR";
+            }
             $data['estado'] = 'success';
         }else{
             $data['estado'] = 'error';

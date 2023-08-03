@@ -289,7 +289,8 @@
                     </div>
                     <div class="col-md-2">
                         <label for="">Tipo Docuemnto</label>
-                        <select name="tipo_documento" id="tipo_documento" class="form-control">
+                        <select name="tipo_documento" id="tipo_documento" class="form-control" onchange="verificaNit()">
+                            <option value="">SELECCIONE</option>
                             <option value="1">Cedula de Identidad</option>
                             <option value="2">Cedula de Identidad de Extranjero</option>
                             <option value="3">Pasaporte</option>
@@ -299,7 +300,9 @@
                     </div>
                     <div class="col-md-2">
                         <label for="">Nit/Cedula</label>
-                        <input type="number" class="form-control" id="nit_factura" name="nit_factura">
+                        <input type="number" class="form-control" id="nit_factura" name="nit_factura" onchange="verificaNit()">
+                        <small style="display: none;" class="text-danger" id="nitnoexiste">NIT INVALIDO</small>
+                        <small style="display: none;" class="text-success" id="nitsiexiste">NIT VALIDO</small>
                     </div>
                     <div class="col-md-2">
                         <label for="">Razon Social</label>
@@ -327,6 +330,14 @@
                         </div>
                     </div>
                 </div>
+                <div class="row" style="display: none" id="bloque_exepcion">
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label class="control-label">Enviar con execpcion?</label>
+                            <input type="checkbox" name="execpcion" id="execpcion" required readonly>
+                        </div>
+                    </div>
+                </div>
             </form>
             <div class="row mt-2">
                 <div class="col-md-12">
@@ -351,8 +362,9 @@
             }
         })
 
-        var arrayProductos = [];
-        var arrayPagos     = [];
+        var arrayProductos          = [];
+        var arrayPagos              = [];
+        let valorIniDescuento       = 0;
 
         $( document ).ready(function() {
             ajaxListado();
@@ -685,8 +697,6 @@
                     })
                 })
 
-                console.log(detalle, arrayProductos)
-
                 let numero_factura                  = $('#numero_factura').val();
                 let cuf                             = "123456789";//cambiar
                 let cufd                            = "{{ session('scufd') }}";  //solo despues de que aga
@@ -704,8 +714,14 @@
                 let nombreEstudiante                = $('#nombreCompletoEstudiante').val();
                 let periodoFacturado                = detalle[(detalle.length)-1].descripcion+" / "+$('#anio_vigente_cuota_pago').val();
 
-                var factura = [];
+                let codigoExcepcion;
+                if ($('#execpcion').is(':checked'))
+                    codigoExcepcion                 = 1;
+                else
+                    codigoExcepcion                 = 0;
 
+
+                var factura = [];
                 factura.push({
                     cabecera: {
                         nitEmisor                       :"5427648016",
@@ -736,7 +752,7 @@
 
                         montoGiftCard                   :null,
                         descuentoAdicional              :descuentoAdicional,//ver llenado
-                        codigoExcepcion                 :0,
+                        codigoExcepcion                 :codigoExcepcion,
                         cafc                            :null,
                         leyenda                         :leyenda,
                         usuario                         :usuario,
@@ -801,7 +817,7 @@
                             // location.reload();
                         }else{
                             Swal.fire({
-                                type: 'error',
+                                icon: 'error',
                                 title: 'Error!',
                                 text: 'LA FACTURA FUE RECHAZADA',
                             })
@@ -814,11 +830,39 @@
         }
 
         function funcionNueva(input, pago, total){
+            let valorEnviado;
+            if($("#formularioDescuentos")[0].checkValidity()){
+                valorEnviado = input.value;
+
+                // $.ajax({
+                //     url: "{{ url('factura/actualizaDescuento') }}",
+                //     data: {
+                //         pago_id: pago,
+                //         valor: input.value,
+                //         },
+                //     type: 'POST',
+                //     dataType:'json',
+                //     success: function(data) {
+                //         if(data.estado === 'success'){
+                //             var k = (total-input.value).toFixed(2);
+                //             $('#subTotalCalculdo_'+pago).text(k);
+                //             $('#motoTotalFac').val((data.valor)-$('#descuento_adicional').val())
+                //         }
+                //     }
+                // });
+            }else{
+                let idinput = input.id
+                $('#'+idinput).val(valorIniDescuento)
+                valorEnviado = valorIniDescuento;
+                $("#formularioDescuentos")[0].reportValidity();
+            }
+
             $.ajax({
                 url: "{{ url('factura/actualizaDescuento') }}",
                 data: {
                     pago_id: pago,
-                    valor: input.value,
+                    valor: valorEnviado,
+                    // valor: input.value,
                     },
                 type: 'POST',
                 dataType:'json',
@@ -830,7 +874,11 @@
                     }
                 }
             });
+        }
 
+        function guardarValorInicial(input) {
+            valorIniDescuento = input.value;
+            console.log("Valor inicial guardado: " + valorIniDescuento);
         }
 
         function caluculaTotal(event){
@@ -900,6 +948,41 @@
             }
         }
 
+        function verificaNit(){
+            console.log($('#tipo_documento').val())
+            let tipoDocumento = $('#tipo_documento').val();
+            if(tipoDocumento === "5"){
+                let nit = $('#nit_factura').val();
+                $.ajax({
+                    url: "{{ url('factura/verificaNit') }}",
+                    method: "POST",
+                    data:{nit:nit},
+                    dataType: 'json',
+                    success: function (data) {
+                        if(data.estado === "success"){
+                            if(!data.verificacion){
+                                // Marcar el checkbox con jQuery
+                                $('#execpcion').prop('checked', true);
+                                $('#nitnoexiste').show('toggle');
+                                $('#nitsiexiste').hide('toggle');
+                                $('#bloque_exepcion').show('toggle');
+                            }else{
+                                $('#execpcion').prop('checked', false);
+                                $('#nitsiexiste').show('toggle');
+                                $('#nitnoexiste').hide('toggle');
+                                $('#bloque_exepcion').hide('toggle');
+                            }
+                        }else{
+
+                        }
+
+                    }
+                })
+            }else{
+                console.log("nada che", (tipoDocumento === "5"), tipoDocumento)
+                $('#bloque_exepcion').hide('toggle');
+            }
+        }
 
     </script>
 @endsection

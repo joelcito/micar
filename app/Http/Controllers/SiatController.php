@@ -1724,4 +1724,56 @@ class SiatController extends Controller
         }
 
     }
+
+    public function verificarNit($nitVeri){
+        $this->verificarConeccion();
+        $wsdl                   = "https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionCodigos?wsdl";
+        // $wsdl                   = $this->FacturacionCodigos;
+        $codigoAmbiente         = $this->codigoAmbiente;
+        $codigoModalidad        = $this->codigoPuntoVenta;
+        $codigoSistema          = $this->codigoSistema;
+        $codigoSucursal         = $this->codigoSucursal;
+        $cuis                   = session('scuis');
+        $nit                    = $this->nit;
+        $nitParaVerificacion    = $nitVeri;
+
+        $parametros         =  array(
+            'SolicitudVerificarNit' => array(
+                'codigoAmbiente'        => $codigoAmbiente,
+                'codigoModalidad'       => $codigoModalidad,
+                'codigoSistema'         => $codigoSistema,
+                'codigoSucursal'        => $codigoSucursal,
+                'cuis'                  => $cuis,
+                'nit'                   => $nit,
+                'nitParaVerificacion'   => $nitParaVerificacion
+            )
+        );
+
+        $aoptions = array(
+            'http' => array(
+                'header' => $this->header,
+                'timeout' => $this->timeout
+            ),
+        );
+
+        $context = stream_context_create($aoptions);
+
+        try {
+            $client = new \SoapClient($wsdl,[
+                'stream_context'    => $context,
+                'cache_wsdl'        => WSDL_CACHE_NONE,
+                'compression'       => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | SOAP_COMPRESSION_DEFLATE
+            ]);
+
+            $resultado = $client->verificarNit($parametros);
+
+            $data['estado'] = 'success';
+            $data['resultado'] = $resultado;
+        } catch (SoapFault $fault) {
+            $resultado = false;
+            $data['estado'] = 'error';
+            $data['resultado'] = $resultado;
+        }
+        return json_encode($data, JSON_UNESCAPED_UNICODE);
+    }
 }

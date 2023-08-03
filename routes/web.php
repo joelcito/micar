@@ -119,6 +119,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/sacaNumeroFactura', [FacturaController::class, 'sacaNumeroFactura']);
         Route::get('/pruebas', [FacturaController::class, 'pruebas']);
         Route::get('/emiteFacturaMasa', [FacturaController::class, 'emiteFacturaMasa']);
+        Route::post('/verificaNit', [FacturaController::class, 'verificaNit']);
     });
 
     Route::prefix('/puntoVenta')->group(function () {
