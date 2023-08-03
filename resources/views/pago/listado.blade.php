@@ -10,7 +10,7 @@
     <!--end::Modal - New Card-->
     <!--begin::Modal - Add task-->
     <div class="modal fade" id="modalAnular" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header" id="kt_modal_add_user_header">
                     <h2 class="fw-bold">FORMULARIO DE ANULACION</h2>
@@ -28,7 +28,7 @@
                                         <option value="3">DATOS DE EMISION INCORRECTOS</option>
                                         <option value="4">FACTURA O NOTA DE CREDITO-DEBITO DEVUELTA</option>
                                     </select>
-                                    <input type="text" id="factura_id">
+                                    <input type="hidden" id="factura_id">
                                 </div>
                             </div>
                         </div>
