@@ -59,6 +59,7 @@
                     </td>
                     <td class="text-end">
                         <a  class="btn btn-primary btn-icon btn-sm"href="{{ url('factura/generaPdfFacturaNew', [$p->id]) }}" target="_blank"><i class="fa fa-file-pdf"></i></a>
+                        <a  class="btn btn-white btn-icon btn-sm"href="{{ url('factura/imprimeFactura', [$p->id]) }}" target="_blank"><i class="fa fa-file-pdf"></i></a>
                         @if ($p->uso_cafc === "si")
                             <a href="https://pilotosiat.impuestos.gob.bo/consulta/QR?nit=5427648016&cuf={{ $p->cuf }}&numero={{ $p->numero_cafc }}&t=2" target="_blank" class="btn btn-dark btn-icon btn-sm"><i class="fa fa-file"></i></a>
                         @else

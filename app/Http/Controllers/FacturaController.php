@@ -649,6 +649,22 @@ class FacturaController extends Controller
         return $data;
     }
 
+    public function imprimeFactura(Request $request, $factura_id){  
+        
+        $factura = Factura::find($factura_id);
+        $xml = $factura['productos_xml'];
+
+        $archivoXML = new SimpleXMLElement($xml);
+
+        $cabeza = (array) $archivoXML;
+
+        $cuf            = (string)$cabeza['cabecera']->cuf;
+        $numeroFactura  = (string)$cabeza['cabecera']->numeroFactura;
+
+
+        return view('pago.imprimeFactura')->with(compact('factura', 'archivoXML'));
+    }
+
     // ********************  PRUEBAS FACUTRAS SINCRONIZACION   *****************************
     public function pruebas(){
         $siat = app(SiatController::class);
