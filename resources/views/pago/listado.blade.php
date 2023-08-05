@@ -60,7 +60,7 @@
                             <div class="col-md-3">
                                 <div class="fv-row mb-7">
                                     <label class="required fw-semibold fs-6 mb-2">FECHA</label>
-                                    <input type="date" class="form-control" id="fecha_contingencia" name="fecha_contingencia" required>
+                                    <input type="date" class="form-control" id="fecha_contingencia" name="fecha_contingencia" required value="{{ date('Y-m-d') }}">
                                 </div>
                             </div>
                             <div class="col-md-3">
