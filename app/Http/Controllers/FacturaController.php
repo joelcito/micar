@@ -867,8 +867,8 @@ class FacturaController extends Controller
         $vehiculoId = "10081";
         $pagos = ["4"];
 
-        $usoCafc = "No";
-        $codigoCafcContingencia = null;
+        $usoCafc = "Si";
+        $codigoCafcContingencia = "10122205E166E";
 
         $modalidad = "offline";
 
@@ -912,28 +912,28 @@ class FacturaController extends Controller
                     ],
                     1 => [
                         "detalle" => [
-                            "actividadEconomica" => $actividadEconomica,
-                            "codigoProductoSin" => $codigoProductoSin,
-                            "codigoProducto" => $codigoProducto,
-                            "descripcion" => $descripcionItem,
-                            "cantidad" => $cantidad,
-                            "unidadMedida" => $unidadMedida,
-                            "precioUnitario" => $precioUnitario,
-                            "montoDescuento" => $montoDescuento,
-                            "subTotal" => $subTotal,
-                            "numeroSerie" => $numeroSerie,
-                            "numeroImei" => $numeroImei,
+                            "actividadEconomica"        => $actividadEconomica,
+                            "codigoProductoSin"         => $codigoProductoSin,
+                            "codigoProducto"            => $codigoProducto,
+                            "descripcion"               => $descripcionItem,
+                            "cantidad"                  => $cantidad,
+                            "unidadMedida"              => $unidadMedida,
+                            "precioUnitario"            => $precioUnitario,
+                            "montoDescuento"            => $montoDescuento,
+                            "subTotal"                  => $subTotal,
+                            "numeroSerie"               => $numeroSerie,
+                            "numeroImei"                => $numeroImei,
                         ]
                     ]
                 ]
             ],
             "datosVehiculo" => [
-                "vehiculo_id" => $vehiculoId,
-                "pagos" => $pagos,
+                "vehiculo_id"   => $vehiculoId,
+                "pagos"         => $pagos,
             ],
             "datosRecepcion" => [
-                "uso_cafc" => $usoCafc,
-                "codigo_cafc_contingencia" => $codigoCafcContingencia,
+                "uso_cafc"                  => $usoCafc,
+                "codigo_cafc_contingencia"  => $codigoCafcContingencia,
             ],
             "modalidad" => $modalidad,
         ];
@@ -954,7 +954,8 @@ class FacturaController extends Controller
             $array['datos']['factura'][0]['cabecera']['fechaEmision'] = $formattedDateTime;
 
             // PARA EL NUMERO
-            $array['datos']['factura'][0]['cabecera']['numeroFactura'] = $this->numeroFactura()+1;
+            // $array['datos']['factura'][0]['cabecera']['numeroFactura'] = $this->numeroFactura()+1;
+            $array['datos']['factura'][0]['cabecera']['numeroFactura'] = 1;
 
             // PARA LA MENSUALIDAD
             // $array['datos']['factura'][1]['detalle']['descripcion']         = "$k MENSUALIDAD";
@@ -1130,13 +1131,13 @@ class FacturaController extends Controller
             $facturaNew->cufd               = $scufd;
             $facturaNew->fechaVigencia      = Carbon::parse($sfechaVigenciaCufd)->format('Y-m-d H:i:s');
             $facturaNew->save();
-            foreach ($datosVehiculo['pagos'] as $key => $pago_id) {
-                $pago = Pago::find($pago_id);
-                // dd($datosVehiculo['pagos'], $pago_id, $pago);
-                $pago->estado       = "Pagado";
-                $pago->factura_id   = $facturaNew->id;
-                $pago->save();
-            }
+            // foreach ($datosVehiculo['pagos'] as $key => $pago_id) {
+            //     $pago = Pago::find($pago_id);
+            //     // dd($datosVehiculo['pagos'], $pago_id, $pago);
+            //     $pago->estado       = "Pagado";
+            //     $pago->factura_id   = $facturaNew->id;
+            //     $pago->save();
+            // }
             // ******** DE AQUI YA VIENE PARA LA GENERACION DE LA FACTUR ********
 
 
@@ -1165,7 +1166,7 @@ class FacturaController extends Controller
 
 
 
-            // echo $formattedDateTime."<br>";
+            echo $formattedDateTime."<br>";
             sleep(2);
         }
     }
