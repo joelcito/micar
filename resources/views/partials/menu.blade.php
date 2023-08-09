@@ -84,6 +84,14 @@
                             <span class="menu-title">Evento Significativo</span>
                         </a>
                     </div>
+                    <div class="menu-item">
+                        <a class="menu-link" href="{{ url('sincronizacionCatalogo/listado') }}">
+                            <span class="menu-bullet">
+                                <span class="bullet bullet-dot"></span>
+                            </span>
+                            <span class="menu-title">Sincronizacion de catalogos</span>
+                        </a>
+                    </div>
                     <!--end:Menu item-->
                     {{--  <!--begin:Menu item-->
                     <div class="menu-item">

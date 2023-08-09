@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Factura;
+use App\Models\MotivoAnulacion;
 use App\Models\Pago;
 use App\Models\Venta;
 use Illuminate\Http\Request;
@@ -11,7 +12,8 @@ use Illuminate\Support\Facades\DB;
 class PagoController extends Controller
 {
     public function listado(Request $request){
-        return view('pago.listado');
+        $motivoAnulacion = MotivoAnulacion::all();
+        return view('pago.listado')->with(compact('motivoAnulacion'));
     }
 
     public function ajaxListado(Request $request){

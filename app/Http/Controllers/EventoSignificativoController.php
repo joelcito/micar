@@ -2,24 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\TipoEvento;
 use Illuminate\Http\Request;
 
 class EventoSignificativoController extends Controller
 {
     public function listado(Request $request){
-        $siat = app(SiatController::class);
-        $respuesta = json_decode($siat->sincronizarParametricaEventosSignificativos());
-        if($respuesta->estado === "success"){
-            if($respuesta->resultado->RespuestaListaParametricas->transaccion){
-                $eventosparametricas = json_decode(json_encode($respuesta->resultado->RespuestaListaParametricas->listaCodigos), true);
-            }else{
-                $eventosparametricas = [];
-            }
-        }else{
-            $eventosparametricas = [];
-        }
+        // $siat = app(SiatController::class);
+        // $respuesta = json_decode($siat->sincronizarParametricaEventosSignificativos());
+        // if($respuesta->estado === "success"){
+        //     if($respuesta->resultado->RespuestaListaParametricas->transaccion){
+        //         $eventosparametricas = json_decode(json_encode($respuesta->resultado->RespuestaListaParametricas->listaCodigos), true);
+        //     }else{
+        //         $eventosparametricas = [];
+        //     }
+        // }else{
+        //     $eventosparametricas = [];
+        // }
 
-        return view('eventosignificativo.listado')->with(compact('eventosparametricas'));
+        $tipoEventos = TipoEvento::all();
+
+        return view('eventosignificativo.listado')->with(compact('tipoEventos'));
     }
 
     public function consultaEventos(Request $request){

@@ -38,8 +38,8 @@
                                 <div class="fv-row mb-7">
                                     <label class="required fw-semibold fs-6 mb-2">Tipo de Evento</label>
                                     <select name="codigoEvento" id="codigoEvento" class="form-control">
-                                        @foreach ($eventosparametricas as $eve)
-                                            <option value="{{ $eve['codigoClasificador'] }}">{{ $eve['descripcion'] }}</option>
+                                        @foreach ($tipoEventos as $eve)
+                                            <option value="{{ $eve->codigo_sin }}">{{ $eve->nombre }}</option>
                                         @endforeach
                                     </select>
                                 </div>

@@ -6,6 +6,8 @@ use App\Models\Cliente;
 use App\Models\Servicio;
 use App\Models\User;
 use App\Models\Pago;
+use App\Models\TipoDocumento;
+use App\Models\TipoEvento;
 use App\Models\Vehiculo;
 use App\Models\Venta;
 use Illuminate\Http\Request;
@@ -32,7 +34,9 @@ class VehiculoController extends Controller
         // dd($fac->numeroFactura());
         $numFac = $fac->numeroFactura()+1;
 
-        return view('vehiculo.listado')->with(compact('servicios', 'lavadores', 'clientes', 'verificacionSiat', 'numFac'));
+        $tipoDocumento = TipoDocumento::all();
+
+        return view('vehiculo.listado')->with(compact('servicios', 'lavadores', 'clientes', 'verificacionSiat', 'numFac', 'tipoDocumento'));
     }
 
     public function ajaxListado(Request $request){

@@ -283,19 +283,17 @@
         <div id="bloqueDatosFactura" style="display: none">
             <form id="formularioGeneraFactura">
                 <div class="row">
-                    <div class="col-md-2">
+                    <div class="col-md-1">
                         <label for="">N Factura</label>
-                        <input type="number" class="form-control" id="numero_factura" value="{{ $numFac }}">
+                        <input type="number" class="form-control" id="numero_factura" value="{{ $numFac }}" readonly>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         <label for="">Tipo Docuemnto</label>
                         <select name="tipo_documento" id="tipo_documento" class="form-control" onchange="verificaNit()">
                             <option value="">SELECCIONE</option>
-                            <option value="1">Cedula de Identidad</option>
-                            <option value="2">Cedula de Identidad de Extranjero</option>
-                            <option value="3">Pasaporte</option>
-                            <option value="4">Otro documento de identidad</option>
-                            <option value="5">Numero de identificacion Tributaria</option>
+                            @foreach ($tipoDocumento as $te)
+                                <option value="{{ $te->codigo_sin }}">{{ $te->nombre }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="col-md-2">

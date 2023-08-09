@@ -13,6 +13,7 @@ use App\Http\Controllers\RolController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VentaController;
 use App\Http\Controllers\ServicioController;
+use App\Http\Controllers\SincronizaCatalogo;
 use App\Http\Controllers\VehiculoController;
 use Illuminate\Support\Facades\Route;
 
@@ -135,6 +136,16 @@ Route::middleware('auth')->group(function () {
         Route::post('/consultaEventos', [EventoSignificativoController::class, 'consultaEventos']);
         Route::post('/registro', [EventoSignificativoController::class, 'registro']);
         Route::post('/buscarEventosSignificativos', [EventoSignificativoController::class, 'buscarEventosSignificativos']);
+    });
+
+    Route::prefix('/sincronizacionCatalogo')->group(function () {
+        Route::get('/listado', [SincronizaCatalogo::class, 'listado']);
+        Route::post('/ajaxListadoTipoDocumento', [SincronizaCatalogo::class, 'ajaxListadoTipoDocumento']);
+        Route::post('/ajaxListadoMotivoAnulacion', [SincronizaCatalogo::class, 'ajaxListadoMotivoAnulacion']);
+        Route::post('/ajaxListadoTipoEvento', [SincronizaCatalogo::class, 'ajaxListadoTipoEvento']);
+        Route::post('/sincronizarTipoDocumento', [SincronizaCatalogo::class, 'sincronizarTipoDocumento']);
+        Route::post('/sincronizarMotivoAnulacion', [SincronizaCatalogo::class, 'sincronizarMotivoAnulacion']);
+        Route::post('/sincronizarTipoEvento', [SincronizaCatalogo::class, 'sincronizarTipoEvento']);
     });
 
 });

@@ -23,10 +23,9 @@
                                     <label class="required fw-semibold fs-6 mb-2">Motivo de anulacion</label>
                                     <select name="codigoMotivoAnulacion" id="codigoMotivoAnulacion" class="form-control" required>
                                         <option value="">Seleccione</option>
-                                        <option value="1">FACTURA MAL EMITIDA</option>
-                                        <option value="2">NOTA DE CREDITO-DEBITO MAL EMITIDA</option>
-                                        <option value="3">DATOS DE EMISION INCORRECTOS</option>
-                                        <option value="4">FACTURA O NOTA DE CREDITO-DEBITO DEVUELTA</option>
+                                        @foreach ($motivoAnulacion as $ma)
+                                            <option value="{{ $ma->codigo_sin }}">{{ $ma->nombre }}</option>
+                                        @endforeach
                                     </select>
                                     <input type="hidden" id="factura_id">
                                 </div>
