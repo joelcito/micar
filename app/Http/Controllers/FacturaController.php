@@ -649,8 +649,8 @@ class FacturaController extends Controller
         return $data;
     }
 
-    public function imprimeFactura(Request $request, $factura_id){  
-        
+    public function imprimeFactura(Request $request, $factura_id){
+
         $factura = Factura::find($factura_id);
         $xml = $factura['productos_xml'];
 
@@ -661,8 +661,17 @@ class FacturaController extends Controller
         $cuf            = (string)$cabeza['cabecera']->cuf;
         $numeroFactura  = (string)$cabeza['cabecera']->numeroFactura;
 
+        // Genera el texto para el código QR
+        $textoQR = 'https://pilotosiat.impuestos.gob.bo/consulta/QR?nit=5427648016&cuf='.$cuf.'&numero='.$numeroFactura.'&t=2';
+        // dd($cuf,$numeroFactura, $textoQR);
+        // Genera la ruta temporal para guardar la imagen del código QR
+        $rutaImagenQR = storage_path('app/public/qr_code.png');
+        $urlImagenQR = asset(str_replace(storage_path('app/public'), 'storage', $rutaImagenQR));
+        // Genera el código QR y guarda la imagen en la ruta temporal
+        QrCode::generate($textoQR, $rutaImagenQR);
+        // QrCode::format('png')->generate($textoQR, $rutaImagenQR);
 
-        return view('pago.imprimeFactura')->with(compact('factura', 'archivoXML'));
+        return view('pago.imprimeFactura')->with(compact('factura', 'archivoXML', 'cabeza'));
     }
 
     // ********************  PRUEBAS FACUTRAS SINCRONIZACION   *****************************

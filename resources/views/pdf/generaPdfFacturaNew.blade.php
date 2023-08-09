@@ -404,7 +404,9 @@
             </tr>
             <tr>
                 <td colspan="2" style="text-align: right; padding-right: 10px;">DESCUENTO Bs</td>
-                <td style="text-align: right;">{{ number_format( (float) $archivoXML->cabecera->descuentoAdicional, 2) }}</td>
+                <td style="text-align: right;">
+                    {{ number_format( (float) $archivoXML->cabecera->descuentoAdicional, 2) }}
+                </td>
             </tr>
             <tr>
                 <td colspan="2" style="text-align: right; padding-right: 10px;">TOTAL Bs</td>
@@ -415,16 +417,22 @@
             </tr>
             <tr>
                 <td colspan="2" style="text-align: right; padding-right: 10px;">MONTO GIFT CARD Bs</td>
-                <td style="text-align: right;">{{ number_format( (float) $archivoXML->cabecera->montoGiftCard, 2) }}</td>
+                <td style="text-align: right;">
+                    {{ number_format( (float) $archivoXML->cabecera->montoGiftCard, 2) }}
+                </td>
             </tr>
             <tr>
                 <td colspan="2" style="text-align: right; padding-right: 10px;"><b>MONTO A PAGAR Bs</b></td>
                 {{--  <td style="text-align: right;"><b>{{ number_format($to,2) }}</b></td>  --}}
-                <td style="text-align: right;"><b>{{ number_format((float) $archivoXML->cabecera->montoTotal,2) }}</b></td>
+                <td style="text-align: right;">
+                    <b>{{ number_format((float) $archivoXML->cabecera->montoTotal,2) }}</b>
+                </td>
             </tr>
             <tr>
                 <td colspan="2" style="text-align: right; padding-right: 10px;"><b>IMPORTE BASE CRÉDITO FISCAL</b></td>
-                <td style="text-align: right;"><b>{{ number_format((float) $archivoXML->cabecera->montoTotal,2) }}</b></td>
+                <td style="text-align: right;">
+                    <b>{{ number_format((float) $archivoXML->cabecera->montoTotal,2) }}</b>
+                </td>
                 {{--  <td style="text-align: right;"><b>{{ number_format($to,2) }}</b></td>  --}}
             </tr>
 

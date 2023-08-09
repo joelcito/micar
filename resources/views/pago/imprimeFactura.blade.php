@@ -166,392 +166,232 @@
             width: 300px;
         }
 
+        #table_detalle{
+            width: 300px;
+        }
+
+        #btonVolver{
+            background-color: black;
+            color: white;
+            padding: 3px 3px;
+            border: 1px solid #ff1500 ;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
 	</style>
-	<script src="{{ asset('js/NumeroALetras.js') }}"></script>
-	<script src="{{ asset('dist/js/qrcode.min.js') }}"></script>
 </head>
 <body>
-@php
-	// function fechaCastellano ($fecha) {
-    //     $fecha = substr($fecha, 0, 10);
-    //     $numeroDia = date('d', strtotime($fecha));
-    //     $dia = date('l', strtotime($fecha));
-    //     $mes = date('F', strtotime($fecha));
-    //     $anio = date('Y', strtotime($fecha));
-    //     $dias_ES = array("Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo");
-    //     $dias_EN = array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
-    //     $nombredia = str_replace($dias_EN, $dias_ES, $dia);
-    //     $meses_ES = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre",
-    //     "Noviembre", "Diciembre");
-    //     $meses_EN = array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October",
-    //     "November", "December");
-    //     $nombreMes = str_replace($meses_EN, $meses_ES, $mes);
-    //     return $numeroDia." de ".$nombreMes." de ".$anio;
-	// }
-@endphp
+    <div style="width: 302px" class="facturaPequena">
 
-    {{--  @dd(auth()->user()->almacen_id, auth()->user()->name)  --}}
-
-    {{-- @if (auth()->user()->almacen_id == 2 || auth()->user()->almacen_id == 12 || auth()->user()->almacen_id == 3) --}}
-    @if (true)
-
-        <div style="width: 302px" class="facturaPequena">
-
-            <div class="textoCentrado">
-                <b class="textoCentradoNegrita">FACTURA </b>                                                             <br>
-                <b class="textoCentradoNegrita">CON DERECHO A CREDITO FISCAL </b>                                        <br>
-                {{ $archivoXML->cabecera->razonSocialEmisor }}                              <br>
-                CASA MATRIZ                                                                 <br>
-                No. Punto de Venta {{ $archivoXML->cabecera->codigoPuntoVenta }}            <br>
-                {{ $archivoXML->cabecera->direccion }}                                      <br>
-                Tel. {{ $archivoXML->cabecera->telefono }}                                  <br>
-                {{ $archivoXML->cabecera->municipio }}                                      <br>
-                - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - <br>
-                <b class="textoCentradoNegrita">NIT</b>                                                                  <br>
-                {{ $archivoXML->cabecera->nitEmisor }}                                      <br>
-                <b class="textoCentradoNegrita">FACTURA N°</b>                                                           <br>
-                {{ $archivoXML->cabecera->numeroFactura }}                                  <br>
-                <b class="textoCentradoNegrita">CÓD. AUTORIZACIÓN</b>                                                    <br>
-                <div class="estatico">
-                    {{ $archivoXML->cabecera->cuf }}
-                </div>                                                                      
-                - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - <br>
-                <table id="table_nuew_num_fac">
-                    <tr>
-                        <td style="text-align: right; width: 150px"><b>NOMBRE/RAZÓN SOCIAL:</b></td>
-                        <td width="150px" style="text-align: left">
-                            {{ $archivoXML->cabecera->nombreRazonSocial }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: right; width: 150px"><b>NIT/CI/CEX:</b></td>
-                        <td width="100px" style="text-align: left">
-                            {{ $archivoXML->cabecera->numeroDocumento }}
-                            @if (!empty($archivoXML->cabecera->complemento))
-                                - {{ $archivoXML->cabecera->complemento }}
-                            @endif    
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: right; width: 150px"><b>COD. CLIENTE:</b></td>
-                        <td width="100px" style="text-align: left">
-                            {{ $archivoXML->cabecera->numeroDocumento }}
-                            @if (!empty($archivoXML->cabecera->complemento))
-                                - {{ $archivoXML->cabecera->complemento }}
-                            @endif  
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: right; width: 150px"><b>FECHA DE EMISION:</b></td>
-                        <td width="100px" style="text-align: left">
-                            <div>
-                                @php
-                                    $fechaHora = $archivoXML->cabecera->fechaEmision;
-                                    $dateTime = new DateTime($fechaHora);
-                                    $formattedDateTime = $dateTime->format('d/m/Y h:i A');
-                                @endphp
-                                {{ $formattedDateTime }}
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-                - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - <br>
-                <b class="textoCentradoNegrita">DETALLE</b><br>
-                <table>
-                    <thead>
-                        <th>
-                            <td>N°</td>
-                            <td>P/U</td>
-                            <td>CANT</td>
-                            <td>DAE</td>
-                        </th>
-                    </thead>
-                </table>
-
-
-
-
-
-
-
-                {{-- {{ $datosEmpresa->nombre }}<br /><br />
-                {{ $datosEmpresa->direccion }} --}}
-                
-                DATOS EMPRESA<br /><br />
-                DIRECCION EMPRESA
+        <div class="textoCentrado">
+            <b class="textoCentradoNegrita">FACTURA </b>                                                             <br>
+            <b class="textoCentradoNegrita">CON DERECHO A CREDITO FISCAL </b>                                        <br>
+            {{ $archivoXML->cabecera->razonSocialEmisor }}                              <br>
+            CASA MATRIZ                                                                 <br>
+            No. Punto de Venta {{ $archivoXML->cabecera->codigoPuntoVenta }}            <br>
+            {{ $archivoXML->cabecera->direccion }}                                      <br>
+            Tel. {{ $archivoXML->cabecera->telefono }}                                  <br>
+            {{ $archivoXML->cabecera->municipio }}                                      <br>
+            - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - <br>
+            <b class="textoCentradoNegrita">NIT</b>                                                                  <br>
+            {{ $archivoXML->cabecera->nitEmisor }}                                      <br>
+            <b class="textoCentradoNegrita">FACTURA N°</b>                                                           <br>
+            {{ $archivoXML->cabecera->numeroFactura }}                                  <br>
+            <b class="textoCentradoNegrita">CÓD. AUTORIZACIÓN</b>                                                    <br>
+            <div class="estatico">
+                {{ $archivoXML->cabecera->cuf }}
             </div>
-            <p class="textoCentradoNegrita">FACTURA ORIGINAL</p>
-            <hr />
-
-            {{-- <div class="textoCentradoNegrita">NIT: {{ $datosEmpresa->nit }}</div> --}}
-            <div class="textoCentradoNegrita">NIT: NIT ENPRESA</div>
-            {{-- <div class="textoCentradoNegrita">FACTURA N&deg;: {{ $datosFactura->numero_factura }}</div> --}}
-            <div class="textoCentradoNegrita">FACTURA N&deg;: NUM FACTURA</div>
-            <div class="textoCentrado">N&deg; AUTORIZACION: DATOA UTORIZACION</div>
-
-            <hr />
-            {{-- <div class="textoCentrado">{{ $datosEmpresa->actividad }}</div> --}}
-            <div class="textoCentrado">ACTIVIODAD</div>
-            <br />
-
-            {{-- <div>Fecha: {{ $datosEmpresa->ciudad }}, {{ fechaCastellano($datosVenta->fecha) }}</div> --}}
-            <div>Fecha: CIUDAD EMPRESAA, FECHA</div>
-            {{-- <div>Se&ntilde;or(es): {{ $datosVenta->cliente->razon_social }}</div> --}}
-            <div>Se&ntilde;or(es): RAZON SOCIAL</div>
-            {{-- <div>NIT/CI: {{ $datosFactura->nit_cliente }}</div> --}}
-            <div>NIT/CI: NIT CLIENTE</div>
+            - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - <br>
+            <table id="table_nuew_num_fac">
+                <tr>
+                    <td style="text-align: right; width: 150px"><b>NOMBRE/RAZÓN SOCIAL:</b></td>
+                    <td width="150px" style="text-align: left">
+                        {{ $archivoXML->cabecera->nombreRazonSocial }}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: right; width: 150px"><b>NIT/CI/CEX:</b></td>
+                    <td width="100px" style="text-align: left">
+                        {{ $archivoXML->cabecera->numeroDocumento }}
+                        @if (!empty($archivoXML->cabecera->complemento))
+                            - {{ $archivoXML->cabecera->complemento }}
+                        @endif
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: right; width: 150px"><b>COD. CLIENTE:</b></td>
+                    <td width="100px" style="text-align: left">
+                        {{ $archivoXML->cabecera->numeroDocumento }}
+                        @if (!empty($archivoXML->cabecera->complemento))
+                            - {{ $archivoXML->cabecera->complemento }}
+                        @endif
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: right; width: 150px"><b>FECHA DE EMISION:</b></td>
+                    <td width="100px" style="text-align: left">
+                        <div>
+                            @php
+                                $fechaHora = $archivoXML->cabecera->fechaEmision;
+                                $dateTime = new DateTime($fechaHora);
+                                $formattedDateTime = $dateTime->format('d/m/Y h:i A');
+                            @endphp
+                            {{ $formattedDateTime }}
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - <br>
+            <b class="textoCentradoNegrita">DETALLE</b><br>
 
             <div>
-                <table class="datos" width="302">
-                    <thead>
-                        <tr>
-                            <th>CANT.</th>
-                            <th>DESCRIPCION</th>
-                            <th>P/U</th>
-                            <th>SUBTOTAL</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @php
-                        $sumaSubTotal = 0;
-                        @endphp
-                        {{-- @foreach ($productosVenta as $con => $pv)
-                        <tr>
-                            <td style="text-align: right;" width="100px">
-                                <span class="text-info"><b>{{ ($pv->precio_cobrado_mayor>0)?$pv->escala->nombre:"" }}</b></span>
-                                <span class="text-success"><b>{{ ($pv->combo_id != null)?$pv->combo->nombre:"" }}</b></span>
-                                &nbsp;&nbsp;&nbsp; <b>{{ $pv->cantidad }}
-                            </td>
-                            <td width="425px" style="text-align: left;">{{ $pv->producto->nombre }}</td>
-
+                <table id="table_detalle">
+                    @php
+                        $total = 0;
+                        $json = json_encode($archivoXML);
+                        $array = json_decode($json, true);
+                        $listado_detalles = $array['detalle'];
+                        $subTotales = 0;
+                    @endphp
+                    @foreach ($listado_detalles as $d)
+                        @if (is_array($d))
                             @php
-                            if ($pv->precio_cobrado_mayor>0) {
-                            $precio_costo = $pv->precio_cobrado_mayor;
-                            }else{
-                            $precio_costo = $pv->precio_cobrado;
-                            }
-                            $subTotal = $precio_costo * $pv->cantidad;
-                            $sumaSubTotal += $subTotal;
+                                $subTotales += (float) $d['subTotal'];
                             @endphp
-
-                            <td style="text-align: right;" width="160px">{{ $precio_costo }}</td>
-                            <td style="text-align: right;" width="100px"><b>{{ number_format($subTotal, 2, '.', '') }}</b></td>
-
-                        </tr>
-                        @endforeach --}}
-                        @php
-                        // $numeroParaDecimal = number_format($subTotal, 2, '.', '');
-                        // list($numero, $decimal) = explode('.', $numeroParaDecimal);
-                        @endphp
-                    </tbody>
-                    <tfoot>
-                        <td colspan="2" style="text-align: left;"></td>
-                        <td style="background-color: #fefefe;color: #000;">TOTAL</td>
-                        <td style="text-align: right;font-size: 9pt;font-weight: bold;">
-                            {{-- {{ number_format($sumaSubTotal, 2, '.','') }} --}}
-                        </td>
-                    </tfoot>
-
+                            <tr>
+                                <td style="text-align: left">
+                                    {{ $d['codigoProducto'] }} - {{ $d['descripcion'] }} <br>
+                                    Unidad de Medida: Unidad (Servicios) <br>
+                                    {{ number_format((float) $d['cantidad'],2) }} X {{ number_format((float) $d['precioUnitario'],2) }} - {{ number_format((float) $d['montoDescuento'],2) }}
+                                </td>
+                                <td>
+                                    <br>
+                                    <br>
+                                    {{ number_format((float) $d['subTotal'],2) }}
+                                </td>
+                            </tr>
+                        @else
+                            @php
+                                $subTotales += (float) $listado_detalles['subTotal'];
+                            @endphp
+                            <tr>
+                                <td>
+                                    {{ $listado_detalles['codigoProducto'] }} - {{ $listado_detalles['descripcion'] }} <br>
+                                    Unidad de Medida: Unidad (Servicios) <br>
+                                    {{ number_format((float) $listado_detalles['cantidad'],2) }} X {{ number_format((float) $listado_detalles['precioUnitario'],2) }} - {{ number_format((float) $listado_detalles['montoDescuento'],2) }}
+                                </td>
+                                <td>
+                                    <br>
+                                    <br>
+                                    {{ number_format((float) $listado_detalles['subTotal'],2) }}
+                                </td>
+                            </tr>
+                            @break
+                        @endif
+                    @endforeach
                 </table>
-                {{-- SON: <span id="literalTotal"> </span>{{ $decimal }}/100 BOLIVIANOS --}}
-                SON: <span id="literalTotal"> </span>decimal/100 BOLIVIANOS
-                <br />
-                <br />
-
-                {{-- <div>Codigo de Control: {{ $datosFactura->codigo_control }}</div> --}}
-                <div>Codigo de Control: CODIGO CONTROL</div>
-                {{-- <div>Fecha limite de Emision: {{ $datosFactura->fecha_limite }}</div> --}}
-                <div>Fecha limite de Emision: FECHA LIMITE DE EMISION</div>
-                <br />
-                <center>
+            </div>
+            - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - <br>
+            <table id="table_nuew_num_fac">
+                <tr>
+                    <td style="text-align: right; width: 150px">SUBTOTAL Bs</td>
+                    <td width="150px" style="text-align: right">
+                        {{  number_format( $subTotales, 2) }}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: right; width: 150px">DESCUENTO Bs</td>
+                    <td width="100px" style="text-align: right">
+                        {{ number_format( (float) $archivoXML->cabecera->descuentoAdicional, 2) }}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: right; width: 150px">TOTAL Bs</td>
+                    <td width="100px" style="text-align: right">
+                        {{ number_format( (float) $archivoXML->cabecera->montoTotal, 2) }}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: right; width: 150px">MONTO GIFT CARD Bs</td>
+                    <td width="100px" style="text-align: right">
+                        {{ number_format( (float) $archivoXML->cabecera->montoGiftCard, 2) }}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: right; width: 150px"><b>MONTO A PAGAR Bs</b></td>
+                    <td width="100px" style="text-align: right">
+                        <b>{{ number_format((float) $archivoXML->cabecera->montoTotal,2) }}</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: right; width: 150px"><b>IMPORTE BASE CRÉDITO FISCAL Bs</b></td>
+                    <td width="100px" style="text-align: right">
+                        <b>{{ number_format((float) $archivoXML->cabecera->montoTotal,2) }}</b>
+                    </td>
+                </tr>
+            </table>
+            <br>
+            <div style="text-align: left">
+                @php
+                    $to = ((float) $archivoXML->cabecera->montoTotal);
+                    $number = $to;
+                    $formatter = new NumberFormatter('es', NumberFormatter::SPELLOUT);
+                    $literal = $formatter->format($number);
+                @endphp
+                <b>Son: {{ ucfirst($literal) }} 00/100 Bolivianos</b>
+            </div>
+            - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - <br>
+            <p style="font-size:11px">
+                ESTA FACTURA CONTRIBUYE AL DESARROLLO DEL PAÍS, EL USO ILÍCITO SERÁ SANCIONADO PENALMENTE DE ACUERDO A LEY
+            </p>
+            <br>
+            <p style="font-size:11px">
+                Ley N&deg; 453: El proveedor debera suministrar el servicio en las modalidades y terminos ofertados o convenidos.
+            </p>
+            @if ($factura->tipo_factura === 'online')
+                “Este documento es la Representación Gráfica de un Documento Fiscal Digital emitido en una modalidad de facturación en línea”
+            @else
+                “Este documento es la Representación Gráfica de un Documento Fiscal Digital emitido fuera de línea, verifique su envío con su proveedor o en la página web www.impuestos.gob.bo”
+            @endif
+            <br>
+            <br>
+            <center>
                 <div id="qrcode"></div>
-                </center>
+            </center>
+            <br>
 
 
-                <br />
-                <center>
-                    "ESTA FACTURA CONTRIBUYE AL DESARROLLO DEL PAIS. EL USO ILICITO DE ESTA SERA SANCIONADO DE ACUERDO A
-                    LEY"<br />
-                    <b>Ley N&deg; 453: El proveedor debera suministrar el servicio en las modalidades y terminos ofertados o
-                        convenidos.</b>
-                    <p>&nbsp;</p>
-                    <div id="btnImprimir">
-                        <input type="button" id="botonImpresion" value="IMPRIMIR" onClick="window.print()">
-                    </div>
-
-                    <div>
-                        <input type="button" value="VOLVER">
-                    </div>
-                </center>
-            </div>
-
+        <div>
+            <center>
+                <div id="btnImprimir">
+                    <input type="button" id="botonImpresion" value="IMPRIMIR" onClick="window.print()">
+                    <a id="btonVolver" href="{{ URL::previous() }}" class="btn btn-primary btn-dark">VOLVER</a>
+                </div>
+            </center>
         </div>
 
-    @else
-
-        <div id="fondo">
-            <div id="logo"><img src="{{ asset('assets/images/logoSmartZone.jpg') }}" width="150"></div>
-
-            <table id="datosEmpresaNit" width="300">
-                <tr>
-                    <th style="text-align: left;">NIT:</th>
-                    <td>{{ $datosEmpresa->nit }}</td>
-                </tr>
-                <tr>
-                    <th style="text-align: left;">FACTURA N&deg;:</th>
-                    <td>{{ $datosFactura->numero_factura }}</td>
-                </tr>
-                <tr>
-                    <th style="text-align: left;">N&deg; AUTORIZACION:</th>
-                    <td>{{ $datosFactura->numero_autorizacion }}</td>
-                </tr>
-            </table>
-
-            <table id="datosEmpresaFactura">
-                <tr>
-                    <td style="text-align: left;"><b>Lugar y Fecha:</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $datosEmpresa->ciudad
-                        }}, {{ fechaCastellano($datosVenta->fecha) }}</span></td>
-                    <td><b>NIT/CI:<b /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $datosFactura->nit_cliente }}</td>
-                </tr>
-                <tr>
-                    <td style="text-align: left;"><b>Se&ntilde;or(es):</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{
-                        $datosVenta->cliente->razon_social }}</td>
-                    <td></td>
-                </tr>
-            </table>
-            <div id="tablaProductos">
-                <table class="datos" width="892">
-                    <thead>
-                        <tr>
-                            <th style="padding-top: 5px;padding-bottom: 5px;">N&deg;</th>
-                            <th>CANTIDAD</th>
-                            <th>DESCRIPCION</th>
-                            <th>PRECIO UNITARIO</th>
-                            <th>SUBTOTAL</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @php
-                        $sumaSubTotal = 0;
-                        @endphp
-                        @foreach ($productosVenta as $con => $pv)
-                        <tr>
-                            <td width="25px">{{ ++$con }}</td>
-                            <td style="text-align: right;" width="100px">
-                                <span class="text-info"><b>{{ ($pv->precio_cobrado_mayor>0)?$pv->escala->nombre:"" }}</b></span>
-                                <span class="text-success"><b>{{ ($pv->combo_id != null)?$pv->combo->nombre:"" }}</b></span>
-                                &nbsp;&nbsp;&nbsp; <b>{{ $pv->cantidad }}
-                            </td>
-                            <td width="425px" style="text-align: left;">{{ $pv->producto->nombre }}</td>
-
-                            @php
-                            if ($pv->precio_cobrado_mayor>0) {
-                            $precio_costo = $pv->precio_cobrado_mayor;
-                            }else{
-                            $precio_costo = $pv->precio_cobrado;
-                            }
-                            $subTotal = $precio_costo * $pv->cantidad;
-                            $sumaSubTotal += $subTotal;
-                            @endphp
-
-                            <td style="text-align: right;" width="160px">{{ $precio_costo }}</td>
-                            <td style="text-align: right;" width="100px"><b>{{ number_format($subTotal, 2, '.', '') }}</b></td>
-
-                        </tr>
-                        @endforeach
-                        @php
-                        $numeroParaDecimal = number_format($subTotal, 2, '.', '');
-                        list($numero, $decimal) = explode('.', $numeroParaDecimal);
-                        @endphp
-                    </tbody>
-                    <tfoot>
-                        <td colspan="3" style="text-align: left;">SON: <span id="literalTotal"> </span>{{ $decimal }}/100
-                            BOLIVIANOS</td>
-                        <td style="background-color: #abd4ed;color: #000;">TOTAL Bs.</td>
-                        <td style="text-align: right;font-size: 9pt;font-weight: bold;">{{ number_format($sumaSubTotal, 2, '.',
-                            '') }}</td>
-                    </tfoot>
-
-                </table>
-                <br />
-                <table class="codigoControlQr" width="100%">
-                    <tr>
-                        <td>
-                            Codigo de Control: {{ $datosFactura->codigo_control }}<br />
-                            Fecha limite de Emision: {{ $datosFactura->fecha_limite }}
-                        </td>
-                        <td>
-                            <div id="qrcode"></div>
-                        </td>
-                    </tr>
-                </table>
-                <br />
-                <center>
-                    "ESTA FACTURA CONTRIBUYE AL DESARROLLO DEL PAIS. EL USO ILICITO DE ESTA SERA SANCIONADO DE ACUERDO A
-                    LEY"<br />
-                    <b>Ley N&deg; 453: El proveedor debera suministrar el servicio en las modalidades y terminos ofertados o
-                        convenidos.</b>
-                    <p>&nbsp;</p>
-                    <div id="btnImprimir">
-                        <input type="button" id="botonImpresion" value="IMPRIMIR" onClick="window.print()">
-                    </div>
-                </center>
-            </div>
-
-            <div id="txtOriginal">ORIGINAL</div>
-            <div id="txtActividad">{{ $datosEmpresa->actividad }}</div>
-            <div id="txtFactura">FACTURA</div>
-            <div id="direccionEmpresa">
-                <span style="font-size: 8pt;">{{ $datosEmpresa->nombre }}</span><br>
-                {{ $datosEmpresa->direccion }}
-            </div>
-        </div>
-
-    @endif
-
-	@php
-		// $fechaFecha = $datosVenta->fecha;
-		// $fechaFactura = new DateTime($datosVenta->fecha);
-		// // $datosFecha = explode("/", "$fechaFecha");
-		// // $nuevaFecha = $datosFecha[2]."/".$datosFecha[1]."/".$datosFecha[0];
-		// $fechaQr = $fechaFactura->format('d/m/Y');
-	@endphp
-
+    </div>
+	<script src="{{ asset('assets/js/qrcodejs/qrcode.js') }}"></script>
 	<script>
-        {{-- 
-		let valorTotal = Number({{ $sumaSubTotal }});
-		var options = { year: 'numeric', month: 'long', day: 'numeric' };
-		// var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        @php
+            $cuf            = (string)$cabeza['cabecera']->cuf;
+            $numeroFactura  = (string)$cabeza['cabecera']->numeroFactura;
+        @endphp
 
-		function numerosALetras() {
+        let cadenaQr = 'https://pilotosiat.impuestos.gob.bo/consulta/QR?nit=5427648016&cuf={{ $cuf }}&numero={{ $numeroFactura }}&t=1';
+        var options = {
+            text: cadenaQr,
+            width: 120,
+            height: 120,
+            colorDark: "#000000",   // Color de los módulos oscuros
+            colorLight: "#ffffff"   // Color de los módulos claros
+        };
+        var qr = new QRCode(document.getElementById("qrcode"), options);
 
-			// generamos los numeros a letras
-		    valorLiteral = numeroALetras(valorTotal, {
-		        plural: ' ',
-		        singular: ' ',
-		        centPlural: 'Centavos',
-		        centSingular: 'Centavo'
-		    });
-			// console.log(valorLiteral);
-			document.getElementById("literalTotal").innerHTML = valorLiteral;
-
-			// cambiamos la fecha para mejor lectura
-			let fecha = new Date("{{ $datosVenta->fecha }}");
-			document.getElementById("lugarFecha").innerHTML = "La Paz, " + fecha.toLocaleDateString("es-ES", options);
-		}
-
-		window.onload = numerosALetras;
-		let cadenaQr = "{{ $datosEmpresa->nit }}|{{ $datosFactura->numero_factura }}|{{ $datosFactura->numero_autorizacion }}|{{ $fechaQr }}|{{ number_format($sumaSubTotal, 2, '.', '') }}|{{ round($sumaSubTotal, 0, PHP_ROUND_HALF_UP) }}|{{ $datosFactura->codigo_control }}|{{ $datosFactura->nit_cliente }}|0|0|0|0";
-		// console.log(cadenaQr);
-		var qrcode = new QRCode("qrcode", {
-			text: cadenaQr,
-			width: 90,
-			height: 90,
-			colorDark : "#000000",
-			colorLight : "#ffffff",
-			correctLevel : QRCode.CorrectLevel.H
-		});
-        --}}
 	</script>
 
 </body>
