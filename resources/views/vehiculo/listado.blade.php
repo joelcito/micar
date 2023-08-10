@@ -224,49 +224,51 @@
             </div>
         </div>
         <hr>
-        <div class="row">
-            <div class="col-md-3">
-                <div id="table_agrega_servicios" style="display: none">
-                    <label class="required fw-semibold fs-6 mb-2">Servicio</label>
-                    <select name="serivicio_id" id="serivicio_id" class="form-control" onchange="identificaSericio(this)">
-                        <option value="">SELECCIONE</option>
-                        @foreach ($servicios as $s)
-                        <option value="{{ $s }}">{{ $s->descripcion }}</option>
+        <form id="formularioAgregaVenta">
+            <div class="row">
+                <div class="col-md-3">
+                    <div id="table_agrega_servicios" style="display: none">
+                        <label class="required fw-semibold fs-6 mb-2">Servicio</label>
+                        <select name="serivicio_id" id="serivicio_id" class="form-control" onchange="identificaSericio(this)" required>
+                            <option value="">SELECCIONE</option>
+                            @foreach ($servicios as $s)
+                            <option value="{{ $s }}">{{ $s->descripcion }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3 haber" style="display: none">
+                    <label class="required fw-semibold fs-6 mb-2">Unidad</label>
+                    <input type="text" readonly class="form-control" id="unidad" name="unidad">
+                </div>
+                <div class="col-md-3 haber" style="display: none">
+                    <label class="required fw-semibold fs-6 mb-2">Lavador</label>
+                    <select name="lavador_id" id="lavador_id" class="form-control" required>
+                        <option value="">Seleccione el Lavador</option>
+                        @foreach ($lavadores as $l)
+                            <option value="{{ $l->id }}">{{ $l->name }}</option>
                         @endforeach
                     </select>
                 </div>
+                <div class="col-md-3 haber" style="display: none">
+                    <label class="required fw-semibold fs-6 mb-2">Precio</label>
+                    <input type="text" readonly class="form-control" id="precio" name="precio" required>
+                </div>
             </div>
-            <div class="col-md-3 haber" style="display: none">
-                <label class="required fw-semibold fs-6 mb-2">Unidad</label>
-                <input type="text" readonly class="form-control" id="unidad" name="unidad">
+            <div class="row">
+                <div class="col-md-3 haber" style="display: none">
+                    <label class="required fw-semibold fs-6 mb-2">Cantidad</label>
+                    <input type="text" class="form-control" id="cantidad" name="cantidad" required>
+                </div>
+                <div class="col-md-3 haber" style="display: none">
+                    <label class="required fw-semibold fs-6 mb-2">Total</label>
+                    <input type="text" class="form-control" id="total" name="total" readonly value="0" required>
+                </div>
+                <div class="col-md-6 haber" style="display: none">
+                    <button class="btn btn-success btn-icon btn-sm w-100 mt-10" type="button" onclick="agregarVenta()"><i class="fa fa-car-alt"></i>  Agregar</button>
+                </div>
             </div>
-            <div class="col-md-3 haber" style="display: none">
-                <label class="required fw-semibold fs-6 mb-2">Lavador</label>
-                <select name="lavador_id" id="lavador_id" class="form-control">
-                    <option value="">Seleccione el Lavador</option>
-                    @foreach ($lavadores as $l)
-                        <option value="{{ $l->id }}">{{ $l->name }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="col-md-3 haber" style="display: none">
-                <label class="required fw-semibold fs-6 mb-2">Precio</label>
-                <input type="text" readonly class="form-control" id="precio" name="precio">
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-3 haber" style="display: none">
-                <label class="required fw-semibold fs-6 mb-2">Cantidad</label>
-                <input type="text" class="form-control" id="cantidad" name="cantidad">
-            </div>
-            <div class="col-md-3 haber" style="display: none">
-                <label class="required fw-semibold fs-6 mb-2">Total</label>
-                <input type="text" class="form-control" id="total" name="total" readonly>
-            </div>
-            <div class="col-md-6 haber" style="display: none">
-                <button class="btn btn-success btn-icon btn-sm w-100 mt-10" onclick="agregarVenta()"><i class="fa fa-car-alt"></i>  Agregar</button>
-            </div>
-        </div>
+        </form>
 
         <div id="table_vehiculos">
 
@@ -289,7 +291,7 @@
                     </div>
                     <div class="col-md-3">
                         <label for="">Tipo Docuemnto</label>
-                        <select name="tipo_documento" id="tipo_documento" class="form-control" onchange="verificaNit()">
+                        <select name="tipo_documento" id="tipo_documento" class="form-control" onchange="verificaNit()" required>
                             <option value="">SELECCIONE</option>
                             @foreach ($tipoDocumento as $te)
                                 <option value="{{ $te->codigo_sin }}">{{ $te->nombre }}</option>
@@ -313,7 +315,7 @@
                             <option value="offline">Fuera de Linea</option>
                         </select>
                     </div>
-                    <div class="col-md-2" style="">
+                    <div class="col-md-2" style="display: none;" id="bloque_cafc">
                         <label for="">Uso del CAFC?</label>
                         <div class="row mt-5">
                             <div class="col-md-6">
@@ -323,7 +325,7 @@
                             <div class="col-md-6">
                                 <label for="radioSi">Si</label>
                                 <input type="radio" name="uso_cafc" id="radioSi" value="Si">
-                                <input type="text" id="codigo_cafc_contingencia" name="codigo_cafc_contingencia">
+                                <input type="hidden" id="codigo_cafc_contingencia" name="codigo_cafc_contingencia">
                             </div>
                         </div>
                     </div>
@@ -500,71 +502,66 @@
             var json = JSON.parse(selected.value);
             $('#unidad').val(json.unidad_venta)
             $('#precio').val(json.precio)
+            $('#cantidad').val(1)
+            $('#total').val((1*json.precio))
             $('.haber').show('toggle');
         }
 
         function agregarVenta(){
-            let servicio_id = (JSON.parse($('#serivicio_id').val())).id
-            let lavador_id = $('#lavador_id').val();
-            let vehiculo_id = $('#vehiculo_id').val();
-            let precio = $('#precio').val();
-            let cantidad = $('#cantidad').val();
-            let total = $('#total').val();
-            let pago_id = $('#pago_id').val();
 
-            console.log(
-            servicio_id,
-            lavador_id,
-            vehiculo_id,
-            precio,
-            cantidad,
-            total)
+            if($('#formularioAgregaVenta')[0].checkValidity()){
 
-            $.ajax({
-                url: "{{ url('vehiculo/ajaxRegistraVenta') }}",
-                type: 'POST',
-                data:{
-                    servicio_id     :servicio_id,
-                    lavador_id      :lavador_id,
-                    vehiculo_id     :vehiculo_id,
-                    precio          :precio,
-                    cantidad        :cantidad,
-                    total           :total,
-                    pago_id         :pago_id
-                },
-                dataType: 'json',
-                success: function(data) {
-                    if(data.estado === 'success'){
-                        console.log(data)
-                        $('#pago_id').val(data.pago_id);
-                        $('#detalle_ventas').html(data.listado_ventas);
-                        // Swal.fire({
-                        //     icon: 'success',
-                        //     title: 'Eliminado!',
-                        //     text: 'La categoria se elimino!',
-                        //     timer: 1000
-                        // })
+                let servicio_id = (JSON.parse($('#serivicio_id').val())).id
+                let lavador_id = $('#lavador_id').val();
+                let vehiculo_id = $('#vehiculo_id').val();
+                let precio = $('#precio').val();
+                let cantidad = $('#cantidad').val();
+                let total = $('#total').val();
+                let pago_id = $('#pago_id').val();
+
+                console.log(
+                servicio_id,
+                lavador_id,
+                vehiculo_id,
+                precio,
+                cantidad,
+                total)
+
+                $.ajax({
+                    url: "{{ url('vehiculo/ajaxRegistraVenta') }}",
+                    type: 'POST',
+                    data:{
+                        servicio_id     :servicio_id,
+                        lavador_id      :lavador_id,
+                        vehiculo_id     :vehiculo_id,
+                        precio          :precio,
+                        cantidad        :cantidad,
+                        total           :total,
+                        pago_id         :pago_id
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        if(data.estado === 'success'){
+                            $('#pago_id').val(data.pago_id);
+                            $('#detalle_ventas').html(data.listado_ventas);
+
+                            $('#serivicio_id').val('')
+                            $('#precio').val(0)
+                            $('#cantidad').val(0)
+                            $('#total').val(0)
+
+                            $('#bloqueDatosFactura').hide('toggle');
+                        }
                     }
-                }
-            });
+                });
+
+            }else{
+    			$("#formularioAgregaVenta")[0].reportValidity()
+            }
 
         }
 
         function eliminarPago(pago){
-            // Swal.fire({
-            //     title: 'Estas seguro de eliminar el servicio ?',
-            //     text: "No podrás revertir esto.!",
-            //     icon: 'warning',
-            //     showCancelButton: true,
-            //     confirmButtonColor: '#3085d6',
-            //     cancelButtonColor: '#d33',
-            //     confirmButtonText: 'Si, eliminar!'
-            // }).then((result) => {
-            //     if (result.isConfirmed) {
-
-            //     }
-            // })
-
             $.ajax({
                 url: "{{ url('pago/eliminarPago') }}",
                 type: 'POST',
@@ -575,23 +572,11 @@
                 dataType: 'json',
                 success: function(data) {
                     if(data.estado === 'success'){
-                        // $('#pago_id').val(data.pago_id);
                         $('#detalle_ventas').html(data.listado);
-                        // Swal.fire({
-                        //     icon: 'success',
-                        //     title: 'Eliminado!',
-                        //     text: 'La categoria se elimino!',
-                        //     timer: 1000
-                        // })
+                        $('#bloqueDatosFactura').hide('toggle');
                     }
                 }
             });
-        }
-
-        function imprimeNota(){
-            // let pago = $('#pago_id').val();
-            let url = "{{ asset('vehiculo/imprimeNota') }}/"+pago;
-            window.location.href = url;
         }
 
         function buscarVehiculo(){
@@ -667,7 +652,6 @@
                     if(data.estado === 'success'){
                         arrayPagos = data.pagos;
                         arrayProductos = JSON.parse(data.lista)
-                        console.log(JSON.parse(data.lista))
                     }
                 }
             });
@@ -789,8 +773,6 @@
                     dataType:'json',
                     success: function(data) {
 
-                        console.log(data);
-
                         if(data.estado === "VALIDADA"){
                             Swal.fire({
                                 icon: 'success',
@@ -798,7 +780,7 @@
                                 text: 'LA FACTURA FUE VALIDADA',
                                 timer: 3000
                             })
-                            //window.location.href = "{{ url('pago/listado')}}"
+                            window.location.href = "{{ url('pago/listado')}}"
                         }else if(data.estado === "error_email"){
                             Swal.fire({
                                 icon: 'error',
@@ -811,7 +793,7 @@
                                 title: 'Exito!',
                                 text: 'LA FACTURA FUERA DE LINEA FUE REGISTRADA',
                             })
-                            // window.location.href = "{{ url('pago/listado')}}"
+                            window.location.href = "{{ url('pago/listado')}}"
                             // location.reload();
                         }else{
                             Swal.fire({
@@ -827,27 +809,59 @@
             }
         }
 
+        function emitirRecibo(){
+
+            $.ajax({
+                url: "{{ url('factura/emitirRecibo') }}",
+                type: 'POST',
+                data:{
+                    vehiculo            : $('#vehiculo_id').val(),
+                    monto               : $('#motoTotalFac').val(),
+                    descuento_adicional : $('#descuento_adicional').val()
+                },
+                dataType: 'json',
+                success: function(data) {
+                    if(data.estado === 'success'){
+                        let url = "{{ asset('factura/imprimeRecibo') }}/"+data.factura;
+                        window.location.href = url;
+                    }
+                }
+            });
+
+
+
+
+            /*
+            detalle = [];
+            arrayProductos.forEach(function (prod){
+                detalle.push({
+                    actividadEconomica  :   prod.codigoActividad,
+                    codigoProductoSin   :   prod.codigoProducto,
+                    codigoProducto      :   prod.servicio_id,
+                    descripcion         :   prod.descripcion,
+                    cantidad            :   prod.cantidad,
+                    unidadMedida        :   prod.unidadMedida,
+                    precioUnitario      :   prod.precio,
+                    montoDescuento      :   prod.descuento,
+                    subTotal            :   ((prod.cantidad*prod.precio)-prod.descuento),
+                    numeroSerie         :   null,
+                    numeroImei          :   null
+                })
+            })
+
+            console.log(detalle, arrayProductos)
+            */
+
+
+
+            //let url = "{{ asset('vehiculo/imprimeNota') }}/"+pago;
+            //window.location.href = url;
+        }
+
         function funcionNueva(input, pago, total){
             let valorEnviado;
             if($("#formularioDescuentos")[0].checkValidity()){
                 valorEnviado = input.value;
-
-                // $.ajax({
-                //     url: "{{ url('factura/actualizaDescuento') }}",
-                //     data: {
-                //         pago_id: pago,
-                //         valor: input.value,
-                //         },
-                //     type: 'POST',
-                //     dataType:'json',
-                //     success: function(data) {
-                //         if(data.estado === 'success'){
-                //             var k = (total-input.value).toFixed(2);
-                //             $('#subTotalCalculdo_'+pago).text(k);
-                //             $('#motoTotalFac').val((data.valor)-$('#descuento_adicional').val())
-                //         }
-                //     }
-                // });
             }else{
                 let idinput = input.id
                 $('#'+idinput).val(valorIniDescuento)
@@ -868,7 +882,7 @@
                     if(data.estado === 'success'){
                         var k = (total-input.value).toFixed(2);
                         $('#subTotalCalculdo_'+pago).text(k);
-                        $('#motoTotalFac').val((data.valor)-$('#descuento_adicional').val())
+                        $('#motoTotalFac').val(parseFloat(((data.valor)-$('#descuento_adicional').val()).toFixed(2)).toFixed(2))
                     }
                 }
             });
@@ -896,6 +910,11 @@
 
         function bloqueCAFC(){
             console.log($('#tipo_facturacion').val())
+            if($('#tipo_facturacion').val() === "offline"){
+                $('#bloque_cafc').show('toggle')
+            }else{
+                $('#bloque_cafc').hide('toggle')
+            }
         }
 
         // Agregar un evento para verificar el radio seleccionado al cambiar

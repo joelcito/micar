@@ -122,6 +122,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/emiteFacturaMasa', [FacturaController::class, 'emiteFacturaMasa']);
         Route::get('/imprimeFactura/{factura_id}', [FacturaController::class, 'imprimeFactura']);
         Route::post('/verificaNit', [FacturaController::class, 'verificaNit']);
+        Route::post('/emitirRecibo', [FacturaController::class, 'emitirRecibo']);
+        Route::get('/imprimeRecibo/{factura_id}', [FacturaController::class, 'imprimeRecibo']);
     });
 
     Route::prefix('/puntoVenta')->group(function () {

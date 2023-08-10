@@ -1272,4 +1272,68 @@ class FacturaController extends Controller
         }
     }
 
+
+    // ============================= PARA LA GENERACION DEL RECIBO ==================================================
+    public function emitirRecibo(Request $request){
+        if($request->ajax()){
+            // dd($request->all());
+            $vehiculo_d             = $request->input('vehiculo');
+            $monto                  = $request->input('monto');
+            $descuento_adicional    = $request->input('descuento_adicional');
+
+            $vehiculo               = Vehiculo::find($vehiculo_d);
+
+            $servicios  = Pago::select('pagos.*','servicios.codigoActividad', 'servicios.codigoProducto', 'servicios.unidadMedida', 'servicios.descripcion')
+                                ->join('servicios', 'pagos.servicio_id','=', 'servicios.id')
+                                ->where('pagos.estado',"paraPagar")
+                                ->where('pagos.vehiculo_id',$vehiculo_d)
+                                ->get();
+
+            $factura                        = new Factura();
+            $factura->creador_id            = Auth::user()->id;
+            $factura->vehiculo_id           = $vehiculo->id;
+            $factura->cliente_id            = $vehiculo->cliente->id;
+            $factura->fecha                 = date('Y-m-d H:m:s');
+            $factura->total                 = $monto;
+            $factura->facturado             = "No";
+            $factura->numero_recibo         = $this->numeroRecibo();
+            $factura->descuento_adicional   = $descuento_adicional;
+            $factura->save();
+
+            $pagos =    $servicios->pluck('id');
+
+            Pago::whereIn('id',$pagos)->update([
+                'estado'        => 'Pagado',
+                'factura_id'    => $factura->id,
+            ]);
+
+            $data['estado'] = 'success';
+            $data['factura'] = $factura->id;
+        }else{
+            $data['estado'] = 'error';
+        }
+        return $data;
+    }
+
+    protected function numeroRecibo(){
+        $dato = Factura::where('facturado', 'No')
+                    ->select(DB::raw('MAX(CAST(numero_recibo AS UNSIGNED)) as max_numero_recibo'))
+                    ->first();
+
+        if($dato){
+            $numero = $dato->max_numero_recibo + 1;
+        }else{
+            $numero = 1;
+        }
+
+        return $numero;
+    }
+
+    public function imprimeRecibo(Request $request, $factura_id){
+        $factura    = Factura::find($factura_id);
+        $pagos      = Pago::where('factura_id', $factura_id)->get();
+        return view('pago.imprimeRecibo')->with(compact('factura', 'pagos'));
+    }
+    // ============================= PARA LA GENERACION DEL RECIBO END ==================================================
+
 }

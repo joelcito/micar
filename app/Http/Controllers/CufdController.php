@@ -23,11 +23,12 @@ class CufdController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($codigo,$codigoControl,$direccion,$fechaVigencia){
+    public function create($codigo,$codigoControl,$direccion,$fechaVigencia, $punto_venta){
         $cufd = new Cufd();
         $cufd->codigo               = $codigo;
         $cufd->codigoControl        = $codigoControl;
         $cufd->direccion            = $direccion;
+        $cufd->punto_venta          = $punto_venta;
         // Convierte el valor a un objeto Carbon y aplícale el formato deseado
         $fechaVigenciaFormateada    = Carbon::parse($fechaVigencia)->format('Y-m-d H:i:s');
         $cufd->fechaVigencia        = $fechaVigenciaFormateada;

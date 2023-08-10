@@ -14,4 +14,8 @@ class Factura extends Model
     public function vehiculo(){
         return $this->belongsTo('App\Models\Vehiculo', 'vehiculo_id');
     }
+
+    public function cliente(){
+        return $this->belongsTo('App\Models\Vehiculo', 'cliente_id');
+    }
 }

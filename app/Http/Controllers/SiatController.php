@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cufd;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -1664,34 +1665,85 @@ class SiatController extends Controller
     }
 
     public function verificarConeccion(){
+        // dd(session()->all(), session()->has('scufd'));
         if(!session()->has('scufd')){
-            $cufd = json_decode($this->cufd());
-            if($cufd->estado === "success"){
-                if($cufd->resultado->RespuestaCufd->transaccion){
-                    session(['scufd'                => $cufd->resultado->RespuestaCufd->codigo]);
-                    session(['scodigoControl'       => $cufd->resultado->RespuestaCufd->codigoControl]);
-                    session(['sdireccion'           => $cufd->resultado->RespuestaCufd->direccion]);
-                    session(['sfechaVigenciaCufd'   => $cufd->resultado->RespuestaCufd->fechaVigencia]);
+            $cufdDelDia = Cufd::where('punto_venta', $this->codigoPuntoVenta)
+                                ->latest()
+                                ->first();
+            if($cufdDelDia){
+                $fechaVigencia = $cufdDelDia->fechaVigencia;
+                // dd(
+                //     $cufdDelDia->fechaVigencia,
+                //     $fechaVigencia < date('Y-m-d H:i'),
+                //     $cufdDelDia
+                // );
+                if($fechaVigencia < date('Y-m-d H:i')){
+                    $cufd = json_decode($this->cufd());
+                    if($cufd->estado === "success"){
+                        if($cufd->resultado->RespuestaCufd->transaccion){
+                            session(['scufd' => $cufd->resultado->RespuestaCufd->codigo]);
+                            session(['scodigoControl' => $cufd->resultado->RespuestaCufd->codigoControl]);
+                            session(['sdireccion' => $cufd->resultado->RespuestaCufd->direccion]);
+                            session(['sfechaVigenciaCufd' => $cufd->resultado->RespuestaCufd->fechaVigencia]);
 
-                    $cufdNew = app(CufdController::class);
-                    $cufdNew->create(
-                                    $cufd->resultado->RespuestaCufd->codigo,
-                                    $cufd->resultado->RespuestaCufd->codigoControl,
-                                    $cufd->resultado->RespuestaCufd->direccion,
-                                    $cufd->resultado->RespuestaCufd->fechaVigencia
-                                );
-
-                    $data['$cufd->resultado->RespuestaCufd->transaccion'] = 'si';
+                            $cufdNew = app(CufdController::class);
+                            $cufdNew->create(
+                                            $cufd->resultado->RespuestaCufd->codigo,
+                                            $cufd->resultado->RespuestaCufd->codigoControl,
+                                            $cufd->resultado->RespuestaCufd->direccion,
+                                            $cufd->resultado->RespuestaCufd->fechaVigencia,
+                                            $this->codigoPuntoVenta
+                                        );
+                            $data['$cufd->resultado->RespuestaCufd->transaccion 2'] = 'si';
+                        }else{
+                            $data['$cufd->resultado->RespuestaCufd->transaccion 2'] = 'no';
+                        }
+                        $data['$cufd->estado === "success"'] = 'si';
+                    }else{
+                        $data['$cufd->estado === "success"'] = 'no';
+                    }
+                    $data['$fechaVigencia < date("Y-m-d H:i")'] = 'si';
                 }else{
-                    $data['$cufd->resultado->RespuestaCufd->transaccion'] = 'no';
+                    session(['scufd'                => $cufdDelDia->codigo]);
+                    session(['scodigoControl'       => $cufdDelDia->codigoControl]);
+                    session(['sdireccion'           => $cufdDelDia->direccion]);
+                    session(['sfechaVigenciaCufd'   => $cufdDelDia->fechaVigencia]);
                 }
-                $data['!session()->has("scufd")'] = 'si';
             }else{
-                // dd("chw");
+                $cufd = json_decode($this->cufd());
+                if($cufd->estado === "success"){
+                    if($cufd->resultado->RespuestaCufd->transaccion){
+                        session(['scufd'                => $cufd->resultado->RespuestaCufd->codigo]);
+                        session(['scodigoControl'       => $cufd->resultado->RespuestaCufd->codigoControl]);
+                        session(['sdireccion'           => $cufd->resultado->RespuestaCufd->direccion]);
+                        session(['sfechaVigenciaCufd'   => $cufd->resultado->RespuestaCufd->fechaVigencia]);
+
+                        $cufdNew = app(CufdController::class);
+                        $cufdNew->create(
+                                        $cufd->resultado->RespuestaCufd->codigo,
+                                        $cufd->resultado->RespuestaCufd->codigoControl,
+                                        $cufd->resultado->RespuestaCufd->direccion,
+                                        $cufd->resultado->RespuestaCufd->fechaVigencia,
+                                        $this->codigoPuntoVenta
+                                    );
+
+                        $data['$cufd->resultado->RespuestaCufd->transaccion'] = 'si';
+                    }else{
+                        $data['$cufd->resultado->RespuestaCufd->transaccion'] = 'no';
+                    }
+                    $data['!session()->has("scufd")'] = 'si';
+                }else{
+                    // dd("chw");
+                }
             }
         }else{
-            // dd("no");
             $fechaVigencia = str_replace("T"," ",substr(session('sfechaVigenciaCufd'),0,16));
+            // dd(
+            //     "no",
+            //     $fechaVigencia,
+            //     session()->all(),
+            //     $fechaVigencia < date('Y-m-d H:i')
+            // );
             if($fechaVigencia < date('Y-m-d H:i')){
                 $cufd = json_decode($this->cufd());
                 if($cufd->estado === "success"){

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\TipoEvento;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class EventoSignificativoController extends Controller
 {
@@ -68,6 +69,25 @@ class EventoSignificativoController extends Controller
             $fechaFin       = str_replace(' ', 'T', trim($request->input('fechafin')));
 
             $siat = app(SiatController::class);
+            // AQUI CREAMOS EL NUEVO CUFD PARA EL NUEVO DIA
+            $cufd = json_decode($siat->cufd());
+            if($cufd->estado === "success"){
+                if($cufd->resultado->RespuestaCufd->transaccion){
+                    session(['scufd' => $cufd->resultado->RespuestaCufd->codigo]);
+                    session(['scodigoControl' => $cufd->resultado->RespuestaCufd->codigoControl]);
+                    session(['sdireccion' => $cufd->resultado->RespuestaCufd->direccion]);
+                    session(['sfechaVigenciaCufd' => $cufd->resultado->RespuestaCufd->fechaVigencia]);
+                    $cufdNew = app(CufdController::class);
+                    $cufdNew->create(
+                                    $cufd->resultado->RespuestaCufd->codigo,
+                                    $cufd->resultado->RespuestaCufd->codigoControl,
+                                    $cufd->resultado->RespuestaCufd->direccion,
+                                    $cufd->resultado->RespuestaCufd->fechaVigencia,
+                                    Auth::user()->codigo_punto_venta
+                                );
+                }
+            }
+            // END AQUI CREAMOS EL NUEVO CUFD PARA EL NUEVO DIA
             $respuesta = json_decode($siat->registroEventoSignificativo($codMotEvent, $cufdEvent, $desc, $fechaIni, $fechaFin));
 
             if($respuesta->estado === "success" && $respuesta->resultado->RespuestaListaEventos->transaccion){

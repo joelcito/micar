@@ -188,32 +188,33 @@
     <div style="width: 302px" class="facturaPequena">
 
         <div class="textoCentrado">
-            <b class="textoCentradoNegrita">FACTURA </b>                                                             <br>
-            <b class="textoCentradoNegrita">CON DERECHO A CREDITO FISCAL </b>                                        <br>
-            {{ $archivoXML->cabecera->razonSocialEmisor }}                              <br>
+            <b class="textoCentradoNegrita">RECIBO</b>                                                             <br>
+            {{--  <b class="textoCentradoNegrita">CON DERECHO A CREDITO FISCAL </b>                                        <br>  --}}
+            MICAELA QUIROZ ESCOBAR                                                      <br>
             CASA MATRIZ                                                                 <br>
-            No. Punto de Venta {{ $archivoXML->cabecera->codigoPuntoVenta }}            <br>
-            {{ $archivoXML->cabecera->direccion }}                                      <br>
-            Tel. {{ $archivoXML->cabecera->telefono }}                                  <br>
-            {{ $archivoXML->cabecera->municipio }}                                      <br>
+            {{--  No. Punto de Venta {{ $archivoXML->cabecera->codigoPuntoVenta }}            <br>  --}}
+            CALLE RIO ESPEJILLOS NRO.S/N ZONA VILLA FATIMA UV:0051 MZA:0049             <br>
+            Tel. 73130500                                                               <br>
+            Santa Cruz                                                                  <br>
             - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - <br>
-            <b class="textoCentradoNegrita">NIT</b>                                                                  <br>
-            {{ $archivoXML->cabecera->nitEmisor }}                                      <br>
-            <b class="textoCentradoNegrita">FACTURA N°</b>                                                           <br>
-            {{ $archivoXML->cabecera->numeroFactura }}                                  <br>
-            <b class="textoCentradoNegrita">CÓD. AUTORIZACIÓN</b>                                                    <br>
+            {{--  <b class="textoCentradoNegrita">NIT</b>                                                                  <br>  --}}
+            {{--  {{ $archivoXML->cabecera->nitEmisor }}                                      <br>  --}}
+            <b class="textoCentradoNegrita">RECIBO N°</b>                                                           <br>
+            {{ $factura->numero_recibo }}                                               <br>
+            {{--  <b class="textoCentradoNegrita">CÓD. AUTORIZACIÓN</b>                                                    <br>
             <div class="estatico">
                 {{ $archivoXML->cabecera->cuf }}
-            </div>
+            </div>  --}}
             - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - <br>
             <table id="table_nuew_num_fac">
                 <tr>
-                    <td style="text-align: right; width: 150px"><b>NOMBRE/RAZÓN SOCIAL:</b></td>
+                    <td style="text-align: right; width: 150px"><b>SEÑORES:</b></td>
                     <td width="150px" style="text-align: left">
-                        {{ $archivoXML->cabecera->nombreRazonSocial }}
+                        {{--  @dd($factura->cliente)  --}}
+                        {{ $factura->cliente->nombres." ".$factura->cliente->ap_paterno." ".$factura->cliente->ap_materno }}
                     </td>
                 </tr>
-                <tr>
+                {{--  <tr>
                     <td style="text-align: right; width: 150px"><b>NIT/CI/CEX:</b></td>
                     <td width="100px" style="text-align: left">
                         {{ $archivoXML->cabecera->numeroDocumento }}
@@ -221,8 +222,8 @@
                             - {{ $archivoXML->cabecera->complemento }}
                         @endif
                     </td>
-                </tr>
-                <tr>
+                </tr>  --}}
+                {{--  <tr>
                     <td style="text-align: right; width: 150px"><b>COD. CLIENTE:</b></td>
                     <td width="100px" style="text-align: left">
                         {{ $archivoXML->cabecera->numeroDocumento }}
@@ -230,13 +231,13 @@
                             - {{ $archivoXML->cabecera->complemento }}
                         @endif
                     </td>
-                </tr>
+                </tr>  --}}
                 <tr>
                     <td style="text-align: right; width: 150px"><b>FECHA DE EMISION:</b></td>
                     <td width="100px" style="text-align: left">
                         <div>
                             @php
-                                $fechaHora = $archivoXML->cabecera->fechaEmision;
+                                $fechaHora = $factura->fecha;
                                 $dateTime = new DateTime($fechaHora);
                                 $formattedDateTime = $dateTime->format('d/m/Y h:i A');
                             @endphp
@@ -296,7 +297,7 @@
                 </table>
             </div>
             - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - <br>
-            <table id="table_nuew_num_fac">
+            {{--  <table id="table_nuew_num_fac">
                 <tr>
                     <td style="text-align: right; width: 150px">SUBTOTAL Bs</td>
                     <td width="150px" style="text-align: right">
@@ -343,9 +344,9 @@
                     $literal = $formatter->format($number);
                 @endphp
                 <b>Son: {{ ucfirst($literal) }} 00/100 Bolivianos</b>
-            </div>
+            </div>  --}}
             - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - <br>
-            <p style="font-size:11px">
+            {{--  <p style="font-size:11px">
                 ESTA FACTURA CONTRIBUYE AL DESARROLLO DEL PAÍS, EL USO ILÍCITO SERÁ SANCIONADO PENALMENTE DE ACUERDO A LEY
             </p>
             <br>
@@ -362,7 +363,7 @@
             <center>
                 <div id="qrcode"></div>
             </center>
-            <br>
+            <br>  --}}
 
 
         <div>
@@ -378,11 +379,11 @@
 	<script src="{{ asset('assets/js/qrcodejs/qrcode.js') }}"></script>
 	<script>
         @php
-            $cuf            = (string)$cabeza['cabecera']->cuf;
-            $numeroFactura  = (string)$cabeza['cabecera']->numeroFactura;
+            //$cuf            = (string)$cabeza['cabecera']->cuf;
+            //$numeroFactura  = (string)$cabeza['cabecera']->numeroFactura;
         @endphp
 
-        let cadenaQr = 'https://pilotosiat.impuestos.gob.bo/consulta/QR?nit=5427648016&cuf={{ $cuf }}&numero={{ $numeroFactura }}&t=1';
+        {{--  let cadenaQr = 'https://pilotosiat.impuestos.gob.bo/consulta/QR?nit=5427648016&cuf={{ $cuf }}&numero={{ $numeroFactura }}&t=1';
         var options = {
             text: cadenaQr,
             width: 120,
@@ -390,7 +391,7 @@
             colorDark: "#000000",   // Color de los módulos oscuros
             colorLight: "#ffffff"   // Color de los módulos claros
         };
-        var qr = new QRCode(document.getElementById("qrcode"), options);
+        var qr = new QRCode(document.getElementById("qrcode"), options);  --}}
 
 	</script>
 

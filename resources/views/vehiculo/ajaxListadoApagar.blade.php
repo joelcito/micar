@@ -52,7 +52,16 @@
                     @endphp
                     {{-- <input type="number" class="form-control" id="pago_listado_{{ $p->id }}" onchange="funcionNueva(this,{{ $p->id }}, {{ $p->total }})" value="{{ $valoInput }}" min="0" max="{{ $p->total }}" onfocus="guardarValorInicial(this)"> --}}
                     {{-- <input type="number" class="form-control" id="pago_listado_{{ $p->id }}" oninput="funcionNueva(this,{{ $p->id }}, {{ $p->total }})" value="{{ $valoInput }}" min="0" max="{{ $p->total }}" onfocus="guardarValorInicial(this)"> --}}
-                    <input type="number" class="form-control" id="pago_listado_{{ $p->id }}" onchange="funcionNueva(this,{{ $p->id }}, {{ $p->total }})" value="{{ $valoInput }}" min="0" max="{{ $p->total }}" onfocus="guardarValorInicial(this)">
+                    <input type="number"
+                            class="form-control"
+                            id="pago_listado_{{ $p->id }}"
+                            value="{{ $valoInput }}"
+                            min="0"
+                            max="{{ $p->total }}"
+                            step="0.1"
+                            onchange="funcionNueva(this,{{ $p->id }}, {{ $p->total }})"
+                            onfocus="guardarValorInicial(this)"
+                            >
                 </td>
                 <td>
                     <span id="subTotalCalculdo_{{ $p->id }}">{{ $p->importe }}</span>
@@ -84,13 +93,13 @@
     </table>
 </form>
 <div class="row">
-    {{-- <div class="col-md-6">
-        <button class="btn btn-success w-100 btn-sm" onclick="imprimeNota()">RECIBO</button>
+    <div class="col-md-4">
+        <button class="btn btn-info w-100 btn-sm" onclick="muestraDatosFactura()">IMPRIME NOTA DE VENTA</button>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-4">
+        <button class="btn btn-success w-100 btn-sm" onclick="emitirRecibo()">RECIBO</button>
+    </div>
+    <div class="col-md-4">
         <button class="btn btn-dark w-100 btn-sm" onclick="muestraDatosFactura()">FACTURA</button>
-    </div> --}}
-    <div class="col-md-12">
-        <button class="btn btn-dark w-100 btn-sm" onclick="muestraDatosFactura()">CONCLUIR</button>
     </div>
 </div>
