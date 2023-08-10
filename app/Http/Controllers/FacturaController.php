@@ -1334,6 +1334,25 @@ class FacturaController extends Controller
         $pagos      = Pago::where('factura_id', $factura_id)->get();
         return view('pago.imprimeRecibo')->with(compact('factura', 'pagos'));
     }
+
+    public function anularRecibo(Request $request){
+        if($request->ajax()){
+            $factura_id = $request->input('factura');
+            $factura = Factura::find($factura_id);
+            $factura->estado = "Anulado";
+            $factura->save();
+            $ids = Pago::where('factura_id',$factura_id)->get()->pluck('id');
+            Pago::destroy($ids);
+            $data['estado'] = 'success';
+        }else{
+            $data['estado'] = 'error';
+        }
+        return $data;
+    }
+
+    public function imprimeTicked(Request $request, $vehiculo_id){
+        return view('pago.imprimeTicked');
+    }
     // ============================= PARA LA GENERACION DEL RECIBO END ==================================================
 
 }

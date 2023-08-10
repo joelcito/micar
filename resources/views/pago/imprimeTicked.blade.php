@@ -189,49 +189,22 @@
 
         <div class="textoCentrado">
             <b class="textoCentradoNegrita">RECIBO</b>                                                             <br>
-            {{--  <b class="textoCentradoNegrita">CON DERECHO A CREDITO FISCAL </b>                                        <br>  --}}
             MICAELA QUIROZ ESCOBAR                                                      <br>
             CASA MATRIZ                                                                 <br>
-            {{--  No. Punto de Venta {{ $archivoXML->cabecera->codigoPuntoVenta }}            <br>  --}}
             CALLE RIO ESPEJILLOS NRO.S/N ZONA VILLA FATIMA UV:0051 MZA:0049             <br>
             Tel. 73130500                                                               <br>
             Santa Cruz                                                                  <br>
             - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - <br>
-            {{--  <b class="textoCentradoNegrita">NIT</b>                                                                  <br>  --}}
-            {{--  {{ $archivoXML->cabecera->nitEmisor }}                                      <br>  --}}
-            <b class="textoCentradoNegrita">RECIBO N°</b>                                                           <br>
+           <b class="textoCentradoNegrita">RECIBO N°</b>                                                           <br>
             {{ $factura->numero_recibo }}                                               <br>
-            {{--  <b class="textoCentradoNegrita">CÓD. AUTORIZACIÓN</b>                                                    <br>
-            <div class="estatico">
-                {{ $archivoXML->cabecera->cuf }}
-            </div>  --}}
             - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - <br>
             <table id="table_nuew_num_fac">
                 <tr>
                     <td style="text-align: right; width: 150px"><b>SEÑORES:</b></td>
                     <td width="150px" style="text-align: left">
-                        {{--  @dd($factura->cliente)  --}}
                         {{ $factura->cliente->nombres." ".$factura->cliente->ap_paterno." ".$factura->cliente->ap_materno }}
                     </td>
                 </tr>
-                {{--  <tr>
-                    <td style="text-align: right; width: 150px"><b>NIT/CI/CEX:</b></td>
-                    <td width="100px" style="text-align: left">
-                        {{ $archivoXML->cabecera->numeroDocumento }}
-                        @if (!empty($archivoXML->cabecera->complemento))
-                            - {{ $archivoXML->cabecera->complemento }}
-                        @endif
-                    </td>
-                </tr>  --}}
-                {{--  <tr>
-                    <td style="text-align: right; width: 150px"><b>COD. CLIENTE:</b></td>
-                    <td width="100px" style="text-align: left">
-                        {{ $archivoXML->cabecera->numeroDocumento }}
-                        @if (!empty($archivoXML->cabecera->complemento))
-                            - {{ $archivoXML->cabecera->complemento }}
-                        @endif
-                    </td>
-                </tr>  --}}
                 <tr>
                     <td style="text-align: right; width: 150px"><b>FECHA DE EMISION:</b></td>
                     <td width="100px" style="text-align: left">
@@ -275,42 +248,6 @@
                             <td>{{ $pago->importe }}</td>
                         </tr>
                     @endforeach
-                    {{-- @foreach ($listado_detalles as $d)
-                        @if (is_array($d))
-                            @php
-                                $subTotales += (float) $d['subTotal'];
-                            @endphp
-                            <tr>
-                                <td style="text-align: left">
-                                    <b>{{ $d['codigoProducto'] }} - {{ $d['descripcion'] }}</b> <br>
-                                    Unidad de Medida: Unidad (Servicios) <br>
-                                    {{ number_format((float) $d['cantidad'],2) }} X {{ number_format((float) $d['precioUnitario'],2) }} - {{ number_format((float) $d['montoDescuento'],2) }}
-                                </td>
-                                <td>
-                                    <br>
-                                    <br>
-                                    {{ number_format((float) $d['subTotal'],2) }}
-                                </td>
-                            </tr>
-                        @else
-                            @php
-                                $subTotales += (float) $listado_detalles['subTotal'];
-                            @endphp
-                            <tr>
-                                <td>
-                                    {{ $listado_detalles['codigoProducto'] }} - {{ $listado_detalles['descripcion'] }} <br>
-                                    Unidad de Medida: Unidad (Servicios) <br>
-                                    {{ number_format((float) $listado_detalles['cantidad'],2) }} X {{ number_format((float) $listado_detalles['precioUnitario'],2) }} - {{ number_format((float) $listado_detalles['montoDescuento'],2) }}
-                                </td>
-                                <td>
-                                    <br>
-                                    <br>
-                                    {{ number_format((float) $listado_detalles['subTotal'],2) }}
-                                </td>
-                            </tr>
-                            @break
-                        @endif
-                    @endforeach --}}
                 </table>
             </div>
             - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - <br>
@@ -334,24 +271,6 @@
                         {{ number_format( (float) $factura->total, 2) }}
                     </td>
                 </tr>
-                {{-- <tr>
-                    <td style="text-align: right; width: 150px">MONTO GIFT CARD Bs</td>
-                    <td width="100px" style="text-align: right">
-                        {{ number_format( (float) $archivoXML->cabecera->montoGiftCard, 2) }}
-                    </td>
-                </tr> --}}
-                {{-- <tr>
-                    <td style="text-align: right; width: 150px"><b>MONTO A PAGAR Bs</b></td>
-                    <td width="100px" style="text-align: right">
-                        <b>{{ number_format((float) $archivoXML->cabecera->montoTotal,2) }}</b>
-                    </td>
-                </tr> --}}
-                {{-- <tr>
-                    <td style="text-align: right; width: 150px"><b>IMPORTE BASE CRÉDITO FISCAL Bs</b></td>
-                    <td width="100px" style="text-align: right">
-                        <b>{{ number_format((float) $archivoXML->cabecera->montoTotal,2) }}</b>
-                    </td>
-                </tr> --}}
             </table>
             <br>
             <div style="text-align: left">
@@ -361,28 +280,8 @@
                     $centavos = ($to - $bolivianos) * 100; // Convertir los decimales a centavos
                     $literal = ucfirst((new NumberFormatter('es', NumberFormatter::SPELLOUT))->format($bolivianos));
                 @endphp
-                {{-- <b>Son: {{ ucfirst($literal) }} 00/100 Bolivianos</b> --}}
                 <b>Son: {{ $literal }} @if ($centavos > 0){{ round($centavos) }}@else{{ '00' }}@endif/100 Bolivianos</b>
             </div> 
-            - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - <br>
-            {{--  <p style="font-size:11px">
-                ESTA FACTURA CONTRIBUYE AL DESARROLLO DEL PAÍS, EL USO ILÍCITO SERÁ SANCIONADO PENALMENTE DE ACUERDO A LEY
-            </p>
-            <br>
-            <p style="font-size:11px">
-                Ley N&deg; 453: El proveedor debera suministrar el servicio en las modalidades y terminos ofertados o convenidos.
-            </p>
-            @if ($factura->tipo_factura === 'online')
-                “Este documento es la Representación Gráfica de un Documento Fiscal Digital emitido en una modalidad de facturación en línea”
-            @else
-                “Este documento es la Representación Gráfica de un Documento Fiscal Digital emitido fuera de línea, verifique su envío con su proveedor o en la página web www.impuestos.gob.bo”
-            @endif
-            <br>
-            <br>
-            <center>
-                <div id="qrcode"></div>
-            </center>
-            <br>  --}}
 
 
         <div>

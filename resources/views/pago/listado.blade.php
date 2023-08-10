@@ -458,6 +458,40 @@
                 }
             })
         }
+
+        function anularREcibo(factura){    
+            Swal.fire({
+                title: 'Esta seguro de Anular el Recibo?',
+                text: "No podras revertir eso!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si, Anular!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ url('factura/anularRecibo') }}",
+                        method: "POST",
+                        data: {
+                            factura: factura
+                        },
+                        dataType:'json',
+                        success: function (data) {
+                            if(data.estado === 'success'){
+                                Swal.fire({
+                                    icon:'success',
+                                    title: 'Exito!',
+                                    text:"Se anulo ewl recibo con exito!",
+                                    timer:1500
+                                })
+                                ajaxListado();
+                            }
+                        }
+                    })
+                }
+            })       
+        }
     </script>
 @endsection
 
