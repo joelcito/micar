@@ -188,21 +188,28 @@
     <div style="width: 302px" class="facturaPequena">
 
         <div class="textoCentrado">
-            <b class="textoCentradoNegrita">RECIBO</b>                                                             <br>
+            <b class="textoCentradoNegrita">TICKET</b>                                                             <br>
             MICAELA QUIROZ ESCOBAR                                                      <br>
             CASA MATRIZ                                                                 <br>
             CALLE RIO ESPEJILLOS NRO.S/N ZONA VILLA FATIMA UV:0051 MZA:0049             <br>
             Tel. 73130500                                                               <br>
             Santa Cruz                                                                  <br>
-            - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - <br>
-           <b class="textoCentradoNegrita">RECIBO N°</b>                                                           <br>
-            {{ $factura->numero_recibo }}                                               <br>
+            {{--  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - <br>  --}}
+           {{--  <b class="textoCentradoNegrita">RECIBO N°</b>                                                           <br>  --}}
+            {{--  @dd($pagos)  --}}
+            {{--  {{ $factura->numero_recibo }}                                               <br>  --}}
             - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - <br>
             <table id="table_nuew_num_fac">
                 <tr>
                     <td style="text-align: right; width: 150px"><b>SEÑORES:</b></td>
                     <td width="150px" style="text-align: left">
-                        {{ $factura->cliente->nombres." ".$factura->cliente->ap_paterno." ".$factura->cliente->ap_materno }}
+                        {{ $pagos[0]->vehiculo->cliente->nombres." ".$pagos[0]->vehiculo->cliente->ap_paterno." ".$pagos[0]->vehiculo->cliente->ap_materno }}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: right; width: 150px"><b>PLACA:</b></td>
+                    <td width="150px" style="text-align: left">
+                        {{ $pagos[0]->vehiculo->placa }}
                     </td>
                 </tr>
                 <tr>
@@ -210,7 +217,7 @@
                     <td width="100px" style="text-align: left">
                         <div>
                             @php
-                                $fechaHora = $factura->fecha;
+                                $fechaHora = $pagos[0]->created_at;
                                 $dateTime = new DateTime($fechaHora);
                                 $formattedDateTime = $dateTime->format('d/m/Y h:i A');
                             @endphp
@@ -220,8 +227,7 @@
                 </tr>
             </table>
             - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - <br>
-            <b class="textoCentradoNegrita">DETALLE</b><br>
-
+            <b class="textoCentradoNegrita">SERVICIOS</b><br>
             <div>
                 <table id="table_detalle">
                     <thead>
@@ -251,7 +257,7 @@
                 </table>
             </div>
             - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - <br>
-             <table id="table_nuew_num_fac">
+             {{--  <table id="table_nuew_num_fac">
                 <tr>
                     <td style="text-align: right; width: 150px">SUBTOTAL Bs</td>
                     <td width="150px" style="text-align: right">
@@ -261,7 +267,6 @@
                 <tr>
                     <td style="text-align: right; width: 150px">DESCUENTO Bs</td>
                     <td width="100px" style="text-align: right">
-                        {{-- {{ number_format( (float) $archivoXML->cabecera->descuentoAdicional, 2) }} --}}
                         {{ number_format( (float) $factura->descuento_adicional, 2) }}
                     </td>
                 </tr>
@@ -281,7 +286,7 @@
                     $literal = ucfirst((new NumberFormatter('es', NumberFormatter::SPELLOUT))->format($bolivianos));
                 @endphp
                 <b>Son: {{ $literal }} @if ($centavos > 0){{ round($centavos) }}@else{{ '00' }}@endif/100 Bolivianos</b>
-            </div> 
+            </div>  --}}
 
 
         <div>

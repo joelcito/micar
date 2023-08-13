@@ -1351,7 +1351,12 @@ class FacturaController extends Controller
     }
 
     public function imprimeTicked(Request $request, $vehiculo_id){
-        return view('pago.imprimeTicked');
+
+        $pagos = Pago::where('vehiculo_id',$vehiculo_id)
+                        ->where('estado','Parapagar')
+                        ->get();
+
+        return view('pago.imprimeTicked')->with(compact('pagos'));
     }
     // ============================= PARA LA GENERACION DEL RECIBO END ==================================================
 

@@ -37,4 +37,5 @@ class Pago extends Model
         return $this->belongsTo('App\Models\Servicio', 'servicio_id');
     }
 
+
 }

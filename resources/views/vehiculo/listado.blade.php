@@ -810,7 +810,6 @@
         }
 
         function emitirRecibo(){
-
             $.ajax({
                 url: "{{ url('factura/emitirRecibo') }}",
                 type: 'POST',
@@ -827,35 +826,6 @@
                     }
                 }
             });
-
-
-
-
-            /*
-            detalle = [];
-            arrayProductos.forEach(function (prod){
-                detalle.push({
-                    actividadEconomica  :   prod.codigoActividad,
-                    codigoProductoSin   :   prod.codigoProducto,
-                    codigoProducto      :   prod.servicio_id,
-                    descripcion         :   prod.descripcion,
-                    cantidad            :   prod.cantidad,
-                    unidadMedida        :   prod.unidadMedida,
-                    precioUnitario      :   prod.precio,
-                    montoDescuento      :   prod.descuento,
-                    subTotal            :   ((prod.cantidad*prod.precio)-prod.descuento),
-                    numeroSerie         :   null,
-                    numeroImei          :   null
-                })
-            })
-
-            console.log(detalle, arrayProductos)
-            */
-
-
-
-            //let url = "{{ asset('vehiculo/imprimeNota') }}/"+pago;
-            //window.location.href = url;
         }
 
         function funcionNueva(input, pago, total){
@@ -996,9 +966,14 @@
                     }
                 })
             }else{
-                console.log("nada che", (tipoDocumento === "5"), tipoDocumento)
                 $('#bloque_exepcion').hide('toggle');
             }
+        }
+
+        function emitirTicket(){
+            let vehiculo = $('#vehiculo_id').val()
+            let url = "{{ asset('factura/imprimeTicked') }}/"+vehiculo;
+            window.location.href = url;
         }
 
     </script>

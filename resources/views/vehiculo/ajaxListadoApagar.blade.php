@@ -94,7 +94,7 @@
 </form>
 <div class="row">
     <div class="col-md-4">
-        <button class="btn btn-info w-100 btn-sm" onclick="muestraDatosFactura()">IMPRIME NOTA DE VENTA</button>
+        <button class="btn btn-info w-100 btn-sm" onclick="emitirTicket()">IMPRIME NOTA DE VENTA</button>
     </div>
     <div class="col-md-4">
         <button class="btn btn-success w-100 btn-sm" onclick="emitirRecibo()">RECIBO</button>
