@@ -1230,10 +1230,10 @@ class FacturaController extends Controller
                 }
             }else{
                 if($value == null && $value <> '0'){
-                    $hijo = $xml_temporal->addChild("$key","$value");
+                    $hijo = $xml_temporal->addChild("$key",htmlspecialchars("$value"));
                     $hijo->addAttribute('xsi:nil','true', $ns_xsi);
                 }else{
-                    $xml_temporal->addChild("$key", "$value");
+                    $xml_temporal->addChild("$key", htmlspecialchars("$value"));
                 }
             }
         }
