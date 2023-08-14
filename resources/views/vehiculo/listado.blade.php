@@ -703,12 +703,15 @@
 
                 let complemento;
                 var complementoValue = $("#complemento").val();
-
-                if (complementoValue === null || complementoValue.trim() === "")
+                if (complementoValue === null || complementoValue.trim() === ""){
                     complemento                     = null;
-                else
-                    complemento                     = $('#complemento').val();
-
+                }else{
+                    if($('#tipo_documento').val()==5){
+                        complemento                     = null;
+                    }else{
+                        complemento                     = $('#complemento').val();
+                    }
+                }
 
                 let montoTotal                      = $('#motoTotalFac').val();
                 let descuentoAdicional              = $('#descuento_adicional').val();
