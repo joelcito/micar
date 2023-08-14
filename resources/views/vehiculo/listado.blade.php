@@ -198,6 +198,7 @@
             <div class="col-md-4">
                 <span class="text-primary"><b>VEHICULO:</b></span><span id="vehiculo_text"></span>
                 <input type="hidden" id="vehiculo_id">
+                <input type="text" id="complemento">
             </div>
             <div class="col-md-4">
                 <span class="text-primary"><b>PLACA:</b></span><span id="placa_text"></span>
@@ -484,7 +485,7 @@
         }
 
         // function agregarServicio(placa, marca, ap, am, nombre, vehiculo, nit, razon_socal, cliente){
-        function agregarServicio(placa, marca, ap, am, nombre, vehiculo, cliente){
+        function agregarServicio(placa, marca, ap, am, nombre, vehiculo, cliente, complemento){
             $.ajax({
                 url: "{{ url('vehiculo/consultaPagosPorCobrar') }}",
                 type: 'POST',
@@ -501,6 +502,7 @@
                         $('#vehiculo_text').text(marca);
                         $('#placa_text').text(placa);
                         $('#vehiculo_id').val(vehiculo);
+                        $('#complemento').val(complemento);
                         sacaNitRazonSocial(cliente);
                         arrayPagos = [];
                     }
@@ -698,7 +700,16 @@
                 let nombreRazonSocial               = $('#razon_factura').val();
                 let codigoTipoDocumentoIdentidad    = $('#tipo_documento').val()
                 let numeroDocumento                 = $('#nit_factura').val();
-                let complemento                     = $('#complementoPersonaFac').val();
+
+                let complemento;
+                var complementoValue = $("#complemento").val();
+
+                if (complementoValue === null || complementoValue.trim() === "")
+                    complemento                     = null;
+                else
+                    complemento                     = $('#complemento').val();
+
+
                 let montoTotal                      = $('#motoTotalFac').val();
                 let descuentoAdicional              = $('#descuento_adicional').val();
                 let leyenda                         = "Ley N° 453: El proveedor deberá suministrar el servicio en las modalidades y términos ofertados o convenidos.";
@@ -730,8 +741,8 @@
                         nombreRazonSocial               :nombreRazonSocial,
                         codigoTipoDocumentoIdentidad    :codigoTipoDocumentoIdentidad,
                         numeroDocumento                 :numeroDocumento,
-                        complemento                     :null,
-                        // complemento                     :complemento,
+                        // complemento                     :null,
+                        complemento                     :complemento,
                         codigoCliente                   :numeroDocumento,
                         codigoMetodoPago                :1,
                         numeroTarjeta                   :null,

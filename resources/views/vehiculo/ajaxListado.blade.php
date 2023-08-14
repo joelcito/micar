@@ -29,7 +29,7 @@
                         <a class="text-gray-800 text-hover-primary mb-1">{{ $v->marca }}</a>
                     </td>
                     <td class="text-end">
-                        <button class="btn btn-success btn-icon btn-sm" onclick="agregarServicio('{{ $v->placa }}', '{{ $v->marca }}', '{{ $v->cliente->ap_paterno }}', '{{ $v->cliente->ap_materno }}', '{{ $v->cliente->nombres }}', '{{ $v->id }}', '{{ $v->cliente->id }}')"><i class="fa fa-donate"></i></button>
+                        <button class="btn btn-success btn-icon btn-sm" onclick="agregarServicio('{{ $v->placa }}', '{{ $v->marca }}', '{{ $v->cliente->ap_paterno }}', '{{ $v->cliente->ap_materno }}', '{{ $v->cliente->nombres }}', '{{ $v->id }}', '{{ $v->cliente->id }}', '{{ $v->cliente->complemento }}')"><i class="fa fa-donate"></i></button>
                         <button class="btn btn-danger btn-icon btn-sm" onclick="eliminrCategoria('{{ $v->id}}')"><i class="fa fa-trash"></i></button>
                     </td>
                 </tr>
