@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Firma\Firmadores\FirmadorBoliviaSingle;
+use App\Mail\CorreoAnulacion;
 use App\Mail\EnviaCorreo;
 use App\Models\Cliente;
 use App\Models\Factura;
@@ -343,6 +344,18 @@ class FacturaController extends Controller
                     //     Pago::destroy($p->id);
                     // }
                 }
+
+                $cliente = Cliente::find($fatura->cliente_id);
+
+                $correo = $cliente->correo;
+                $nombre = $cliente->nombres." ".$cliente->ap_paterno." ".$cliente->ap_materno;
+                $numero = $fatura->numero;
+                $fecha  = $fatura->fecha;
+
+                //protected function enviaCorreoAnulacion($correo, $nombre, $numero, $fecha){
+
+                $this->enviaCorreoAnulacion($correo, $nombre, $numero, $fecha );
+
             }else{
                 $fatura->descripcion = $respuesta->resultado->RespuestaServicioFacturacion->mensajesList->descripcion;
             }
@@ -1265,6 +1278,11 @@ class FacturaController extends Controller
         // Elimina el archivo PDF guardado en la ruta temporal
         Storage::delete($rutaPDF);
         // dd($response);
+    }
+
+    protected function enviaCorreoAnulacion($correo, $nombre, $numero, $fecha){
+        $mail = new CorreoAnulacion($nombre, $numero, $fecha);
+        $response = Mail::to($correo)->send($mail);
     }
 
 
