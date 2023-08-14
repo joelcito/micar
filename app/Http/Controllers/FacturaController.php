@@ -428,7 +428,7 @@ class FacturaController extends Controller
             $rutaCarpeta = "assets/docs/paquete";
             // Verificar si la carpeta existe
             if (!file_exists($rutaCarpeta))
-                mkdir($rutaCarpeta, true);
+                mkdir($rutaCarpeta, 0755, true);
 
             // Obtener lista de archivos en la carpeta
             $archivos = glob($rutaCarpeta . '/*');
