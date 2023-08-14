@@ -29,11 +29,7 @@ class ClienteController extends Controller
         return json_encode($data);
     }
 
-    protected function listadoArray(){
-        // $clientes = Cliente::all();
-        $clientes = Cliente::orderBy('id', 'desc')->limit(100)->get();
-        return view('cliente.ajaxListado')->with(compact('clientes'))->render();
-    }
+
     public function guarda(Request $request){
         if($request->ajax()){
             $cliente_id  = $request->input('cliente_id');
@@ -71,15 +67,14 @@ class ClienteController extends Controller
         $vehiculos = Vehiculo::where('cliente_id', $cliente_id)
                                 ->get();
 
-        // $pagos = Pago::where()
-                        // ->get();
-
         return view('cliente.perfil')->with(compact('cliente', 'vehiculos'));
     }
 
     public function ajaxListadoVehiculo(Request $request){
         if($request->ajax()){
-            dd($request);
+            $cliente_id = $request->input('cliente');
+
+            $data['listado'] = $this->listadoArrayVehiuclos($cliente_id);
             $data['estado'] = 'success';
         }else{
             $data['estado'] = 'error';
@@ -88,7 +83,17 @@ class ClienteController extends Controller
         return $data;
     }
 
+    public function listadoArrayVehiuclos($cliente){
 
+        $vehiculos = Vehiculo::where('cliente_id', $cliente)->get();
 
+        return view('cliente.ajaxListadoVehiculos')->with(compact('vehiculos'))->render();
+    }
+
+    protected function listadoArray(){
+        // $clientes = Cliente::all();
+        $clientes = Cliente::orderBy('id', 'desc')->limit(100)->get();
+        return view('cliente.ajaxListado')->with(compact('clientes'))->render();
+    }
 
 }

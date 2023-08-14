@@ -91,6 +91,7 @@ Route::middleware('auth')->group(function () {
     Route::post('vehiculo/buscarVehiculo', [VehiculoController::class, 'buscarVehiculo']);
     Route::post('vehiculo/obtenerNitRazonSocial', [VehiculoController::class, 'obtenerNitRazonSocial']);
     Route::post('vehiculo/consultaPagosPorCobrar', [VehiculoController::class, 'consultaPagosPorCobrar']);
+    Route::post('vehiculo/guarda', [VehiculoController::class, 'guarda']);
 
 
 

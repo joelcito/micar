@@ -1,7 +1,6 @@
 @extends('layouts.app')
 @section('css')
-    {{-- <link href="{{ asset('assets/plugins/custom/datatables/datatables.bundle.css') }}" rel="stylesheet" type="text/css" /> --}}
-    <link href="{{ asset('assets/plugins/custom/prismjs/prismjs.bundle.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('assets/plugins/custom/datatables/datatables.bundle.css') }}" rel="stylesheet" type="text/css" />
 @endsection
 @section('metadatos')
     <meta name="csrf-token" content="{{ csrf_token() }}" />
@@ -10,7 +9,7 @@
 
     <!--end::Modal - New Card-->
     <!--begin::Modal - Add task-->
-    {{-- <div class="modal fade" id="modalCliente" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="modalVehiuclo" tabindex="-1" aria-hidden="true">
         <!--begin::Modal dialog-->
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <!--begin::Modal content-->
@@ -18,7 +17,7 @@
                 <!--begin::Modal header-->
                 <div class="modal-header" id="kt_modal_add_user_header">
                     <!--begin::Modal title-->
-                    <h2 class="fw-bold">Formulario de categoria</h2>
+                    <h2 class="fw-bold">Formulario de vehiculo</h2>
                     <!--end::Modal title-->
                     <!--begin::Close-->
                     <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-users-modal-action="close">
@@ -32,73 +31,32 @@
                 <!--end::Modal header-->
                 <!--begin::Modal body-->
                 <div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
-                    <form id="formularioCliente">
+                    <form id="formularioVehiuclo">
                         @csrf
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="fv-row mb-7">
-                                    <label class="required fw-semibold fs-6 mb-2">Nombres</label>
-                                    <input type="text" class="form-control" required name="nombres" id="nombres">
-                                    <input type="hidden" name="cliente_id" id="cliente_id" value="0">
+                                    <label class="required fw-semibold fs-6 mb-2">PLACA</label>
+                                    <input type="text" class="form-control" required name="placa" id="placa">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="fv-row mb-7">
-                                    <label class="required fw-semibold fs-6 mb-2">Ap Paterno</label>
-                                    <input type="text" class="form-control" required name="ap_paterno" id="ap_paterno">
+                                    <label class=" fw-semibold fs-6 mb-2">COLOR</label>
+                                    <input type="text" class="form-control"  name="color" id="color">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="fv-row mb-7">
-                                    <label class="required fw-semibold fs-6 mb-2">Ap Materno</label>
-                                    <input type="text" class="form-control" required name="ap_materno" id="ap_materno">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="fv-row mb-7">
-                                    <label class="required fw-semibold fs-6 mb-2">Cedula</label>
-                                    <input type="number" class="form-control" required name="cedula" id="cedula">
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="fv-row mb-7">
-                                    <label class="required fw-semibold fs-6 mb-2">Complemento</label>
-                                    <input type="text" class="form-control" required name="complemento" id="complemento">
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="fv-row mb-7">
-                                    <label class="required fw-semibold fs-6 mb-2">Nit</label>
-                                    <input type="text" class="form-control" required name="nit" id="nit">
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="fv-row mb-7">
-                                    <label class="required fw-semibold fs-6 mb-2">Razon Social</label>
-                                    <input type="text" class="form-control" required name="razon_social" id="razon_social">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="fv-row mb-7">
-                                    <label class="required fw-semibold fs-6 mb-2">Correo</label>
-                                    <input type="email" class="form-control" required name="correo" id="correo">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="fv-row mb-7">
-                                    <label class="required fw-semibold fs-6 mb-2">Celular</label>
-                                    <input type="number" class="form-control" required name="celular" id="celular">
+                                    <label class=" fw-semibold fs-6 mb-2">MARCA</label>
+                                    <input type="text" class="form-control"  name="marca" id="marca">
                                 </div>
                             </div>
                         </div>
                     </form>
                     <div class="row">
                         <div class="col-md-12">
-                            <button class="btn btn-success w-100" onclick="guardarCliente()">Guardar</button>
+                            <button class="btn btn-success w-100" onclick="guardarVehiouclo()">Guardar</button>
                         </div>
                     </div>
                 </div>
@@ -107,7 +65,7 @@
             <!--end::Modal content-->
         </div>
         <!--end::Modal dialog-->
-    </div> --}}
+    </div>
     <!--end::Modal - Add task-->
 
 
@@ -229,7 +187,7 @@
                     <div class="fv-row mb-7">
                         <label class="required fw-semibold fs-6 mb-2">Cedula</label>
                         <input type="text" class="form-control" value="{{ $cliente->cedula }}">
-                        <input type="cliente_id" value="{{ $cliente->id  }}">
+                        <input type="text" id="cliente_id" value="{{ $cliente->id  }}">
                     </div>
                 </div>
                 <div class="col-md-3">
@@ -289,13 +247,15 @@
                 <h1>Listado de Vehiculos</h1>
             </div>
             <div class="card-toolbar">
-
+                <button class="btn btn-sm btn-primary" type="button" onclick="nuevoVehiuclo()">Nuevo Vehiculo <i class="fa fa-plus"></i></button>
             </div>
         </div>
         <div class="card-body py-4">
             <div class="row">
                 <div class="col-md-12">
+                    <div id="tabla_vehiuclos">
 
+                    </div>
                 </div>
             </div>
         </div>
@@ -305,8 +265,7 @@
 @stop()
 
 @section('js')
-    {{-- <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script> --}}
-    <script src="{{ asset('assets/plugins/custom/prismjs/prismjs.bundle.js') }}"></script>
+    <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
     <script>
         $.ajaxSetup({
             // definimos cabecera donde estarra el token y poder hacer nuestras operaciones de put,post...
@@ -334,9 +293,44 @@
                 dataType: 'json',
                 success: function(data) {
                     if(data.estado === 'success')
-                        $('#table_categoria').html(data.listado);
+                        $('#tabla_vehiuclos').html(data.listado);
                 }
             });
+        }
+
+        function nuevoVehiuclo(){
+            $('#modalVehiuclo').modal('show')
+        }
+
+        function guardarVehiouclo(){
+            if($("#formularioVehiuclo")[0].checkValidity()){
+                $.ajax({
+                    url: "{{ url('vehiculo/guarda') }}",
+                    data:{
+                        placa   :$('#placa').val(),
+                        color   :$('#color').val(),
+                        marca   :$('#marca').val(),
+                        cliente :$('#cliente_id').val(),
+                    },
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function(data) {
+                        if(data.estado === 'success'){
+                            $('#table_categoria').html(data.listado);
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Correcto!',
+                                text: 'Se registro con exito!',
+                                timer: 1500
+                            })
+                            $('#tabla_vehiuclos').html(data.listado);
+                            $('#modalVehiuclo').modal('hide');
+                        }
+                    }
+                });
+            }else{
+    			$("#formularioVehiuclo")[0].reportValidity()
+            }
         }
 
         // function guardarCliente(){

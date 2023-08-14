@@ -204,4 +204,30 @@ class VehiculoController extends Controller
         return $data;
     }
 
+    public function guarda(Request $request){
+        if($request->ajax()){
+            $placa        = $request->input('placa');
+            $color        = $request->input('color');
+            $marca        = $request->input('marca');
+            $cliente_id   = $request->input('cliente');
+
+            $vehiculo               = new Vehiculo();
+            $vehiculo->creador_id   = Auth::user()->id;
+            $vehiculo->cliente_id   = $cliente_id;
+            $vehiculo->placa        = $placa;
+            $vehiculo->color        = $color;
+            $vehiculo->marca        = $marca;
+            $vehiculo->save();
+
+            $clienteCLass = app(ClienteController::class);
+
+            $data['listado'] = $clienteCLass->listadoArrayVehiuclos($cliente_id);
+            $data['estado'] = 'success';
+        }else{
+            $data['estado'] = 'error';
+        }
+
+        return $data;
+    }
+
 }

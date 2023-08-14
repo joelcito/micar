@@ -64,7 +64,7 @@
                             <div class="col-md-2">
                                 <div class="fv-row mb-7">
                                     <label class="required fw-semibold fs-6 mb-2">Complemento</label>
-                                    <input type="text" class="form-control" required name="complemento" id="complemento">
+                                    <input type="text" class="form-control" name="complemento" id="complemento">
                                 </div>
                             </div>
                             <div class="col-md-3">
