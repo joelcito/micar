@@ -78,16 +78,20 @@ Route::middleware('auth')->group(function () {
     Route::get('/cliente/nuevo', [ClienteController::class, 'nuevo']);
     Route::post('/cliente/guarda', [ClienteController::class, 'guarda']);
     Route::post('/cliente/ajaxListado', [ClienteController::class, 'ajaxListado']);
+    Route::post('/cliente/ajaxListadoVehiculo', [ClienteController::class, 'ajaxListadoVehiculo']);
+    Route::get('/cliente/perfil/{cliente_id}', [ClienteController::class, 'perfil']);
     // Route::post('/cliente/eliminar', [ClienteController::class, 'eliminar']);
 
     // VEHICULO
-    Route::get('/vehiculo', [VehiculoController::class, 'listado']);
-    Route::post('/vehiculo/ajaxListado', [VehiculoController::class, 'ajaxListado']);
-    Route::post('/vehiculo/ajaxRegistraVenta', [VehiculoController::class, 'ajaxRegistraVenta']);
-    Route::post('/vehiculo/eliminarVenta', [VehiculoController::class, 'eliminarVenta']);
-    Route::get('/vehiculo/imprimeNota/{pago_id}', [VehiculoController::class, 'imprimeNota']);
-    Route::post('/vehiculo/buscarVehiculo', [VehiculoController::class, 'buscarVehiculo']);
-    Route::post('/vehiculo/obtenerNitRazonSocial', [VehiculoController::class, 'obtenerNitRazonSocial']);
+    Route::get('vehiculo', [VehiculoController::class, 'listado']);
+    Route::post('vehiculo/ajaxListado', [VehiculoController::class, 'ajaxListado']);
+    Route::post('vehiculo/ajaxRegistraVenta', [VehiculoController::class, 'ajaxRegistraVenta']);
+    Route::post('vehiculo/eliminarVenta', [VehiculoController::class, 'eliminarVenta']);
+    Route::get('vehiculo/imprimeNota/{pago_id}', [VehiculoController::class, 'imprimeNota']);
+    Route::post('vehiculo/buscarVehiculo', [VehiculoController::class, 'buscarVehiculo']);
+    Route::post('vehiculo/obtenerNitRazonSocial', [VehiculoController::class, 'obtenerNitRazonSocial']);
+    Route::post('vehiculo/consultaPagosPorCobrar', [VehiculoController::class, 'consultaPagosPorCobrar']);
+
 
 
     // PAGOS

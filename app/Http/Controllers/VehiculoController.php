@@ -193,69 +193,15 @@ class VehiculoController extends Controller
         return $data;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+    public function consultaPagosPorCobrar(Request $request){
+        if($request->ajax()){
+            $vehiculo_id = $request->input('id');
+            $data['listado_ventas'] = $this->listadoArrayPagos($vehiculo_id);
+            $data['estado'] = "success";
+        }else{
+            $data['estado'] = "errror";
+        }
+        return $data;
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Vehiculo  $vehiculo
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Vehiculo $vehiculo)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Vehiculo  $vehiculo
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Vehiculo $vehiculo)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Vehiculo  $vehiculo
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Vehiculo $vehiculo)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Vehiculo  $vehiculo
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Vehiculo $vehiculo)
-    {
-        //
-    }
 }

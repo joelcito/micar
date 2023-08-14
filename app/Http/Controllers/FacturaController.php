@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Firma\Firmadores\FirmadorBoliviaSingle;
+use App\Mail\EnviaCorreo;
 use App\Models\Cliente;
 use App\Models\Factura;
 use App\Models\Pago;
@@ -11,6 +12,8 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use SimpleXMLElement;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use PDF;
@@ -180,31 +183,7 @@ class FacturaController extends Controller
             $datos['factura'][0]['cabecera']['direccion']           = $sdireccion;
             $datos['factura'][0]['cabecera']['codigoPuntoVenta']    = $puntoVenta;
 
-            // $datos['factura'][0]['cabecera']['codigoPuntoVenta']    = 3;
-            // $datos['factura'][0]['cabecera']['codigoPuntoVenta']    = 1;
-
-            // dd($datos['factura']);
-
-            // VERIFICAMOS QUE SEA MENSUALIDAD
-            // for ($i=1; $i < count($datos['factura']); $i++) {
-            //     if($datos['factura'][$i]['detalle']['codigoProducto'] != 2){
-            //         $g = explode(' ', $datos['factura'][$i]['detalle']['descripcion']);
-            //         $datos['factura'][$i]['detalle']['descripcion'] = $g[1];
-            //     }
-            // }
-
-            // VERIFICAMOS EN EL PERIDOD
-            // $periodo = explode(' ', $datos['factura'][0]['cabecera']['periodoFacturado']);
-            // if(array_intersect(["null","undefined"],$periodo))
-            //     $datos['factura'][0]['cabecera']['periodoFacturado'] = $periodo[1];
-
-
             $temporal = $datos['factura'];
-            /*
-                $dar = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-                            <facturaComputarizadaSectorEducativo xsi:noNamespaceSchemaLocation="facturaComputarizadaSectorEducativo.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-                            </facturaComputarizadaSectorEducativo>';
-            */
             $dar = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
                         <facturaElectronicaCompraVenta xsi:noNamespaceSchemaLocation="facturaElectronicaCompraVenta.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
                         </facturaElectronicaCompraVenta>';
@@ -290,58 +269,33 @@ class FacturaController extends Controller
                 $data['estado']     = 'OFFLINE';
             }
 
-            // $siat = app(SiatController::class);
-            // $for = json_decode($siat->recepcionFactura($archivoZip, $valoresCabecera['fechaEmision'],$hashArchivo));
-
-            // if($for->estado === "error"){
-            //     $codigo_descripcion = null;
-            //     $codigo_trancaccion = null;
-            //     $descripcion        = null;
-            //     $codigo_recepcion   = null;
-            // }else{
-            //     if($for->resultado->RespuestaServicioFacturacion->transaccion){
-            //         $codigo_recepcion = $for->resultado->RespuestaServicioFacturacion->codigoRecepcion;
-            //         $descripcion = NULL;
-            //     }else{
-            //         $codigo_recepcion = NULL;
-            //         $descripcion = $for->resultado->RespuestaServicioFacturacion->mensajesList->descripcion;
-            //     }
-            //     $codigo_descripcion = $for->resultado->RespuestaServicioFacturacion->codigoDescripcion;
-            //     $codigo_trancaccion = $for->resultado->RespuestaServicioFacturacion->transaccion;
-            // }
-
             $facturaNew                     = Factura::find($factura->id);
             $facturaNew->codigo_descripcion = $codigo_descripcion;
             $facturaNew->codigo_recepcion   = $codigo_recepcion;
             $facturaNew->codigo_trancaccion = $codigo_trancaccion;
             $facturaNew->descripcion        = $descripcion;
             $facturaNew->cuis               = session('scuis');
-            // $facturaNew->cufd               = session('scufd');
-            // $facturaNew->fechaVigencia      = session('sfechaVigenciaCufd');
             $facturaNew->cufd               = $scufd;
             $facturaNew->fechaVigencia      = Carbon::parse($sfechaVigenciaCufd)->format('Y-m-d H:i:s');
             $facturaNew->save();
 
 
-            // $data['estado'] = $facturaNew->codigo_descripcion;
-
             foreach ($datosVehiculo['pagos'] as $key => $pago_id) {
                 $pago = Pago::find($pago_id);
-                // dd($datosVehiculo['pagos'], $pago_id, $pago);
                 $pago->estado       = "Pagado";
                 $pago->factura_id   = $facturaNew->id;
                 $pago->save();
             }
 
             // ENVIAMOS EL CORREO DE LA FACTURA
-            // $nombre = $persona->nombres." ".$persona->apellido_paterno." ".$persona->apellido_materno;
-            // $this->enviaCorreo(
-            //     $persona->email,
-            //     $nombre,
-            //     $factura->numero,
-            //     $factura->fecha,
-            //     $factura->id
-            // );
+            $nombre = $cliente->nombres." ".$cliente->ap_paterno." ".$cliente->ap_materno;
+            $this->enviaCorreo(
+                $cliente->correo,
+                $nombre,
+                $factura->numero,
+                $factura->fecha,
+                $factura->id
+            );
 
             // PARA VALIDAR EL XML
             // $this->validar();
@@ -1270,6 +1224,47 @@ class FacturaController extends Controller
                 }
             }
         }
+    }
+
+    protected function enviaCorreo($correo, $nombre, $numero, $fecha, $factura_id){
+
+        $factura = Factura::find($factura_id);
+
+        $xml = $factura['productos_xml'];
+
+        $archivoXML = new SimpleXMLElement($xml);
+
+        $cabeza = (array) $archivoXML;
+
+        $cuf            = (string)$cabeza['cabecera']->cuf;
+        $numeroFactura  = (string)$cabeza['cabecera']->numeroFactura;
+
+        // Genera el texto para el código QR
+        $textoQR = 'https://pilotosiat.impuestos.gob.bo/consulta/QR?nit=5427648016&cuf='.$cuf.'&numero='.$numeroFactura.'&t=2';
+        // Genera la ruta temporal para guardar la imagen del código QR
+        $rutaImagenQR = storage_path('app/public/qr_code.png');
+        // Genera el código QR y guarda la imagen en la ruta temporal
+        QrCode::generate($textoQR, $rutaImagenQR);
+        $pdf = PDF::loadView('pdf.generaPdfFacturaNew', compact('factura', 'archivoXML','rutaImagenQR'))->setPaper('letter');
+
+        // Genera la ruta donde se guardará el archivo PDF
+        $rutaPDF = storage_path('app/public/factura.pdf');
+        // Guarda el PDF en la ruta especificada
+        $pdf->save($rutaPDF);
+
+        // $pdfPath = "assets/docs/facturapdf.pdf";
+        $xmlPath = "assets/docs/facturaxml.xml";
+
+        $mail = new EnviaCorreo($nombre, $numero, $fecha);
+        // $mail->attach($pdfPath, ['as' => 'Factura.pdf'])
+        $mail->attach($rutaPDF, ['as' => 'Factura.pdf'])
+            ->attach($xmlPath, ['as' => 'Factura.xml']);
+
+        $response = Mail::to($correo)->send($mail);
+
+        // Elimina el archivo PDF guardado en la ruta temporal
+        Storage::delete($rutaPDF);
+        // dd($response);
     }
 
 

@@ -193,14 +193,14 @@
     <div class="card-body py-4">
         <div class="row" id="bloque_cliente" style="display: none;">
             <div class="col-md-4">
-                <span class="text-primary"><b>CLIENTE:</b></span><span id="cliente"></span>
+                <span class="text-primary"><b>CLIENTE:</b></span><span id="cliente_text"></span>
             </div>
             <div class="col-md-4">
-                <span class="text-primary"><b>VEHICULO:</b></span><span id="vehiculo"></span>
-                <input type="text" id="vehiculo_id">
+                <span class="text-primary"><b>VEHICULO:</b></span><span id="vehiculo_text"></span>
+                <input type="hidden" id="vehiculo_id">
             </div>
             <div class="col-md-4">
-                <span class="text-primary"><b>PLACA:</b></span><span id="placa"></span>
+                <span class="text-primary"><b>PLACA:</b></span><span id="placa_text"></span>
             </div>
         </div>
         <hr>
@@ -485,17 +485,27 @@
 
         // function agregarServicio(placa, marca, ap, am, nombre, vehiculo, nit, razon_socal, cliente){
         function agregarServicio(placa, marca, ap, am, nombre, vehiculo, cliente){
-            $('#table_vehiculos').hide('toggle');
-            $('#table_agrega_servicios').show('toggle');
-            $('#bloque_cliente').show('toggle');
-
-            $('#cliente').text(ap+" "+am+" "+nombre);
-            $('#vehiculo').text(marca);
-            $('#placa').text(placa);
-            $('#vehiculo_id').val(vehiculo);
-            sacaNitRazonSocial(cliente);
-
-            arrayPagos = [];
+            $.ajax({
+                url: "{{ url('vehiculo/consultaPagosPorCobrar') }}",
+                type: 'POST',
+                data:{id:vehiculo},
+                dataType: 'json',
+                success: function(data) {
+                    if(data.estado === 'success'){
+                        $('#detalle_ventas').html(data.listado_ventas);
+                        $('#bloqueDatosFactura').hide('toggle');
+                        $('#table_vehiculos').hide('toggle');
+                        $('#table_agrega_servicios').show('toggle');
+                        $('#bloque_cliente').show('toggle');
+                        $('#cliente_text').text(ap+" "+am+" "+nombre);
+                        $('#vehiculo_text').text(marca);
+                        $('#placa_text').text(placa);
+                        $('#vehiculo_id').val(vehiculo);
+                        sacaNitRazonSocial(cliente);
+                        arrayPagos = [];
+                    }
+                }
+            });
         }
 
         function identificaSericio(selected){
