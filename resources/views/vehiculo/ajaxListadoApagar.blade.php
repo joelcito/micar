@@ -93,13 +93,16 @@
     </table>
 </form>
 <div class="row">
-    <div class="col-md-4">
+    {{--  <div class="col-md-4">
         <button class="btn btn-info w-100 btn-sm" onclick="emitirTicket()">IMPRIME NOTA DE VENTA</button>
     </div>
     <div class="col-md-4">
         <button class="btn btn-success w-100 btn-sm" onclick="emitirRecibo()">RECIBO</button>
     </div>
     <div class="col-md-4">
+        <button class="btn btn-dark w-100 btn-sm" onclick="muestraDatosFactura()">FACTURA</button>
+    </div>  --}}
+    <div class="col-md-12">
         <button class="btn btn-dark w-100 btn-sm" onclick="muestraDatosFactura()">FACTURA</button>
     </div>
 </div>
