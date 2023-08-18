@@ -380,6 +380,12 @@
                 $('#table_vehiculos').show('toggle');
             });
 
+            // Agregar un evento para el enfoque (cuando el usuario hace clic en el campo)
+            $("#miInput").on("focus", function() {
+                console.log($("#miInput").val())
+                // Puedes realizar cualquier otra acción que desees aquí
+            });
+
         });
 
         function ajaxListado(){
