@@ -483,16 +483,14 @@
                     </div>
                     <!--end:Menu item-->
                     <!--begin:Menu item-->
-                    <div class="menu-item">
-                        <!--begin:Menu link-->
+                    {{-- <div class="menu-item">
                         <a class="menu-link" href="{{ url('/cliente/nuevo') }}">
                             <span class="menu-bullet">
                                 <span class="bullet bullet-dot"></span>
                             </span>
                             <span class="menu-title">Nuevo Cliente</span>
                         </a>
-                        <!--end:Menu link-->
-                    </div>
+                    </div> --}}
                     <!--end:Menu item-->
                 </div>
                 <!--end:Menu sub-->
@@ -523,13 +521,21 @@
                         </a>
                     </div>
                     <div class="menu-item">
+                        <a class="menu-link" href="{{ url('pago/porcobrar') }}">
+                            <span class="menu-bullet">
+                                <span class="bullet bullet-dot"></span>
+                            </span>
+                            <span class="menu-title">Cuentas por cobrar</span>
+                        </a>
+                    </div>
+                    {{-- <div class="menu-item">
                         <a class="menu-link" href="{{ url('/cliente/nuevo') }}">
                             <span class="menu-bullet">
                                 <span class="bullet bullet-dot"></span>
                             </span>
                             <span class="menu-title">Nuevo Cliente</span>
                         </a>
-                    </div>
+                    </div> --}}
                     <div class="menu-item">
                         <a class="menu-link" href="#">
                             <span class="menu-bullet">

@@ -101,6 +101,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/ajaxListado', [PagoController::class, 'ajaxListado']);
         Route::get('/detalle/{pago_id}', [PagoController::class, 'detalle']);
         Route::post('/eliminarPago', [PagoController::class, 'eliminarPago']);
+        Route::post('/emitirPorCobrar', [PagoController::class, 'emitirPorCobrar']);
+        Route::get('/porcobrar', [PagoController::class, 'porcobrar']);
     });
 
     // Route::post('/pago/ajaxListado', [PagoController::class, 'ajaxListado']);

@@ -67,6 +67,24 @@ class PagoController extends Controller
         return $data;
     }
 
+    // ============================= PARA LA GENERACION DE CUENTAS POR COBRAR ==================================================
+    public function  emitirPorCobrar(Request $request){
+        if($request->ajax()){
+            $vehiculo_id = $request->input('vehiculo');
+            Pago::where('estado', 'Parapagar')->update(['estado' => 'Porcobrar']);
+            $data['estado'] = "success";
+        }else{
+            $data['estado'] = "error";
+        }
+        return $data;
+    }
+
+    public function  porcobrar(Request $request) {
+        return view('pago.porcobrar');
+    }
+    // ============================= PARA LA GENERACION DE CUENTAS POR COBRAR ==================================================
+
+
     protected function listadoArrayPagos($vehiculo_id){
 
         $pagos = Pago::where('vehiculo_id', $vehiculo_id)

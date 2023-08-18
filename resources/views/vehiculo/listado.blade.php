@@ -256,7 +256,7 @@
                     <input type="text" readonly class="form-control" id="precio" name="precio" required>
                 </div>
             </div>
-            <div class="row">
+            <div class="row mt-2">
                 <div class="col-md-3 haber" style="display: none">
                     <label class="required fw-semibold fs-6 mb-2">Cantidad</label>
                     <input type="text" class="form-control" id="cantidad" name="cantidad" required>
@@ -265,7 +265,29 @@
                     <label class="required fw-semibold fs-6 mb-2">Total</label>
                     <input type="text" class="form-control" id="total" name="total" readonly value="0" required>
                 </div>
-                <div class="col-md-6 haber" style="display: none">
+                <div class="col-md-2 haber mt-5" style="display: none">
+                    <div class="form-group">
+                        <label>Por Cobrar</label>
+                        <div class="checkbox-list">
+                            <label class="checkbox">
+                                <input type="checkbox" name="Checkboxes1"/>
+                                <span></span>
+                                Registrar por cobrar
+                            </label>
+                            {{-- <label class="checkbox checkbox-disabled">
+                                <input type="checkbox" disabled="disabled" checked="checked" name="Checkboxes1"/>
+                                <span></span>
+                                Disabled
+                            </label> --}}
+                            {{-- <label class="checkbox">
+                                <input type="checkbox" checked="checked" name="Checkboxes1"/>
+                                <span></span>
+                                Checked
+                            </label> --}}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 haber" style="display: none">
                     <button class="btn btn-success btn-icon btn-sm w-100 mt-10" type="button" onclick="agregarVenta()"><i class="fa fa-car-alt"></i>  Agregar</button>
                 </div>
             </div>
@@ -1004,6 +1026,30 @@
             let vehiculo = $('#vehiculo_id').val()
             let url = "{{ asset('factura/imprimeTicked') }}/"+vehiculo;
             window.location.href = url;
+        }
+
+        function emitirPorCobrar(){
+            $.ajax({
+                url: "{{ url('pago/emitirPorCobrar') }}",
+                data: {
+                    vehiculo: $('#vehiculo_id').val(),
+                },
+                type: 'POST',
+                dataType:'json',
+                success: function(data) {
+                    if(data.estado === "success"){
+                        Swal.fire({
+                            icon:   'success',
+                            title:  'Exito!',
+                            text:   "Se agrego el registro POR COBRAR",
+                            timer: 2500
+                        })
+                        setTimeout(function() {
+                            location.reload();
+                        }, 3000); // 3000 milisegundos = 3 segundos
+                    }
+                }
+            });
         }
 
     </script>

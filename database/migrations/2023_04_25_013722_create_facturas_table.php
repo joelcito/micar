@@ -32,11 +32,15 @@ return new class extends Migration
             $table->dateTime('fecha')->nullable();
             $table->decimal('total',12,2)->nullable();
             $table->string('facturado',5)->nullable();
+
+            $table->string('tipo_pago',50)->nullable();
+            $table->decimal('monto_pagado',12,2)->nullable();
+            $table->decimal('cambio_devuelto',12,2)->nullable();
+
             $table->string('numero',10)->nullable();
             $table->string('numero_cafc',10)->nullable();
             $table->string('numero_recibo',10)->nullable();
             $table->string('codigo_control',10)->nullable();
-
             $table->string('cuf')->nullable();
             $table->string('codigo_metodo_pago_siat',10)->nullable();
             $table->decimal('monto_total_subjeto_iva',10,2)->nullable();
