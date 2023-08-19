@@ -65,93 +65,42 @@
 
     <!--begin::Card-->
     <div class="card">
-        <!--begin::Card body-->
+        <div class="card-header border-0 pt-6 bg-light-primary ">
+            <div class="card-title">
+                <h1>Cuentas por cobrar</h1>
+            </div>
+            <div class="card-toolbar">
+            </div>
+        </div>
         <div class="card-body py-4">
-            {{-- <div class="row">
-                <div class="col-md-4">
-                    <label class="required fw-semibold fs-6 mb-2">Nombre</label>
-                    <input type="text" class="form-control" id="" value="{{ $ventas[0]->vehiculo->cliente->nombres }}" readonly>
+            <div class="row">
+                <div class="col-md-2">
+                    <label for="">Nombres</label>
+                    <input type="text" class="form-control" id="buscar_nombre" name="buscar_nombre">
                 </div>
-                <div class="col-md-4">
-                    <label class="required fw-semibold fs-6 mb-2">Paterno</label>
-                    <input type="text" class="form-control" id="" value="{{ $ventas[0]->vehiculo->cliente->ap_paterno }}" readonly>
+                <div class="col-md-2">
+                    <label for="">Apellido Paterno</label>
+                    <input type="text" class="form-control" id="buscar_appaterno" name="buscar_appaterno">
                 </div>
-                <div class="col-md-4">
-                    <label class="required fw-semibold fs-6 mb-2">Materno</label>
-                    <input type="text" class="form-control" id="" value="{{ $ventas[0]->vehiculo->cliente->ap_materno }}" readonly>
+                <div class="col-md-2">
+                    <label for="">Apellido Materno</label>
+                    <input type="text" class="form-control" id="buscar_apmaterno" name="buscar_apmaterno">
+                </div>
+                <div class="col-md-2">
+                    <label for="">Cedula</label>
+                    <input type="text" class="form-control" id="buscar_cedula" name="buscar_cedula">
+                </div>
+                <div class="col-md-2">
+                    <label for="">Placa</label>
+                    <input type="text" class="form-control" id="buscar_placa" name="buscar_placa">
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-success w-100 btn-sm mt-7" onclick="ajaxListado()"><i class="fa fa-search"></i>Buscar</button>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <label class="required fw-semibold fs-6 mb-2">Marca</label>
-                    <input type="text" class="form-control" id="" value="{{ $ventas[0]->vehiculo->marca }}" readonly>
-                    <input type="hidden" id="pago_id" value="{{ $ventas[0]->pago_id}}">
-                </div>
-                <div class="col-md-6">
-                    <label class="required fw-semibold fs-6 mb-2">Placa</label>
-                    <input type="text" class="form-control" id="" value="{{ $ventas[0]->vehiculo->placa }}" readonly>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <hr>
-                    <h3 class="text-center text-primary">DETALLE DE VENTAS</h3>
-                </div>
-            </div> --}}
-            {{-- <table class="table align-middle table-row-dashed fs-6 gy-5">
-                <thead>
-                    <tr>
-                        <th>N°</th>
-                        <th>SERVICIO</th>
-                        <th>LAVADOR</th>
-                        <th>CANTIDAD</th>
-                        <th>TOTAL</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @php
-                        $total = 0;
-                    @endphp
-                    @foreach ($ventas as $key => $v)
-                    @php
-                        $total += $v->total;
-                    @endphp
-                    <tr>
-                        <td>{{ $key+1 }}</td>
-                        <td>
-                            @if ($v->servicio)
-                                {{ $v->servicio->descripcion }}
-                            @endif
-                        </td>
-                        <td>
-                            @if ($v->lavador)
-                                {{ $v->lavador->name }}
-                            @endif
-                        </td>
-                        <td>{{ $v->cantidad }}</td>
-                        <td>{{ $v->total }}</td>
-                        <td>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-                <tfoot class="bg-gray-200">
-                    <tr>
-                        <th colspan="3"><b>TOTAL</b></th>
-                        <th></th>
-                        <th></th>
-                        <th>{{ $total."Bs" }}</th>
-                    </tr>
-                </tfoot>
-            </table> --}}
-            <div class="row">
-                <div class="col-md-6">
-                    <button class="btn btn-dark w-100" onclick="imprimeNota()">Recibo</button>
-                </div>
-                <div class="col-md-6">
-                    <button class="btn btn-primary w-100" onclick="imprimeNota()">Factura</button>
-                </div>
+            <hr>
+            <div id="table_porcobrar">
+
             </div>
         </div>
         <!--end::Card body-->
@@ -171,8 +120,30 @@
             }
         })
 
-            // $( document ).ready(function() {
-            // });
+        $( document ).ready(function() {
+            ajaxListado()
+        });
+
+            
+        function ajaxListado(){
+            $.ajax({
+                url: "{{ url('pago/ajaxBuscarPorCobrar') }}",
+                type: 'POST',
+                data:{
+                    nombre      :   $('#buscar_nombre').val(),
+                    appaterno   :   $('#buscar_appaterno').val(),
+                    apmaterno   :   $('#buscar_apmaterno').val(),
+                    cedula      :   $('#buscar_cedula').val(),
+                    placa       :   $('#buscar_placa').val(),
+                },
+                dataType: 'json',
+                success: function(data) {
+                    if(data.estado === 'success'){
+                        $('#table_porcobrar').html(data.listado)
+                    }
+                }
+            });
+        }
 
     //    function guardarVenta(){
     //         if($("#formularioRol")[0].checkValidity()){
@@ -190,18 +161,6 @@
     //         }else{
     // 			$("#formularioRol")[0].reportValidity()
     //         }
-    //     }
-
-    //     function ajaxListado(){
-    //         $.ajax({
-    //             url: "{{ url('rol/ajaxListado') }}",
-    //             type: 'POST',
-    //             dataType: 'json',
-    //             success: function(data) {
-    //                 if(data.estado === 'success')
-    //                     $('#table_roles').html(data.listado);
-    //             }
-    //         });
     //     }
 
     //     function eliminar(rol){

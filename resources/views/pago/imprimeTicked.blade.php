@@ -203,6 +203,7 @@
                 <tr>
                     <td style="text-align: right; width: 150px"><b>SEÑORES:</b></td>
                     <td width="150px" style="text-align: left">
+                        {{-- @dd($pagos) --}}
                         {{ $pagos[0]->vehiculo->cliente->nombres." ".$pagos[0]->vehiculo->cliente->ap_paterno." ".$pagos[0]->vehiculo->cliente->ap_materno }}
                     </td>
                 </tr>

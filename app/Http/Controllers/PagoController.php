@@ -80,7 +80,77 @@ class PagoController extends Controller
     }
 
     public function  porcobrar(Request $request) {
+
+
+        // $pagosPorCobrar = Pago::where('estado', 'Porcobrar')
+        //                     ->select('vehiculo_id', \DB::raw('COUNT(*) as cantidad'))
+        //                     ->groupBy('vehiculo_id')
+        //                     ->get();
+
+        // $pagosPorCobrar = Pago::join('vehiculos as v', 'pagos.vehiculo_id', '=', 'v.id')
+        //                     ->join('clientes as c', 'v.cliente_id', '=', 'c.id')
+        //                     ->where('pagos.estado', 'Porcobrar')
+        //                     ->select('pagos.vehiculo_id', \DB::raw('COUNT(*) as cantidad'), 'v.*', 'c.*')
+        //                     ->groupBy('pagos.vehiculo_id')
+        //                     ->get();
+
+    
+        // dd($pagosPorCobrar);
+        
+
+        // return view('pago.porcobrar')->with(compact('pagosPorCobrar'));
         return view('pago.porcobrar');
+    }
+
+    public function ajaxBuscarPorCobrar(Request $request){
+        if($request->ajax()){
+
+            // dd($request->all());
+
+            $query = Pago::join('vehiculos as v', 'pagos.vehiculo_id', '=', 'v.id')
+                            ->join('clientes as c', 'v.cliente_id', '=', 'c.id')
+                            ->where('pagos.estado', 'Porcobrar')
+                            ->select('pagos.vehiculo_id', \DB::raw('COUNT(*) as cantidad'), 'v.*', 'c.*')
+                            ->groupBy('pagos.vehiculo_id');
+
+                            if(!is_null($request->input('nombre'))) {
+                                $nombre = $request->input('nombre');
+                                $query->where('c.nombres', 'like', '%' . $nombre . '%');
+                            }
+
+                            if (!is_null($request->input('appaterno'))) {
+                                $appaterno = $request->input('nombre');
+                                $query->where('c.ap_paterno', 'like', '%' . $appaterno . '%');
+                            }
+                            
+                            if (!is_null($request->input('apmaterno'))) {
+                                $apmaterno = $request->input('nombre');
+                                $query->where('c.ap_materno', 'like', '%' . $apmaterno . '%');
+                            }
+
+                            if (!is_null($request->input('cedula'))) {
+                                $cedula = $request->input('nombre');
+                                $query->where('c.cedula', 'like', '%' . $cedula . '%');
+                            }
+
+                            if (!is_null($request->input('placa'))) {
+                                $placa = $request->input('placa');
+                                $query->where('v.placa', 'like', '%' . $placa . '%');
+                            }
+
+            $pagosPorCobrar = $pagosPorCobrar = $query->get();
+            // $pagosPorCobrar = $pagosPorCobrar = $query->toSql();
+
+            // dd($pagosPorCobrar);
+
+            $data['estado'] = 'success';
+            $data['listado'] = view('pago.ajaxBuscarPorCobrar')->with(compact('pagosPorCobrar'))->render();
+            
+        }else{
+            $data['estado'] = 'error';
+        }
+
+        return $data;
     }
     // ============================= PARA LA GENERACION DE CUENTAS POR COBRAR ==================================================
 
