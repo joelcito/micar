@@ -1372,5 +1372,5 @@ class FacturaController extends Controller
         return view('pago.imprimeTicked')->with(compact('pagos'));
     }
     // ============================= PARA LA GENERACION DEL RECIBO END ==================================================
-   
+
 }

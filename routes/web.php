@@ -9,6 +9,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MigracionController;
 use App\Http\Controllers\PagoController;
 use App\Http\Controllers\PuntoVentaCotroller;
+use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\RolController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VentaController;
@@ -104,6 +105,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/emitirPorCobrar', [PagoController::class, 'emitirPorCobrar']);
         Route::get('/porcobrar', [PagoController::class, 'porcobrar']);
         Route::post('/ajaxBuscarPorCobrar', [PagoController::class, 'ajaxBuscarPorCobrar']);
+        Route::post('/ajaxServiciosMasa', [PagoController::class, 'ajaxServiciosMasa']);
+        Route::post('/arrayCuotasPorCobrar', [PagoController::class, 'arrayCuotasPorCobrar']);
     });
 
     // Route::post('/pago/ajaxListado', [PagoController::class, 'ajaxListado']);
@@ -158,6 +161,10 @@ Route::middleware('auth')->group(function () {
         Route::post('/sincronizarTipoDocumento', [SincronizaCatalogo::class, 'sincronizarTipoDocumento']);
         Route::post('/sincronizarMotivoAnulacion', [SincronizaCatalogo::class, 'sincronizarMotivoAnulacion']);
         Route::post('/sincronizarTipoEvento', [SincronizaCatalogo::class, 'sincronizarTipoEvento']);
+    });
+
+    Route::prefix('/reporte')->group(function () {
+        Route::get('/pagos', [ReporteController::class, 'pagos']);
     });
 
 });

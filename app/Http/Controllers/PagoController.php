@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Factura;
 use App\Models\MotivoAnulacion;
 use App\Models\Pago;
+use App\Models\TipoDocumento;
 use App\Models\Venta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -94,9 +95,9 @@ class PagoController extends Controller
         //                     ->groupBy('pagos.vehiculo_id')
         //                     ->get();
 
-    
+
         // dd($pagosPorCobrar);
-        
+
 
         // return view('pago.porcobrar')->with(compact('pagosPorCobrar'));
         return view('pago.porcobrar');
@@ -122,7 +123,7 @@ class PagoController extends Controller
                                 $appaterno = $request->input('nombre');
                                 $query->where('c.ap_paterno', 'like', '%' . $appaterno . '%');
                             }
-                            
+
                             if (!is_null($request->input('apmaterno'))) {
                                 $apmaterno = $request->input('nombre');
                                 $query->where('c.ap_materno', 'like', '%' . $apmaterno . '%');
@@ -140,20 +141,64 @@ class PagoController extends Controller
 
             $pagosPorCobrar = $pagosPorCobrar = $query->get();
             // $pagosPorCobrar = $pagosPorCobrar = $query->toSql();
-
             // dd($pagosPorCobrar);
 
             $data['estado'] = 'success';
             $data['listado'] = view('pago.ajaxBuscarPorCobrar')->with(compact('pagosPorCobrar'))->render();
-            
+
         }else{
             $data['estado'] = 'error';
         }
 
         return $data;
     }
-    // ============================= PARA LA GENERACION DE CUENTAS POR COBRAR ==================================================
 
+    public function ajaxServiciosMasa(Request $request){
+        if($request->ajax()){
+            $vehiculo_id = $request->input('vehiculo');
+            $pagos = Pago::where('vehiculo_id', $vehiculo_id)
+                            ->where('estado','Porcobrar')
+                            ->get();
+
+            $cliente = $pagos[0]->vehiculo->cliente;
+
+            $tipoDocumento = TipoDocumento::all();
+
+            // NUMOER DE FACTURA
+            $fac = app(FacturaController::class);
+            // dd($fac->numeroFactura());
+            $numFac = $fac->numeroFactura()+1;
+
+            $data['estado'] = 'success';
+            $data['listado'] = view('pago.ajaxServiciosMasa')->with(compact('pagos', 'vehiculo_id','tipoDocumento', 'numFac', 'cliente'))->render();
+        }else{
+            $data['estado'] = 'error';
+        }
+        return $data;
+    }
+
+    public function arrayCuotasPorCobrar(Request $request){
+        if($request->ajax()){
+
+            $vehiculo_d = $request->input('vehiculo');
+
+            $servicios = Pago::select('pagos.*','servicios.codigoActividad', 'servicios.codigoProducto', 'servicios.unidadMedida', 'servicios.descripcion')
+                                ->join('servicios', 'pagos.servicio_id','=', 'servicios.id')
+                                ->where('pagos.estado',"Porcobrar")
+                                ->where('pagos.vehiculo_id',$vehiculo_d)
+                                ->get();
+
+            $pagos =    $servicios->pluck('id');
+
+            $data['lista']  = json_encode($servicios);
+            $data['pagos']  = $pagos;
+            $data['estado'] = 'success';
+        }else{
+            $data['estado'] = 'error';
+        }
+        return $data;
+    }
+    // ============================= PARA LA GENERACION DE CUENTAS POR COBRAR ==================================================
 
     protected function listadoArrayPagos($vehiculo_id){
 
@@ -163,7 +208,5 @@ class PagoController extends Controller
 
         return view('vehiculo.ajaxListadoApagar')->with(compact('pagos'))->render();
     }
-
-
 
 }
