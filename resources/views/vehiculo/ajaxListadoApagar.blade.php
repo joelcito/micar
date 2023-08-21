@@ -92,27 +92,6 @@
         </tfoot>
     </table>
     <hr>
-    <h3 class="text-center text-info">PAGO</h3>
-    <div class="row">
-        <div class="col-md-4">
-            <label for="">Tipo de Pago</label>
-            <select name="tipo_pago" id="tipo_pago" class="form-control">
-                <option value="">Seleccionar</option>
-                <option value="efectivo">Efectivo</option>
-                <option value="tramsferencia">Tramsferencia</option>
-                <option value="qr">Pago Qr</option>
-            </select>
-        </div>
-        <div class="col-md-4">
-            <label for="monto_pagado">Monto</label>
-            <input type="text" class="form-control" id="miInput">
-        </div>
-        <div class="col-md-4">
-            <label for="cambio_devuelto">Cambio</label>
-            <input type="text" class="form-control">
-        </div>
-    </div>
-    <hr>
 </form>
 <div class="row">
     <div class="col-md-3">
@@ -122,7 +101,8 @@
         <button class="btn btn-primary w-100 btn-sm" onclick="emitirPorCobrar()">POR COBRAR</button>
     </div>
     <div class="col-md-3">
-        <button class="btn btn-success w-100 btn-sm" onclick="emitirRecibo()">RECIBO</button>
+        {{-- <button class="btn btn-success w-100 btn-sm" onclick="emitirRecibo()">RECIBO</button> --}}
+        <button class="btn btn-success w-100 btn-sm" onclick="muestraDatosTipoPago()">RECIBO</button>
     </div>
     <div class="col-md-3">
         <button class="btn btn-dark w-100 btn-sm" onclick="muestraDatosFactura()">FACTURA</button>

@@ -305,8 +305,28 @@
             </div>
         </div>
         <hr>
+        <div class="row" id="bloque_tipos_pagos" style="display: none">
+            <div class="col-md-4">
+                <label for="">Tipo de Pago</label>
+                <select name="tipo_pago" id="tipo_pago" class="form-control">
+                    <option value="">Seleccionar</option>
+                    <option value="efectivo">Efectivo</option>
+                    <option value="tramsferencia">Tramsferencia</option>
+                    <option value="qr">Pago Qr</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="monto_pagado">Monto</label>
+                <input type="text" class="form-control" id="miInput">
+            </div>
+            <div class="col-md-4">
+                <label for="cambio_devuelto">Cambio</label>
+                <input type="text" class="form-control">
+            </div>
+        </div>
+        <hr>
         <div id="bloqueDatosFactura" style="display: none">
-            <form id="formularioGeneraFactura">
+            <form id="formularioGeneraFactura">                
                 <div class="row">
                     <div class="col-md-1">
                         <label for="">N Factura</label>
@@ -353,6 +373,7 @@
                         </div>
                     </div>
                 </div>
+                {{-- <h3 class="text-center text-info">PAGO</h3> --}}                
                 <div class="row" style="display: none" id="bloque_exepcion">
                     <div class="col-md-2">
                         <div class="form-group">
@@ -361,13 +382,15 @@
                         </div>
                     </div>
                 </div>
+                
             </form>
             <div class="row mt-2">
                 <div class="col-md-12">
-                    <button class="btn btn-sm w-100 btn-success" onclick="emitirFactura()">Enviar</button>
+                    <button class="btn btn-sm w-100 btn-success" onclick="emitirFactura()" id="boton_enviar_factura">Enviar F</button>
+                    <button class="btn btn-success w-100 btn-sm" style="display: none" id="boton_enviar_recivo">Enviar R</button>
                 </div>
             </div>
-        </div>
+        </div>        
     </div>
     <!--end::Card body-->
 </div>
@@ -680,7 +703,7 @@
 
         function muestraDatosFactura(){
             $('#bloqueDatosFactura').show('toggle')
-
+            $('#bloque_tipos_pagos').show('toggle')
             $.ajax({
                 url: "{{ url('factura/arrayCuotasPagar') }}",
                 data:{
@@ -695,6 +718,11 @@
                     }
                 }
             });
+        }
+
+        function muestraDatosTipoPago(){
+            $('#bloque_tipos_pagos').show('toggle')
+            $('#bloqueDatosFactura').hide('toggle')
         }
 
         function emitirFactura(){
