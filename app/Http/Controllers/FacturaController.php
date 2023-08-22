@@ -223,6 +223,11 @@ class FacturaController extends Controller
             $factura->fecha                     = $datos['factura'][0]['cabecera']['fechaEmision'];
             $factura->total                     = $datos['factura'][0]['cabecera']['montoTotal'];
             $factura->facturado                 = "Si";
+
+            $factura->tipo_pago                 = $request->input('tipo_pago');
+            $factura->monto_pagado              = $request->input('monto_pagado');
+            $factura->cambio_devuelto           = $request->input('cambio');
+
             $factura->cuf                       = $datos['factura'][0]['cabecera']['cuf'];
             $factura->codigo_metodo_pago_siat   = $datos['factura'][0]['cabecera']['codigoMetodoPago'];
             $factura->monto_total_subjeto_iva   = $datos['factura'][0]['cabecera']['montoTotalSujetoIva'];
@@ -1310,6 +1315,10 @@ class FacturaController extends Controller
             $factura->total                 = $monto;
             $factura->facturado             = "No";
             $factura->numero_recibo         = $this->numeroRecibo();
+            // nuevos
+            $factura->tipo_pago             = $request->input('tipo_pago');
+            $factura->monto_pagado          = $request->input('monto_pagado');
+            $factura->cambio_devuelto       = $request->input('cambio');
             $factura->descuento_adicional   = $descuento_adicional;
             $factura->save();
 

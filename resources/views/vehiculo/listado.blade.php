@@ -305,25 +305,32 @@
             </div>
         </div>
         <hr>
-        <div class="row" id="bloque_tipos_pagos" style="display: none">
-            <div class="col-md-4">
-                <label for="">Tipo de Pago</label>
-                <select name="tipo_pago" id="tipo_pago" class="form-control">
-                    <option value="">Seleccionar</option>
-                    <option value="efectivo">Efectivo</option>
-                    <option value="tramsferencia">Tramsferencia</option>
-                    <option value="qr">Pago Qr</option>
-                </select>
+        <form id="formulario_tipo_pagos">
+            <div class="row" id="bloque_tipos_pagos" style="display: none">
+                <div class="col-md-4">
+                    <label for="">Tipo de Pago</label>
+                    <select name="tipo_pago" id="tipo_pago" class="form-control">
+                        <option value="">Seleccionar</option>
+                        <option value="efectivo">Efectivo</option>
+                        <option value="tramsferencia">Tramsferencia</option>
+                        <option value="qr">Qr</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="monto_pagado">Monto</label>
+                    <input type="text" class="form-control" id="miInput" name="miInput">
+                </div>
+                <div class="col-md-4">
+                    <label for="cambio_devuelto">Cambio</label>
+                    <input type="text" class="form-control" readonly value="0" id="cambio" min="0">
+                </div>
             </div>
-            <div class="col-md-4">
-                <label for="monto_pagado">Monto</label>
-                <input type="text" class="form-control" id="miInput">
+            <div class="row mt-1">
+                <div class="col-md-12">
+                    <button type="button" class="btn btn-success w-100 btn-sm" onclick="emitirRecibo()" style="display: none" id="boton_enviar_recivo">Enviar R</button>
+                </div>
             </div>
-            <div class="col-md-4">
-                <label for="cambio_devuelto">Cambio</label>
-                <input type="text" class="form-control">
-            </div>
-        </div>
+        </form>
         <hr>
         <div id="bloqueDatosFactura" style="display: none">
             <form id="formularioGeneraFactura">                
@@ -386,8 +393,7 @@
             </form>
             <div class="row mt-2">
                 <div class="col-md-12">
-                    <button class="btn btn-sm w-100 btn-success" onclick="emitirFactura()" id="boton_enviar_factura">Enviar F</button>
-                    <button class="btn btn-success w-100 btn-sm" style="display: none" id="boton_enviar_recivo">Enviar R</button>
+                    <button class="btn btn-sm w-100 btn-success" onclick="emitirFactura()" style="display: none" id="boton_enviar_factura">Enviar F</button>
                 </div>
             </div>
         </div>        
@@ -426,8 +432,10 @@
             });
 
             // Agregar un evento para el enfoque (cuando el usuario hace clic en el campo)
-            $("#miInput").on("focus", function() {
-                console.log($("#miInput").val())
+            $("#miInput").on("keyup", function() {
+                console.log($(this).val())
+                let dato = $(this).val() - $("#motoTotalFac").val()
+                $('#cambio').val(dato)
                 // Puedes realizar cualquier otra acción que desees aquí
             });
 
@@ -704,6 +712,8 @@
         function muestraDatosFactura(){
             $('#bloqueDatosFactura').show('toggle')
             $('#bloque_tipos_pagos').show('toggle')
+            $('#boton_enviar_factura').show('toggle')
+            $('#boton_enviar_recivo').hide('toggle')
             $.ajax({
                 url: "{{ url('factura/arrayCuotasPagar') }}",
                 data:{
@@ -722,7 +732,9 @@
 
         function muestraDatosTipoPago(){
             $('#bloque_tipos_pagos').show('toggle')
+            $('#boton_enviar_recivo').show('toggle')
             $('#bloqueDatosFactura').hide('toggle')
+            $('#boton_enviar_factura').hide('toggle')
         }
 
         function emitirFactura(){
@@ -847,7 +859,11 @@
                         datos           :datos,
                         datosVehiculo   :datosVehiculo,
                         datosRecepcion  :datosRecepcion,
-                        modalidad       : $('#tipo_facturacion').val()
+                        modalidad       : $('#tipo_facturacion').val(),
+
+                        tipo_pago           : $('#tipo_pago').val(),
+                        monto_pagado        : $('#miInput').val(),
+                        cambio              : $('#cambio').val()
                     },
                     type: 'POST',
                     dataType:'json',
@@ -896,7 +912,11 @@
                 data:{
                     vehiculo            : $('#vehiculo_id').val(),
                     monto               : $('#motoTotalFac').val(),
-                    descuento_adicional : $('#descuento_adicional').val()
+                    descuento_adicional : $('#descuento_adicional').val(),
+                    // datos               : $('#formulario_tipo_pagos').serializeArray()
+                    tipo_pago           : $('#tipo_pago').val(),
+                    monto_pagado        : $('#miInput').val(),
+                    cambio              : $('#cambio').val()
                 },
                 dataType: 'json',
                 success: function(data) {
