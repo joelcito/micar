@@ -25,17 +25,17 @@ class Pago extends Model
         'deleted_at',
     ];
 
-    public function vehiculo(){
-        return $this->belongsTo('App\Models\Vehiculo', 'vehiculo_id');
-    }
+    // public function vehiculo(){
+    //     return $this->belongsTo('App\Models\Vehiculo', 'vehiculo_id');
+    // }
 
-    public function lavador(){
-        return $this->belongsTo('App\Models\User', 'lavador_id');
-    }
+    // public function lavador(){
+    //     return $this->belongsTo('App\Models\User', 'lavador_id');
+    // }
 
-    public function servicio(){
-        return $this->belongsTo('App\Models\Servicio', 'servicio_id');
-    }
+    // public function servicio(){
+    //     return $this->belongsTo('App\Models\Servicio', 'servicio_id');
+    // }
 
 
 }

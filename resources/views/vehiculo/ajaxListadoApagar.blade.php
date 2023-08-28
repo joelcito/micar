@@ -24,51 +24,49 @@
             @php
                 $total = 0;
             @endphp
-            @foreach ($pagos as $key => $p)
+            @foreach ($detalles as $key => $d)
             @php
-                $total+=$p->importe;
+                $total+=$d->importe;
             @endphp
             <tr>
                 <td>{{ $key+1 }}</td>
                 <td>
-                    @if ($p->servicio)
-                        {{ $p->servicio->descripcion }}
+                    @if ($d->servicio)
+                        {{ $d->servicio->descripcion }}
                     @endif
                 </td>
                 <td>
-                    @if ($p->lavador)
-                        {{ $p->lavador->name }}
+                    @if ($d->lavador)
+                        {{ $d->lavador->name }}
                     @endif
                 </td>
-                <td>{{ $p->precio }}</td>
-                <td>{{ $p->cantidad }}</td>
-                <td>{{ $p->total }}</td>
+                <td>{{ $d->precio }}</td>
+                <td>{{ $d->cantidad }}</td>
+                <td>{{ $d->total }}</td>
                 <td>
                     @php
-                        if($p->descuento > 0)
-                            $valoInput = $p->descuento;
+                        if($d->descuento > 0)
+                            $valoInput = $d->descuento;
                         else
                             $valoInput = 0;
                     @endphp
-                    {{-- <input type="number" class="form-control" id="pago_listado_{{ $p->id }}" onchange="funcionNueva(this,{{ $p->id }}, {{ $p->total }})" value="{{ $valoInput }}" min="0" max="{{ $p->total }}" onfocus="guardarValorInicial(this)"> --}}
-                    {{-- <input type="number" class="form-control" id="pago_listado_{{ $p->id }}" oninput="funcionNueva(this,{{ $p->id }}, {{ $p->total }})" value="{{ $valoInput }}" min="0" max="{{ $p->total }}" onfocus="guardarValorInicial(this)"> --}}
                     <input type="number"
                             class="form-control"
-                            id="pago_listado_{{ $p->id }}"
+                            id="pago_listado_{{ $d->id }}"
                             value="{{ $valoInput }}"
                             min="0"
-                            max="{{ $p->total }}"
+                            max="{{ $d->total }}"
                             step="0.1"
-                            onchange="funcionNueva(this,{{ $p->id }}, {{ $p->total }})"
+                            onchange="funcionNueva(this,{{ $d->id }}, {{ $d->total }})"
                             onfocus="guardarValorInicial(this)"
                             >
                 </td>
                 <td>
-                    <span id="subTotalCalculdo_{{ $p->id }}">{{ $p->importe }}</span>
+                    <span id="subTotalCalculdo_{{ $d->id }}">{{ $d->importe }}</span>
                 </td>
                 <td>
                     <center>
-                        <button class="btn btn-danger btn-icon btn-sm" type="button" onclick="eliminarPago('{{ $p->id }}', '{{ $p->pago_id }}')"><i class="fa fa-trash"></i></button>
+                        <button class="btn btn-danger btn-icon btn-sm" type="button" onclick="eliminarPago('{{ $d->id }}')"><i class="fa fa-trash"></i></button>
                     </center>
                 </td>
             </tr>

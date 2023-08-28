@@ -9,6 +9,7 @@ use App\Models\Pago;
 use App\Models\TipoDocumento;
 use App\Models\TipoEvento;
 use App\Models\Vehiculo;
+use App\Models\Detalle;
 use App\Models\Venta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -64,11 +65,15 @@ class VehiculoController extends Controller
 
     protected function listadoArrayPagos($vehiculo_id){
 
-        $pagos = Pago::where('vehiculo_id', $vehiculo_id)
+        // $pagos = Pago::where('vehiculo_id', $vehiculo_id)
+        //                 ->where('estado', "Parapagar")
+        //                 ->get();
+
+        $detalles = Detalle::where('vehiculo_id', $vehiculo_id)
                         ->where('estado', "Parapagar")
                         ->get();
 
-        return view('vehiculo.ajaxListadoApagar')->with(compact('pagos'))->render();
+        return view('vehiculo.ajaxListadoApagar')->with(compact('detalles'))->render();
     }
 
     public function ajaxRegistraVenta(Request $request){
@@ -78,50 +83,34 @@ class VehiculoController extends Controller
 
             $vehiculo_id = $request->input('vehiculo_id');
 
-            $pago = new Pago();
+            $detalle = new Detalle();
+            $detalle->creador_id       = Auth::user()->id;
+            $detalle->vehiculo_id      = $vehiculo_id;
+            $detalle->servicio_id      = $request->input('servicio_id');
+            $detalle->lavador_id       = $request->input('lavador_id');
+            $detalle->precio           = $request->input('precio');
+            $detalle->cantidad         = $request->input('cantidad');
+            $detalle->total            = $request->input('total');
+            $detalle->descuento        = 0;
+            $detalle->importe          = $request->input('total');
+            $detalle->fecha            = date('Y-m-d');
+            $detalle->estado           = "Parapagar";
+            $detalle->save();
 
-            $pago->creador_id       = Auth::user()->id;
-            $pago->vehiculo_id      = $vehiculo_id;
-            $pago->servicio_id      = $request->input('servicio_id');
-            $pago->lavador_id       = $request->input('lavador_id');
-            $pago->precio           = $request->input('precio');
-            $pago->cantidad         = $request->input('cantidad');
-            $pago->total            = $request->input('total');
-            $pago->descuento        = 0;
-            $pago->importe          = $request->input('total');
-            $pago->fecha            = date('Y-m-d');
-            $pago->estado           = "Parapagar";
-            $pago->save();
+            // $pago = new Pago();
 
-
-
-            // if($request->input('pago_id') == 0){
-            //     $pago = new Pago();
-
-            //     $pago->creador_id = Auth::user()->id;
-            //     $pago->vehiculo_id = $request->input('vehiculo_id');
-
-            //     $pago->save();
-
-            //     $pago_id = $pago->id;
-
-            // }else{
-            //     $pago_id = $request->input('pago_id');
-            // }
-
-            // $venta = new Venta();
-
-            // $venta->creador_id  = Auth::user()->id;
-            // $venta->lavador_id  = $request->input('lavador_id');
-            // $venta->vehiculo_id = $request->input('vehiculo_id');
-            // $venta->servicio_id = $request->input('servicio_id');
-            // $venta->precio      = $request->input('precio');
-            // $venta->cantidad    = $request->input('cantidad');
-            // $venta->total       = $request->input('total');
-            // $venta->fecha       = date('Y-m-d');
-            // $venta->pago_id     = $pago_id;
-
-            // $venta->save();
+            // $pago->creador_id       = Auth::user()->id;
+            // $pago->vehiculo_id      = $vehiculo_id;
+            // $pago->servicio_id      = $request->input('servicio_id');
+            // $pago->lavador_id       = $request->input('lavador_id');
+            // $pago->precio           = $request->input('precio');
+            // $pago->cantidad         = $request->input('cantidad');
+            // $pago->total            = $request->input('total');
+            // $pago->descuento        = 0;
+            // $pago->importe          = $request->input('total');
+            // $pago->fecha            = date('Y-m-d');
+            // $pago->estado           = "Parapagar";
+            // $pago->save();
 
             $data['estado'] = 'success';
             // $data['pago_id'] = $pago_id;

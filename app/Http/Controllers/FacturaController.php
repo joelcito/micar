@@ -9,6 +9,7 @@ use App\Models\Cliente;
 use App\Models\Factura;
 use App\Models\Pago;
 use App\Models\Vehiculo;
+use App\Models\Detalle;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -59,18 +60,27 @@ class FacturaController extends Controller
      */
     public function actualizaDescuento(Request $request){
         if($request->ajax()){
-            $pago               = Pago::find($request->input('pago_id'));
-            $pago->descuento    = $request->input('valor');
-            $pago->importe      = ($pago->precio * $pago->cantidad)-$request->input('valor');
-            $pago->save();
+            // $pago               = Pago::find($request->input('pago_id'));
+            $detalle               = Detalle::find($request->input('pago_id'));
+            $detalle->descuento    = $request->input('valor');
+            $detalle->importe      = ($detalle->precio * $detalle->cantidad)-$request->input('valor');
+            $detalle->save();
 
-            $vehiculo_id        = $pago->vehiculo_id;
+            $vehiculo_id        = $detalle->vehiculo_id;
 
-            $sumaImporte = Pago::where('estado','paraPagar')
+            // $sumaImporte = Pago::where('estado','paraPagar')
+            //                     ->where('vehiculo_id',$vehiculo_id)
+            //                     ->sum('total');
+            $sumaImporte = Detalle::where('estado','paraPagar')
                                 ->where('vehiculo_id',$vehiculo_id)
                                 ->sum('total');
 
-            $sumaRebaja = Pago::where('estado','paraPagar')
+                                
+            // $sumaRebaja = Pago::where('estado','paraPagar')
+            //                 ->where('vehiculo_id',$vehiculo_id)
+            //                 ->sum('descuento');
+
+            $sumaRebaja = Detalle::where('estado','paraPagar')
                                 ->where('vehiculo_id',$vehiculo_id)
                                 ->sum('descuento');
 

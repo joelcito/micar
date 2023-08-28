@@ -7,6 +7,7 @@ use App\Models\MotivoAnulacion;
 use App\Models\Pago;
 use App\Models\TipoDocumento;
 use App\Models\Venta;
+use App\Models\Detalle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -56,9 +57,10 @@ class PagoController extends Controller
 
     public function eliminarPago(Request $request) {
         if($request->ajax()){
-            $vehiculo_id = $request->input('vehiculo');
-            $pago_id = $request->input('id') ;
-            Pago::destroy($pago_id);
+            $vehiculo_id    = $request->input('vehiculo');
+            $detalle_id     = $request->input('id') ;
+            // Pago::destroy($detalle_id);
+            Detalle::destroy($detalle_id);
             $data['listado'] = $this->listadoArrayPagos($vehiculo_id);
             $data['estado'] = 'success';
         }else{
@@ -202,11 +204,14 @@ class PagoController extends Controller
 
     protected function listadoArrayPagos($vehiculo_id){
 
-        $pagos = Pago::where('vehiculo_id', $vehiculo_id)
+        // $pagos = Pago::where('vehiculo_id', $vehiculo_id)
+        //                 ->where('estado', "Parapagar")
+        //                 ->get();
+        $detalles = Detalle::where('vehiculo_id', $vehiculo_id)
                         ->where('estado', "Parapagar")
                         ->get();
 
-        return view('vehiculo.ajaxListadoApagar')->with(compact('pagos'))->render();
+        return view('vehiculo.ajaxListadoApagar')->with(compact('detalles'))->render();
     }
 
 }
