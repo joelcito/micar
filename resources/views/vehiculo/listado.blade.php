@@ -318,7 +318,7 @@
                 </div>
                 <div class="col-md-4">
                     <label for="monto_pagado">Monto</label>
-                    <input type="text" class="form-control" id="miInput" name="miInput">
+                    <input type="text" class="form-control" id="miInput" name="miInput" value="0">
                 </div>
                 <div class="col-md-4">
                     <label for="cambio_devuelto">Cambio</label>
