@@ -100,20 +100,20 @@
                 success: function(data) {
                     if(data.estado === 'success'){
                         Swal.fire({
-                            icon: 'success',
-                            title: data.msg,
-                            showConfirmButton: false, // No mostrar botón de confirmación
-                            timer: 2000, // 5 segundos
-                            timerProgressBar: true
+                            icon             : 'success',
+                            title            : data.msg,
+                            showConfirmButton: false,       // No mostrar botón de confirmación
+                            timer            : 2000,        // 5 segundos
+                            timerProgressBar : true
                         });
                         ajaxListadoTipoDocumento();
                     }else{
                         Swal.fire({
-                            icon: 'error',
-                            title: data.msg,
-                            showConfirmButton: false, // No mostrar botón de confirmación
-                            timer: 2000, // 5 segundos
-                            timerProgressBar: true
+                            icon             : 'error',
+                            title            : data.msg,
+                            showConfirmButton: false,      // No mostrar botón de confirmación
+                            timer            : 2000,       // 5 segundos
+                            timerProgressBar : true
                         });
                     }
                 }

@@ -307,22 +307,33 @@
         <hr>
         <form id="formulario_tipo_pagos">
             <div class="row" id="bloque_tipos_pagos" style="display: none">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label for="">Tipo de Pago</label>
-                    <select name="tipo_pago" id="tipo_pago" class="form-control">
+                    <select name="tipo_pago" id="tipo_pago" class="form-control" onchange="relizarPago()">
                         <option value="">Seleccionar</option>
                         <option value="efectivo">Efectivo</option>
                         <option value="tramsferencia">Tramsferencia</option>
                         <option value="qr">Qr</option>
                     </select>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label for="monto_pagado">Monto</label>
                     <input type="text" class="form-control" id="miInput" name="miInput" value="0">
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label for="cambio_devuelto">Cambio</label>
                     <input type="text" class="form-control" readonly value="0" id="cambio" min="0">
+                </div>
+                <div class="col-md-3">
+                    <div class="fv-row mb-7">
+                        <label class="required fw-semibold fs-6 mb-2">Realizara algun Pago?</label>
+                        <div class="d-flex align-items-center mt-3">
+                            <label class="form-check form-check-custom form-check-solid me-3">
+                                <input class="form-check-input h-20px w-20px" type="checkbox" name="realizo_pago" value="pago" id="realizo_pago" />
+                                <span class="form-check-label fw-semibold">Realizo un pago</span>
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="row mt-1">
@@ -435,8 +446,7 @@
             $("#miInput").on("keyup", function() {
                 console.log($(this).val())
                 let dato = $(this).val() - $("#motoTotalFac").val()
-                $('#cambio').val(dato)
-                // Puedes realizar cualquier otra acción que desees aquí
+                $('#cambio').val((dato < 0)? 0 : dato)
             });
 
         });
@@ -723,8 +733,9 @@
                 dataType: 'json',
                 success: function(data) {
                     if(data.estado === 'success'){
-                        arrayPagos = data.pagos;
+                        arrayPagos = data.detalles;
                         arrayProductos = JSON.parse(data.lista)
+                        console.log(arrayPagos, arrayProductos)
                     }
                 }
             });
@@ -843,27 +854,27 @@
                 var datos = {factura};
 
                 var datosVehiculo = {
-                    'vehiculo_id'   :   $('#vehiculo_id').val(),
-                    'pagos'         :   arrayPagos
+                    'vehiculo_id' : $('#vehiculo_id').val(),
+                    'pagos'       : arrayPagos,
+                    'realizo_pago': $("#realizo_pago").prop("checked")
                 };
 
                 var datosRecepcion = {
-                    'uso_cafc'                  :$('input[name="uso_cafc"]:checked').val(),
-                    'codigo_cafc_contingencia'  :$('#codigo_cafc_contingencia').val()
+                    'uso_cafc'                : $('input[name="uso_cafc"]:checked').val(),
+                    'codigo_cafc_contingencia': $('#codigo_cafc_contingencia').val()
                 };
 
 
                 $.ajax({
-                    url: "{{ url('factura/emitirFactura') }}",
+                    url : "{{ url('factura/emitirFactura') }}",
                     data: {
-                        datos           :datos,
-                        datosVehiculo   :datosVehiculo,
-                        datosRecepcion  :datosRecepcion,
-                        modalidad       : $('#tipo_facturacion').val(),
-
-                        tipo_pago           : $('#tipo_pago').val(),
-                        monto_pagado        : $('#miInput').val(),
-                        cambio              : $('#cambio').val()
+                        datos         : datos,
+                        datosVehiculo : datosVehiculo,
+                        datosRecepcion: datosRecepcion,
+                        modalidad     : $('#tipo_facturacion').val(),
+                        tipo_pago     : $('#tipo_pago').val(),
+                        monto_pagado  : $('#miInput').val(),
+                        cambio        : $('#cambio').val()
                     },
                     type: 'POST',
                     dataType:'json',
@@ -871,31 +882,31 @@
 
                         if(data.estado === "VALIDADA"){
                             Swal.fire({
-                                icon: 'success',
+                                icon : 'success',
                                 title: 'Excelente!',
-                                text: 'LA FACTURA FUE VALIDADA',
+                                text : 'LA FACTURA FUE VALIDADA',
                                 timer: 3000
                             })
                             window.location.href = "{{ url('pago/listado')}}"
                         }else if(data.estado === "error_email"){
                             Swal.fire({
-                                icon: 'error',
+                                icon : 'error',
                                 title: 'Error!',
-                                text: data.msg,
+                                text : data.msg,
                             })
                         }else if(data.estado === "OFFLINE"){
                             Swal.fire({
-                                icon: 'warning',
+                                icon : 'warning',
                                 title: 'Exito!',
-                                text: 'LA FACTURA FUERA DE LINEA FUE REGISTRADA',
+                                text : 'LA FACTURA FUERA DE LINEA FUE REGISTRADA',
                             })
                             window.location.href = "{{ url('pago/listado')}}"
-                            // location.reload();
+                              // location.reload();
                         }else{
                             Swal.fire({
-                                icon: 'error',
+                                icon : 'error',
                                 title: 'Error!',
-                                text: 'LA FACTURA FUE RECHAZADA',
+                                text : 'LA FACTURA FUE RECHAZADA',
                             })
                         }
                     }
@@ -1098,6 +1109,11 @@
                     }
                 }
             });
+        }
+        
+        function relizarPago(){
+            let valor = $('#tipo_pago').val();
+            $("#realizo_pago").prop("checked", (valor != "")? true : false);
         }
 
     </script>

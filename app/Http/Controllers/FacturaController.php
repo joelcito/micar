@@ -34,17 +34,25 @@ class FacturaController extends Controller
 
             $vehiculo_d = $request->input('vehiculo');
 
-            $servicios = Pago::select('pagos.*','servicios.codigoActividad', 'servicios.codigoProducto', 'servicios.unidadMedida', 'servicios.descripcion')
-                                ->join('servicios', 'pagos.servicio_id','=', 'servicios.id')
-                                ->where('pagos.estado',"paraPagar")
-                                ->where('pagos.vehiculo_id',$vehiculo_d)
+            // $servicios = Pago::select('pagos.*','servicios.codigoActividad', 'servicios.codigoProducto', 'servicios.unidadMedida', 'servicios.descripcion')
+            //                     ->join('servicios', 'pagos.servicio_id','=', 'servicios.id')
+            //                     ->where('pagos.estado',"paraPagar")
+            //                     ->where('pagos.vehiculo_id',$vehiculo_d)
+            //                     ->get();
+
+            // $pagos =    $servicios->pluck('id');
+            
+            $servicios = Detalle::select('detalles.*','servicios.codigoActividad', 'servicios.codigoProducto', 'servicios.unidadMedida', 'servicios.descripcion')
+                                ->join('servicios', 'detalles.servicio_id','=', 'servicios.id')
+                                ->where('detalles.estado',"paraPagar")
+                                ->where('detalles.vehiculo_id',$vehiculo_d)
                                 ->get();
 
-            $pagos =    $servicios->pluck('id');
+            $detalles =    $servicios->pluck('id');
 
-            $data['lista']  = json_encode($servicios);
-            $data['estado'] = 'success';
-            $data['pagos'] = $pagos;
+            $data['lista']      = json_encode($servicios);
+            $data['estado']     = 'success';
+            $data['detalles']   = $detalles;
 
         }else{
             $data['estado'] = 'error';
@@ -121,6 +129,7 @@ class FacturaController extends Controller
 
             // dd($request->all());
 
+            // ********************************* ESTO ES PARA GENERAR LA FACTURA *********************************
             $datos              = $request->input('datos');
             $datosVehiculo      = $request->input('datosVehiculo');
             $valoresCabecera    = $datos['factura'][0]['cabecera'];
@@ -138,7 +147,6 @@ class FacturaController extends Controller
             }
             else{
                 $datosRecepcion       = $request->input('datosRecepcion');
-                // dd($datosRecepcion);
                 if($datosRecepcion['uso_cafc'] === "Si"){
                     $datos['factura'][0]['cabecera']['cafc'] = $datosRecepcion['codigo_cafc_contingencia'];
                 }
@@ -187,7 +195,7 @@ class FacturaController extends Controller
                 }
             }
 
-            $cufPro                                         = $this->generarBase16($cadenaConM11).$scodigoControl;
+            $cufPro                                                 = $this->generarBase16($cadenaConM11).$scodigoControl;
 
             $datos['factura'][0]['cabecera']['cuf']                 = $cufPro;
             $datos['factura'][0]['cabecera']['cufd']                = $scufd;
@@ -233,11 +241,10 @@ class FacturaController extends Controller
             $factura->fecha                     = $datos['factura'][0]['cabecera']['fechaEmision'];
             $factura->total                     = $datos['factura'][0]['cabecera']['montoTotal'];
             $factura->facturado                 = "Si";
-
             $factura->tipo_pago                 = $request->input('tipo_pago');
             $factura->monto_pagado              = $request->input('monto_pagado');
             $factura->cambio_devuelto           = $request->input('cambio');
-
+            $factura->estado_pago               = (((int)$factura->monto_pagado - (int)$factura->cambio_devuelto) == $factura->total)? "Pagado" : "Deuda"; 
             $factura->cuf                       = $datos['factura'][0]['cabecera']['cuf'];
             $factura->codigo_metodo_pago_siat   = $datos['factura'][0]['cabecera']['codigoMetodoPago'];
             $factura->monto_total_subjeto_iva   = $datos['factura'][0]['cabecera']['montoTotalSujetoIva'];
@@ -259,7 +266,7 @@ class FacturaController extends Controller
 
             if($tipo_factura === "online"){
                 $siat = app(SiatController::class);
-                $for = json_decode($siat->recepcionFactura($archivoZip, $valoresCabecera['fechaEmision'],$hashArchivo));
+                $for  = json_decode($siat->recepcionFactura($archivoZip, $valoresCabecera['fechaEmision'],$hashArchivo));
                 if($for->estado === "error"){
                     $codigo_descripcion = null;
                     $codigo_trancaccion = null;
@@ -267,14 +274,14 @@ class FacturaController extends Controller
                     $codigo_recepcion   = null;
                 }else{
                     if($for->resultado->RespuestaServicioFacturacion->transaccion){
-                        $codigo_recepcion   = $for->resultado->RespuestaServicioFacturacion->codigoRecepcion;
-                        $descripcion        = NULL;
+                        $codigo_recepcion = $for->resultado->RespuestaServicioFacturacion->codigoRecepcion;
+                        $descripcion      = NULL;
                     }else{
-                        $codigo_recepcion   = NULL;
-                        $descripcion        = $for->resultado->RespuestaServicioFacturacion->mensajesList->descripcion;
+                        $codigo_recepcion = NULL;
+                        $descripcion      = $for->resultado->RespuestaServicioFacturacion->mensajesList->descripcion;
                     }
-                    $codigo_descripcion     = $for->resultado->RespuestaServicioFacturacion->codigoDescripcion;
-                    $codigo_trancaccion     = $for->resultado->RespuestaServicioFacturacion->transaccion;
+                    $codigo_descripcion = $for->resultado->RespuestaServicioFacturacion->codigoDescripcion;
+                    $codigo_trancaccion = $for->resultado->RespuestaServicioFacturacion->transaccion;
                 }
                 $data['estado'] = $codigo_descripcion;
             }else{
@@ -294,14 +301,32 @@ class FacturaController extends Controller
             $facturaNew->cufd               = $scufd;
             $facturaNew->fechaVigencia      = Carbon::parse($sfechaVigenciaCufd)->format('Y-m-d H:i:s');
             $facturaNew->save();
+            // ********************************* ESTO ES PARA GENERAR LA FACTURA *********************************
 
+            // dd($datosVehiculo['realizo_pago'],(boolean) $datosVehiculo['realizo_pago']);
 
-            foreach ($datosVehiculo['pagos'] as $key => $pago_id) {
-                $pago = Pago::find($pago_id);
-                $pago->estado       = "Pagado";
-                $pago->factura_id   = $facturaNew->id;
+            Detalle::whereIn('id', $datosVehiculo['pagos'])
+                    ->update(['estado' => 'Finalizado']);
+
+            if($datosVehiculo['realizo_pago'] === "true"){
+                $pago             = new Pago();
+                $pago->creador_id = Auth::user()->id;
+                $pago->factura_id = $facturaNew->id;
+                $pago->monto      = (int)$request->input('monto_pagado')-(int)$request->input('cambio');
+                // $pago->cambio     = 1;
+                $pago->fecha      = date('Y-m-d H:i:s');
+                $pago->tipo_pago  = $request->input('tipo_pago');
                 $pago->save();
+            }else{
+                
             }
+
+            // foreach ($datosVehiculo['pagos'] as $key => $pago_id) {
+            //     $detalle             = Detalle::find($pago_id);
+            //     $detalle->estado     = "Finalizado";
+            //     $detalle->factura_id = $facturaNew->id;
+            //     $detalle->save();
+            // }
 
             // ENVIAMOS EL CORREO DE LA FACTURA
             // $nombre = $cliente->nombres." ".$cliente->ap_paterno." ".$cliente->ap_materno;
@@ -1311,11 +1336,19 @@ class FacturaController extends Controller
 
             $vehiculo               = Vehiculo::find($vehiculo_d);
 
-            $servicios  = Pago::select('pagos.*','servicios.codigoActividad', 'servicios.codigoProducto', 'servicios.unidadMedida', 'servicios.descripcion')
-                                ->join('servicios', 'pagos.servicio_id','=', 'servicios.id')
-                                ->where('pagos.estado',"paraPagar")
-                                ->where('pagos.vehiculo_id',$vehiculo_d)
+            // $servicios  = Pago::select('pagos.*','servicios.codigoActividad', 'servicios.codigoProducto', 'servicios.unidadMedida', 'servicios.descripcion')
+            //                     ->join('servicios', 'pagos.servicio_id','=', 'servicios.id')
+            //                     ->where('pagos.estado',"paraPagar")
+            //                     ->where('pagos.vehiculo_id',$vehiculo_d)
+            //                     ->get();
+
+            $servicios  = Detalle::select('detalles.*','servicios.codigoActividad', 'servicios.codigoProducto', 'servicios.unidadMedida', 'servicios.descripcion')
+                                ->join('servicios', 'detalles.servicio_id','=', 'servicios.id')
+                                ->where('detalles.estado',"paraPagar")
+                                ->where('detalles.vehiculo_id',$vehiculo_d)
                                 ->get();
+
+            dd($servicios);
 
             $factura                        = new Factura();
             $factura->creador_id            = Auth::user()->id;
@@ -1325,7 +1358,6 @@ class FacturaController extends Controller
             $factura->total                 = $monto;
             $factura->facturado             = "No";
             $factura->numero_recibo         = $this->numeroRecibo();
-            // nuevos
             $factura->tipo_pago             = $request->input('tipo_pago');
             $factura->monto_pagado          = $request->input('monto_pagado');
             $factura->cambio_devuelto       = $request->input('cambio');
@@ -1334,10 +1366,16 @@ class FacturaController extends Controller
 
             $pagos =    $servicios->pluck('id');
 
-            Pago::whereIn('id',$pagos)->update([
-                'estado'        => 'Pagado',
+            
+            Detalle::whereIn('id',$pagos)->update([
+                'estado'        => 'Finalizado',
                 'factura_id'    => $factura->id,
             ]);
+
+            // Pago::whereIn('id',$pagos)->update([
+            //     'estado'        => 'Pagado',
+            //     'factura_id'    => $factura->id,
+            // ]);
 
             $data['estado'] = 'success';
             $data['factura'] = $factura->id;

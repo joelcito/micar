@@ -107,6 +107,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/ajaxBuscarPorCobrar', [PagoController::class, 'ajaxBuscarPorCobrar']);
         Route::post('/ajaxServiciosMasa', [PagoController::class, 'ajaxServiciosMasa']);
         Route::post('/arrayCuotasPorCobrar', [PagoController::class, 'arrayCuotasPorCobrar']);
+        Route::post('/pagarCuenta', [PagoController::class, 'pagarCuenta']);
     });
 
     // Route::post('/pago/ajaxListado', [PagoController::class, 'ajaxListado']);

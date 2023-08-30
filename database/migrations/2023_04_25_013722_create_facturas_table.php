@@ -32,11 +32,9 @@ return new class extends Migration
             $table->dateTime('fecha')->nullable();
             $table->decimal('total',12,2)->nullable();
             $table->string('facturado',5)->nullable();
-
             $table->string('tipo_pago',50)->nullable();
             $table->decimal('monto_pagado',12,2)->nullable();
             $table->decimal('cambio_devuelto',12,2)->nullable();
-
             $table->string('numero',10)->nullable();
             $table->string('numero_cafc',10)->nullable();
             $table->string('numero_recibo',10)->nullable();
@@ -55,7 +53,7 @@ return new class extends Migration
             $table->dateTime('fechaVigencia')->nullable();
             $table->string('tipo_factura')->nullable();
             $table->string('uso_cafc')->nullable();
-
+            $table->string('estado_pago',10)->nullable();
             $table->string('estado')->nullable();
             $table->datetime('deleted_at')->nullable();
             $table->timestamps();
