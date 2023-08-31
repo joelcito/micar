@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Categoria;
 use App\Models\Servicio;
+use App\Models\Movimiento;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -49,7 +50,8 @@ class ServicioController extends Controller
     }
 
     protected function listadoArray(){
-        $servicios = Servicio::all();
+        // $servicios = Servicio::all();
+        $servicios = Servicio::where('estado','servicio')->get();
         return view('servicio.ajaxListado')->with(compact('servicios'))->render();
     }
 
@@ -70,79 +72,41 @@ class ServicioController extends Controller
         }
         return json_encode($data);
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
+
+    public function producto(Request $request){
+        return view('servicio.producto');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+    public function ajaxListadoProducto(Request $request){
+        if($request->ajax()){
+            $data['estado'] = 'success';
+            $data['listado'] = $this->listadoArrayProducto();
+        }else{
+            $data['estado'] = 'error';
+        }
+        return $data;
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
+    protected function listadoArrayProducto(){
+        $productos = Servicio::where('estado','producto')->get();
+        return view('servicio.ajaxListadoProducto')->with(compact('productos'))->render();
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Servicio  $servicio
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Servicio $servicio)
-    {
-        //
+    public function  guardaProdcuto(Request $request){
+        if($request->ajax()){
+            $servicio_id             = $request->input('servicio_id');
+            $movimiento              = new Movimiento();
+            $movimiento->creador_id  = Auth::user()->id;
+            $movimiento->servicio_id = $servicio_id;
+            $movimiento->ingreso     = $request->input('cantidad');
+            $movimiento->fecha       = date('Y-m-d H:i:s');
+            $movimiento->descripcion = $request->input('descripcion');
+            $movimiento->save();
+            $data['listado'] = $this->listadoArrayProducto();
+            $data['estado'] = 'success';
+        }else{
+            $data['estado'] = 'error';
+        }
+        return $data;
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Servicio  $servicio
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Servicio $servicio)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Servicio  $servicio
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Servicio $servicio)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Servicio  $servicio
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Servicio $servicio)
-    {
-        //
-    }
+    
 }

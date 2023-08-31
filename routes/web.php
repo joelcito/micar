@@ -63,10 +63,17 @@ Route::middleware('auth')->group(function () {
     Route::post('/rol/eliminar', [RolController::class, 'eliminar']);
 
     // SERVICIOS
-    Route::get('/servicio', [ServicioController::class, 'listado']);
-    Route::post('/servicio/guarda', [ServicioController::class, 'guarda']);
-    Route::post('/servicio/ajaxListado', [ServicioController::class, 'ajaxListado']);
-    Route::post('/servicio/eliminar', [ServicioController::class, 'eliminar']);
+    Route::prefix('/servicio')->group(function(){
+        Route::get('/', [ServicioController::class, 'listado']);
+        Route::post('/guarda', [ServicioController::class, 'guarda']);
+        Route::post('/ajaxListado', [ServicioController::class, 'ajaxListado']);
+        Route::post('/eliminar', [ServicioController::class, 'eliminar']);
+        Route::get('/producto', [ServicioController::class, 'producto']);
+        Route::post('/ajaxListadoProducto', [ServicioController::class, 'ajaxListadoProducto']);
+        Route::post('/guardaProdcuto', [ServicioController::class, 'guardaProdcuto']);
+        
+    });
+
 
     // CATEGORIAS
     Route::get('/categoria', [CategoriaController::class, 'listado']);

@@ -17,7 +17,8 @@ class MigracionController extends Controller
 
     public function migrarServicios(Request $request){
         // Ruta del archivo Excel
-        $filePath = public_path('servicios.xlsx');
+        $filePath = public_path('servicios_mas_pro.xlsx');
+        // $filePath = public_path('servicios.xlsx');
 
         // Lee el archivo Excel y obtiene todas las filas
         $rows = Excel::toArray([], $filePath);
@@ -40,6 +41,7 @@ class MigracionController extends Controller
                 $servicio->descripcion  = $row[1];
                 $servicio->unidad_venta = $row[3];
                 $servicio->precio       = $row[4];
+                $servicio->estado       = $row[5];
                 $servicio->save();
             }
         }
