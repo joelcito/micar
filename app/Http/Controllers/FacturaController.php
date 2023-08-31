@@ -1348,29 +1348,43 @@ class FacturaController extends Controller
                                 ->where('detalles.vehiculo_id',$vehiculo_d)
                                 ->get();
 
-            dd($servicios);
+            // dd($servicios);
 
-            $factura                        = new Factura();
-            $factura->creador_id            = Auth::user()->id;
-            $factura->vehiculo_id           = $vehiculo->id;
-            $factura->cliente_id            = $vehiculo->cliente->id;
-            $factura->fecha                 = date('Y-m-d H:m:s');
-            $factura->total                 = $monto;
-            $factura->facturado             = "No";
-            $factura->numero_recibo         = $this->numeroRecibo();
-            $factura->tipo_pago             = $request->input('tipo_pago');
-            $factura->monto_pagado          = $request->input('monto_pagado');
-            $factura->cambio_devuelto       = $request->input('cambio');
-            $factura->descuento_adicional   = $descuento_adicional;
+            $factura                      = new Factura();
+            $factura->creador_id          = Auth::user()->id;
+            $factura->vehiculo_id         = $vehiculo->id;
+            $factura->cliente_id          = $vehiculo->cliente->id;
+            $factura->fecha               = date('Y-m-d H:m:s');
+            $factura->total               = $monto;
+            $factura->facturado           = "No";
+            $factura->numero_recibo       = $this->numeroRecibo();
+            $factura->tipo_pago           = $request->input('tipo_pago');
+            $factura->monto_pagado        = $request->input('monto_pagado');
+            $factura->cambio_devuelto     = $request->input('cambio');
+            $factura->estado_pago         = (((int)$factura->monto_pagado - (int)$factura->cambio_devuelto) == $factura->total)? "Pagado" : "Deuda";
+            $factura->descuento_adicional = $descuento_adicional;
             $factura->save();
 
             $pagos =    $servicios->pluck('id');
-
             
             Detalle::whereIn('id',$pagos)->update([
                 'estado'        => 'Finalizado',
                 'factura_id'    => $factura->id,
             ]);
+
+            $sipago = $request->input('realizo_pago');
+
+            if($sipago === "true"){
+                $pago             = new Pago();
+                $pago->creador_id = Auth::user()->id;
+                $pago->factura_id = $factura->id;
+                $pago->monto      = (int)$request->input('monto_pagado')-(int)$request->input('cambio');
+                $pago->fecha      = date('Y-m-d H:i:s');
+                $pago->tipo_pago  = $request->input('tipo_pago');
+                $pago->save();
+            }else{
+
+            }
 
             // Pago::whereIn('id',$pagos)->update([
             //     'estado'        => 'Pagado',
@@ -1401,7 +1415,8 @@ class FacturaController extends Controller
 
     public function imprimeRecibo(Request $request, $factura_id){
         $factura    = Factura::find($factura_id);
-        $pagos      = Pago::where('factura_id', $factura_id)->get();
+        // $pagos      = Pago::where('factura_id', $factura_id)->get();
+        $pagos      = Detalle::where('factura_id', $factura_id)->get();
         return view('pago.imprimeRecibo')->with(compact('factura', 'pagos'));
     }
 

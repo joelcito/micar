@@ -449,6 +449,8 @@
                 $('#cambio').val((dato < 0)? 0 : dato)
             });
 
+            $("#serivicio_id, #lavador_id").select2();
+
         });
 
         function ajaxListado(){
@@ -921,13 +923,13 @@
                 url: "{{ url('factura/emitirRecibo') }}",
                 type: 'POST',
                 data:{
-                    vehiculo            : $('#vehiculo_id').val(),
-                    monto               : $('#motoTotalFac').val(),
-                    descuento_adicional : $('#descuento_adicional').val(),
-                    // datos               : $('#formulario_tipo_pagos').serializeArray()
-                    tipo_pago           : $('#tipo_pago').val(),
-                    monto_pagado        : $('#miInput').val(),
-                    cambio              : $('#cambio').val()
+                    vehiculo           : $('#vehiculo_id').val(),
+                    monto              : $('#motoTotalFac').val(),
+                    descuento_adicional: $('#descuento_adicional').val(),
+                    tipo_pago          : $('#tipo_pago').val(),
+                    monto_pagado       : $('#miInput').val(),
+                    cambio             : $('#cambio').val(),
+                    realizo_pago       : $("#realizo_pago").prop("checked")
                 },
                 dataType: 'json',
                 success: function(data) {
