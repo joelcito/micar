@@ -238,11 +238,11 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-md-3 haber" style="display: none">
+                <div class="col serviPro" style="display: none">
                     <label class="required fw-semibold fs-6 mb-2">Unidad</label>
                     <input type="text" readonly class="form-control" id="unidad" name="unidad">
                 </div>
-                <div class="col-md-3 haber" style="display: none">
+                <div class="col servi" style="display: none">
                     <label class="required fw-semibold fs-6 mb-2">Lavador</label>
                     <select name="lavador_id" id="lavador_id" class="form-control" required>
                         <option value="">Seleccione el Lavador</option>
@@ -251,43 +251,21 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col-md-3 haber" style="display: none">
+                <div class="col-md-3 serviPro" style="display: none">
                     <label class="required fw-semibold fs-6 mb-2">Precio</label>
                     <input type="text" readonly class="form-control" id="precio" name="precio" required>
                 </div>
             </div>
             <div class="row mt-2">
-                <div class="col-md-3 haber" style="display: none">
+                <div class="col-md-3 serviPro" style="display: none">
                     <label class="required fw-semibold fs-6 mb-2">Cantidad</label>
                     <input type="text" class="form-control" id="cantidad" name="cantidad" required>
                 </div>
-                <div class="col-md-3 haber" style="display: none">
+                <div class="col-md-3 serviPro" style="display: none">
                     <label class="required fw-semibold fs-6 mb-2">Total</label>
                     <input type="text" class="form-control" id="total" name="total" readonly value="0" required>
                 </div>
-                <div class="col-md-2 haber mt-5" style="display: none">
-                    <div class="form-group">
-                        <label>Por Cobrar</label>
-                        <div class="checkbox-list">
-                            <label class="checkbox">
-                                <input type="checkbox" name="Checkboxes1"/>
-                                <span></span>
-                                Registrar por cobrar
-                            </label>
-                            {{-- <label class="checkbox checkbox-disabled">
-                                <input type="checkbox" disabled="disabled" checked="checked" name="Checkboxes1"/>
-                                <span></span>
-                                Disabled
-                            </label> --}}
-                            {{-- <label class="checkbox">
-                                <input type="checkbox" checked="checked" name="Checkboxes1"/>
-                                <span></span>
-                                Checked
-                            </label> --}}
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 haber" style="display: none">
+                <div class="col-md-6 serviPro" style="display: none">
                     <button class="btn btn-success btn-icon btn-sm w-100 mt-10" type="button" onclick="agregarVenta()"><i class="fa fa-car-alt"></i>  Agregar</button>
                 </div>
             </div>
@@ -344,7 +322,7 @@
         </form>
         <hr>
         <div id="bloqueDatosFactura" style="display: none">
-            <form id="formularioGeneraFactura">                
+            <form id="formularioGeneraFactura">
                 <div class="row">
                     <div class="col-md-1">
                         <label for="">N Factura</label>
@@ -391,7 +369,7 @@
                         </div>
                     </div>
                 </div>
-                {{-- <h3 class="text-center text-info">PAGO</h3> --}}                
+                {{-- <h3 class="text-center text-info">PAGO</h3> --}}
                 <div class="row" style="display: none" id="bloque_exepcion">
                     <div class="col-md-2">
                         <div class="form-group">
@@ -400,14 +378,14 @@
                         </div>
                     </div>
                 </div>
-                
+
             </form>
             <div class="row mt-2">
                 <div class="col-md-12">
                     <button class="btn btn-sm w-100 btn-success" onclick="emitirFactura()" style="display: none" id="boton_enviar_factura">Enviar F</button>
                 </div>
             </div>
-        </div>        
+        </div>
     </div>
     <!--end::Card body-->
 </div>
@@ -428,6 +406,7 @@
         var arrayProductos          = [];
         var arrayPagos              = [];
         let valorIniDescuento       = 0;
+        let cantidadProductos       = 0;
 
         $( document ).ready(function() {
             ajaxListado();
@@ -587,7 +566,15 @@
             $('#precio').val(json.precio)
             $('#cantidad').val(1)
             $('#total').val((1*json.precio))
-            $('.haber').show('toggle');
+            if(json.estado == 'servicio'){
+                $('.servi').show('toggle');
+                $('.serviPro').show('toggle');
+                $("#lavador_id").prop("required", true);
+            }else{
+                $('.servi').hide('toggle');
+                $('.serviPro').show('toggle');
+                $("#lavador_id").prop("required", false);
+            }
         }
 
         function agregarVenta(){
@@ -634,6 +621,7 @@
                             $('#total').val(0)
 
                             $('#bloqueDatosFactura').hide('toggle');
+
                         }
                     }
                 });
@@ -1112,7 +1100,7 @@
                 }
             });
         }
-        
+
         function relizarPago(){
             let valor = $('#tipo_pago').val();
             $("#realizo_pago").prop("checked", (valor != "")? true : false);

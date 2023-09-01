@@ -41,7 +41,7 @@ class FacturaController extends Controller
             //                     ->get();
 
             // $pagos =    $servicios->pluck('id');
-            
+
             $servicios = Detalle::select('detalles.*','servicios.codigoActividad', 'servicios.codigoProducto', 'servicios.unidadMedida', 'servicios.descripcion')
                                 ->join('servicios', 'detalles.servicio_id','=', 'servicios.id')
                                 ->where('detalles.estado',"paraPagar")
@@ -83,7 +83,7 @@ class FacturaController extends Controller
                                 ->where('vehiculo_id',$vehiculo_id)
                                 ->sum('total');
 
-                                
+
             // $sumaRebaja = Pago::where('estado','paraPagar')
             //                 ->where('vehiculo_id',$vehiculo_id)
             //                 ->sum('descuento');
@@ -244,7 +244,7 @@ class FacturaController extends Controller
             $factura->tipo_pago                 = $request->input('tipo_pago');
             $factura->monto_pagado              = $request->input('monto_pagado');
             $factura->cambio_devuelto           = $request->input('cambio');
-            $factura->estado_pago               = (((int)$factura->monto_pagado - (int)$factura->cambio_devuelto) == $factura->total)? "Pagado" : "Deuda"; 
+            $factura->estado_pago               = (((int)$factura->monto_pagado - (int)$factura->cambio_devuelto) == $factura->total)? "Pagado" : "Deuda";
             $factura->cuf                       = $datos['factura'][0]['cabecera']['cuf'];
             $factura->codigo_metodo_pago_siat   = $datos['factura'][0]['cabecera']['codigoMetodoPago'];
             $factura->monto_total_subjeto_iva   = $datos['factura'][0]['cabecera']['montoTotalSujetoIva'];
@@ -318,7 +318,7 @@ class FacturaController extends Controller
                 $pago->tipo_pago  = $request->input('tipo_pago');
                 $pago->save();
             }else{
-                
+
             }
 
             // foreach ($datosVehiculo['pagos'] as $key => $pago_id) {
@@ -1366,7 +1366,7 @@ class FacturaController extends Controller
             $factura->save();
 
             $pagos =    $servicios->pluck('id');
-            
+
             Detalle::whereIn('id',$pagos)->update([
                 'estado'        => 'Finalizado',
                 'factura_id'    => $factura->id,

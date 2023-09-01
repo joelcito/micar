@@ -65,21 +65,21 @@ class VehiculoController extends Controller
 
     protected function listadoArrayPagos($vehiculo_id){
 
-        // $pagos = Pago::where('vehiculo_id', $vehiculo_id)
-        //                 ->where('estado', "Parapagar")
-        //                 ->get();
-
         $detalles = Detalle::where('vehiculo_id', $vehiculo_id)
                         ->where('estado', "Parapagar")
                         ->get();
 
-        return view('vehiculo.ajaxListadoApagar')->with(compact('detalles'))->render();
+        $cantidadProductos = Detalle::join('servicios', 'detalles.servicio_id','=', 'servicios.id')
+                        ->where('servicios.estado', 'producto')
+                        ->where('detalles.estado', "Parapagar")
+                        ->where('detalles.vehiculo_id', $vehiculo_id)
+                        ->count();
+
+        return view('vehiculo.ajaxListadoApagar')->with(compact('detalles', 'cantidadProductos'))->render();
     }
 
     public function ajaxRegistraVenta(Request $request){
         if($request->ajax()){
-
-            // dd($request->all());
 
             $vehiculo_id = $request->input('vehiculo_id');
 
@@ -97,23 +97,13 @@ class VehiculoController extends Controller
             $detalle->estado           = "Parapagar";
             $detalle->save();
 
-            // $pago = new Pago();
-
-            // $pago->creador_id       = Auth::user()->id;
-            // $pago->vehiculo_id      = $vehiculo_id;
-            // $pago->servicio_id      = $request->input('servicio_id');
-            // $pago->lavador_id       = $request->input('lavador_id');
-            // $pago->precio           = $request->input('precio');
-            // $pago->cantidad         = $request->input('cantidad');
-            // $pago->total            = $request->input('total');
-            // $pago->descuento        = 0;
-            // $pago->importe          = $request->input('total');
-            // $pago->fecha            = date('Y-m-d');
-            // $pago->estado           = "Parapagar";
-            // $pago->save();
+            $cantidadProductos = Detalle::join('servicios', 'detalles.servicio_id','=', 'servicios.id')
+                                        ->where('servicios.estado', 'producto')
+                                        ->where('detalles.vehiculo_id', $vehiculo_id)
+                                        ->count();
 
             $data['estado'] = 'success';
-            // $data['pago_id'] = $pago_id;
+            $data['cantida_productos'] = $cantidadProductos;
             $data['listado_ventas'] = $this->listadoArrayPagos($vehiculo_id);
 
         }else{

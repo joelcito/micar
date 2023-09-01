@@ -71,7 +71,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/producto', [ServicioController::class, 'producto']);
         Route::post('/ajaxListadoProducto', [ServicioController::class, 'ajaxListadoProducto']);
         Route::post('/guardaProdcuto', [ServicioController::class, 'guardaProdcuto']);
-        
+
     });
 
 
@@ -115,6 +115,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/ajaxServiciosMasa', [PagoController::class, 'ajaxServiciosMasa']);
         Route::post('/arrayCuotasPorCobrar', [PagoController::class, 'arrayCuotasPorCobrar']);
         Route::post('/pagarCuenta', [PagoController::class, 'pagarCuenta']);
+        Route::get('/finanza', [PagoController::class, 'finanza']);
+        Route::post('/ajaxListadoFinanzas', [PagoController::class, 'ajaxListadoFinanzas']);
     });
 
     // Route::post('/pago/ajaxListado', [PagoController::class, 'ajaxListado']);

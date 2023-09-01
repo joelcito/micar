@@ -59,12 +59,15 @@ class PagoController extends Controller
 
     public function eliminarPago(Request $request) {
         if($request->ajax()){
-            $vehiculo_id    = $request->input('vehiculo');
-            $detalle_id     = $request->input('id') ;
-            // Pago::destroy($detalle_id);
+            $vehiculo_id = $request->input('vehiculo');
+            $detalle_id  = $request->input('id') ;
             Detalle::destroy($detalle_id);
-            $data['listado'] = $this->listadoArrayPagos($vehiculo_id);
-            $data['estado'] = 'success';
+
+
+
+            $data['listado']           = $this->listadoArrayPagos($vehiculo_id);
+            // $data['cantida_productos'] = $cantidadProductos;
+            $data['estado']            = 'success';
         }else{
             $data['estado'] = 'error';
         }
@@ -162,7 +165,7 @@ class PagoController extends Controller
         return $data;
     }
 
-    function pagarCuenta(Request $request){
+    public function pagarCuenta(Request $request){
         if($request->ajax()){
 
             $factura_id = $request->input('factura_id');
@@ -190,6 +193,41 @@ class PagoController extends Controller
         }
         return $data;
     }
+
+    public function finanza(REquest $request){
+        return view('pago.finanza');
+    }
+
+    public function  ajaxListadoFinanzas(Request $request) {
+        if($request->ajax()){
+
+            $query = Pago::orderBy('id', 'desc');
+
+            if(!is_null($request->input('fechaIni')) && !is_null($request->input('fechaFin'))){
+                $fechaIni = $request->input('fechaIni');
+                $fechaFin = $request->input('fechaFin');
+                $query->whereBetween('fecha',[$fechaIni.' 00:00:00', $fechaFin.' 23:59:59']);
+            }
+
+
+            if(!is_null($request->input('tipo_pago'))){
+                $tipoPago = $request->input('tipo_pago');
+                $query->where('tipo_pago',$tipoPago);
+            }
+
+            $pagos = $query->get();
+            // $pagos = $query->toSql();
+            // dd($pagos, $fechaIni, $fechaFin);
+
+            $data['listado'] = view('pago.ajaxListadoFinanzas')->with(compact('pagos'))->render();
+            $data['estado'] = 'success';
+        }else{
+            $data['estado'] = 'error';
+        }
+        return $data;
+    }
+
+
 
     // public function ajaxServiciosMasa(Request $request){
     //     if($request->ajax()){
@@ -240,14 +278,17 @@ class PagoController extends Controller
 
     protected function listadoArrayPagos($vehiculo_id){
 
-        // $pagos = Pago::where('vehiculo_id', $vehiculo_id)
-        //                 ->where('estado', "Parapagar")
-        //                 ->get();
         $detalles = Detalle::where('vehiculo_id', $vehiculo_id)
                         ->where('estado', "Parapagar")
                         ->get();
 
-        return view('vehiculo.ajaxListadoApagar')->with(compact('detalles'))->render();
+        $cantidadProductos = Detalle::join('servicios', 'detalles.servicio_id','=', 'servicios.id')
+                        ->where('servicios.estado', 'producto')
+                        ->where('detalles.estado', "Parapagar")
+                        ->where('detalles.vehiculo_id', $vehiculo_id)
+                        ->count();
+
+        return view('vehiculo.ajaxListadoApagar')->with(compact('detalles', 'cantidadProductos'))->render();
     }
 
 }

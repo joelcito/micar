@@ -577,10 +577,19 @@
                             <span class="menu-bullet">
                                 <span class="bullet bullet-dot"></span>
                             </span>
-                            <span class="menu-title">Listado</span>
+                            <span class="menu-title">Ventas</span>
                         </a>
                     </div>
-
+                </div>
+                <div class="menu-sub menu-sub-accordion">
+                    <div class="menu-item">
+                        <a class="menu-link" href="{{ url('pago/finanza') }}">
+                            <span class="menu-bullet">
+                                <span class="bullet bullet-dot"></span>
+                            </span>
+                            <span class="menu-title">Finanzas</span>
+                        </a>
+                    </div>
                 </div>
             </div>
 

@@ -103,7 +103,7 @@
         <button class="btn btn-success w-100 btn-sm" onclick="muestraDatosTipoPago()">RECIBO</button>
     </div>
     <div class="col-md-4">
-        <button class="btn btn-dark w-100 btn-sm" onclick="muestraDatosFactura()">FACTURA</button>
+        <button class="btn btn-dark w-100 btn-sm" id="boton_facturar" {{ ($cantidadProductos == 0)? '' : 'disabled' }} onclick="muestraDatosFactura()">FACTURA</button>
     </div>
     {{--  <div class="col-md-12">
         <button class="btn btn-dark w-100 btn-sm" onclick="muestraDatosFactura()">FACTURA</button>
