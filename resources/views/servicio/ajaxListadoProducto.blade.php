@@ -34,7 +34,7 @@
                     <a class="text-gray-800 text-hover-primary mb-1">{{ $cantidadEnAlmacen }}</a>
                 </td>
                 <td class="text-end">
-                    <button class="btn btn-sm btn-icon btn-success" onclick="modalAgregarProducto('{{ $p->id }}','{{ $p->descripcion }}')"><i class="fas fa-plus-circle"></i></button>
+                    <button class="btn btn-sm btn-icon btn-success" onclick="modalAgregarProducto('{{ $p->id }}','{{ $p->descripcion }}', '{{ $p->precio }}')"><i class="fas fa-plus-circle"></i></button>
                     <button class="btn btn-sm btn-icon btn-danger"><i class="fas fa-minus-circle"></i></button>
                 </td>
             </tr>

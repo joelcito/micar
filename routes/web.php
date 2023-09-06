@@ -32,7 +32,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     // return view('welcome');
-    return view('auth.login');
+    // return view('auth.login');
+    // return view('home.inicio');
+    return redirect('home');
 });
 
 // Route::get('/dashboard', function () {

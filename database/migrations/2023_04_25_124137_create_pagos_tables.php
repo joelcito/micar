@@ -23,10 +23,13 @@ return new class extends Migration
             $table->unsignedBigInteger('eliminador_id')->nullable();
             $table->foreign('factura_id')->references('id')->on('facturas');
             $table->unsignedBigInteger('factura_id')->nullable();
+            $table->foreign('servicio_id')->references('id')->on('servicios');
+            $table->unsignedBigInteger('servicio_id')->nullable();
+            $table->string('cantidad')->nullable();
             $table->decimal('monto', 15, 2)->nullable();
-            // $table->decimal('cambio', 15, 2)->nullable();
             $table->datetime('fecha')->nullable();
-            $table->string('tipo_pago')->nullable();
+            $table->string('descripcion')->nullable();
+            $table->string('tipo_pago', 15)->nullable();
 
             // $table->foreign('creador_id')->references('id')->on('users');
             // $table->unsignedBigInteger('creador_id')->nullable();
@@ -50,7 +53,7 @@ return new class extends Migration
             // $table->date('fecha')->nullable();
             // $table->string('estado')->nullable();
             // $table->datetime('deleted_at')->nullable();
-            
+
             $table->string('estado')->nullable();
             $table->datetime('deleted_at')->nullable();
             $table->timestamps();

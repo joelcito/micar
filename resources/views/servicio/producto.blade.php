@@ -50,6 +50,26 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="fv-row mb-4">
+                                    <label class="required fw-semibold fs-6 mb-2">Tipo Pago</label>
+                                    <input type="text" class="form-control form-control-solid" required name="tipo_pago" id="tipo_pago" value="efectivo" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="fv-row mb-4">
+                                    <label class="required fw-semibold fs-6 mb-2">P. Unitario</label>
+                                    <input type="text" class="form-control form-control-solid" required name="precio_unitario" id="precio_unitario" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="fv-row mb-4">
+                                    <label class="required fw-semibold fs-6 mb-2">Total Pagar</label>
+                                    <input type="text" class="form-control form-control-solid" required name="total_pagar" id="total_pagar" readonly>
+                                </div>
+                            </div>
+                        </div>
                     </form>
 
                     <div class="row">
@@ -204,6 +224,11 @@
 
         $( document ).ready(function() {
             ajaxListado();
+            $('#cantidad').on('input', function() {
+                var valor = $(this).val();
+                var valorPrecio = $('#precio_unitario').val();
+                $('#total_pagar').val((valor*valorPrecio))
+            });
         });
 
         function ajaxListado(){
@@ -219,9 +244,10 @@
             });
         }
 
-        function modalAgregarProducto(servicio,nombre){
+        function modalAgregarProducto(servicio,nombre, precio){
             $('#tipo').val('ingreso')
             $('#servicio_id').val(servicio)
+            $('#precio_unitario').val(precio)
             $('#texto_titulo').text(nombre)
             $('#modalAgregarProduto').modal('show')
         }

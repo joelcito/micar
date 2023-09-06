@@ -316,6 +316,7 @@ class FacturaController extends Controller
                 // $pago->cambio     = 1;
                 $pago->fecha      = date('Y-m-d H:i:s');
                 $pago->tipo_pago  = $request->input('tipo_pago');
+                $pago->estado     = ($pago->tipo_pago === 'efectivo' )? 'Ingreso' : 'Salida';
                 $pago->save();
             }else{
 
@@ -1381,6 +1382,7 @@ class FacturaController extends Controller
                 $pago->monto      = (int)$request->input('monto_pagado')-(int)$request->input('cambio');
                 $pago->fecha      = date('Y-m-d H:i:s');
                 $pago->tipo_pago  = $request->input('tipo_pago');
+                $pago->estado     = ($pago->tipo_pago === 'efectivo' )? 'Ingreso' : 'Salida';
                 $pago->save();
             }else{
 

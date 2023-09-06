@@ -176,8 +176,10 @@ class PagoController extends Controller
             $pago->monto      = $request->input('importe_pagar');
             $pago->fecha      = date('Y-m-d H:i:s');
             $pago->tipo_pago  = $request->input('tipo_pago');
+            $pago->estado     = ($pago->tipo_pago === 'efectivo' )? 'Ingreso' : 'Salida';
             $pago->save();
 
+            // VERIFICAR SI LA FACTURA FUE PAGADA EN TOTALIDAD
             $factura           = Factura::find($factura_id);
             $pagadosPlazos     = (int) Pago::where('factura_id', $factura_id)->sum('monto');
             $montoTotalFActura = (int) $factura->total;

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Categoria;
 use App\Models\Servicio;
 use App\Models\Movimiento;
+use App\Models\Pago;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -93,6 +94,8 @@ class ServicioController extends Controller
     }
     public function  guardaProdcuto(Request $request){
         if($request->ajax()){
+            // dd($request->all());
+            // GUARDAMOS EN LA TABLA MOVIMIENTOS
             $servicio_id             = $request->input('servicio_id');
             $movimiento              = new Movimiento();
             $movimiento->creador_id  = Auth::user()->id;
@@ -101,6 +104,19 @@ class ServicioController extends Controller
             $movimiento->fecha       = date('Y-m-d H:i:s');
             $movimiento->descripcion = $request->input('descripcion');
             $movimiento->save();
+
+            // GUARDAMOS EN LA TABLA PAGOS
+            $pago              = new Pago();
+            $pago->creador_id  = Auth::user()->id;
+            $pago->servicio_id = $request->input('servicio_id');
+            $pago->cantidad    = $request->input('cantidad');
+            $pago->monto       = $request->input('total_pagar');
+            $pago->fecha       = date('Y-m-d H:i:s');
+            $pago->tipo_pago   = $request->input('tipo_pago');
+            $pago->estado      = "Salida";
+            $pago->descripcion = $request->input('descripcion');
+            $pago->save();
+
             $data['listado'] = $this->listadoArrayProducto();
             $data['estado'] = 'success';
         }else{
@@ -108,5 +124,5 @@ class ServicioController extends Controller
         }
         return $data;
     }
-    
+
 }
