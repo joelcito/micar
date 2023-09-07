@@ -8,27 +8,12 @@
 @section('content')
 
     <!--begin::Modal - Add task-->
-    {{--  <div class="modal fade" id="kt_modal_add_user" tabindex="-1" aria-hidden="true">
-        <!--begin::Modal dialog-->
+     <div class="modal fade" id="modalIngreso" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
-            <!--begin::Modal content-->
             <div class="modal-content">
-                <!--begin::Modal header-->
-                <div class="modal-header" id="kt_modal_add_user_header">
-                    <!--begin::Modal title-->
-                    <h2 class="fw-bold">Formulario de rol</h2>
-                    <!--end::Modal title-->
-                    <!--begin::Close-->
-                    <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-users-modal-action="close">
-                        <i class="ki-duotone ki-cross fs-1">
-                            <span class="path1"></span>
-                            <span class="path2"></span>
-                        </i>
-                    </div>
-                    <!--end::Close-->
+                <div class="modal-header">
+                    <h2 class="fw-bold">Formulario de Salida</h2>
                 </div>
-                <!--end::Modal header-->
-                <!--begin::Modal body-->
                 <div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
 
                     <form id="formularioRol">
@@ -59,7 +44,7 @@
             <!--end::Modal content-->
         </div>
         <!--end::Modal dialog-->
-    </div>  --}}
+    </div> 
     <!--end::Modal - Add task-->
 
 
@@ -69,6 +54,60 @@
             <div class="card-title ">
                 <h1>FLUJO DE CAJA</h1>
             </div>
+            <!-- Propiedades adicionales -->
+            {{-- <div class="card-subtitle text-muted">
+                Informe financiero
+            </div> --}}
+            <div class="card-actions">
+                <button class="btn btn-success btn-icon btn-sm" onclick="modalIngreso()"><i class="fas fa-money-bill"></i> <i class="fas fa-arrow-down"></i></button>
+                <button class="btn btn-danger btn-icon btn-sm"><i class="fas fa-money-bill"></i> <i class="fas fa-arrow-up"></i></button>
+            </div>
+             <!-- Iconos o imágenes -->
+            {{-- <div class="card-icons">
+                <img src="https://static.vecteezy.com/system/resources/previews/018/930/626/non_2x/whatsapp-logo-whatsapp-icon-whatsapp-transparent-free-png.png" width="5%" alt="Ícono de flujo de caja">
+            </div>
+            
+            <!-- Descripción adicional -->
+            <div class="card-description">
+                Este informe detalla los ingresos y gastos de la empresa durante el último trimestre.
+            </div>
+            
+            <!-- Enlaces relacionados -->
+            <div class="card-links">
+                <a href="#">Ver detalles</a>
+                <a href="#">Descargar PDF</a>
+            </div>
+            <!-- Datos adicionales -->
+            <div class="card-data">
+                <p>Fecha de creación: 01/09/2023</p>
+                <p>Autor: John Doe</p>
+            </div>
+            
+            <!-- Etiquetas o categorías -->
+            <div class="card-tags">
+                <span class="badge badge-info">Finanzas</span>
+                <span class="badge badge-secondary">Informe</span>
+            </div>
+            <!-- Opciones de clasificación -->
+            <div class="card-sort">
+                <label for="sort-select">Ordenar por:</label>
+                <select id="sort-select" class="form-control">
+                    <option value="fecha">Fecha</option>
+                    <option value="tipo">Tipo</option>
+                    <option value="monto">Monto</option>
+                </select>
+            </div>
+            <!-- Botón de favorito -->
+            <div class="card-favorite">
+                <button class="btn btn-outline-warning">Agregar a favoritos</button>
+            </div>
+            
+            <!-- Información de contacto -->
+            <div class="card-contact">
+                <p>Para más información, contacte a:</p>
+                <p>Correo electrónico: info@empresa.com</p>
+                <p>Teléfono: +1234567890</p>
+            </div> --}}
         </div>
         <!--begin::Card body-->
         <div class="card-body py-4">
@@ -133,6 +172,10 @@
                         $('#table_pagos').html(data.listado);
                 }
             });
+        }
+
+        function modalIngreso(){
+            $('#modalIngreso').modal('show')
         }
 
     //    function guardarVenta(){

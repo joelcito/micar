@@ -23,9 +23,9 @@ return new class extends Migration
             $table->unsignedBigInteger('eliminador_id')->nullable();
             $table->foreign('factura_id')->references('id')->on('facturas');
             $table->unsignedBigInteger('factura_id')->nullable();
-            $table->foreign('servicio_id')->references('id')->on('servicios');
-            $table->unsignedBigInteger('servicio_id')->nullable();
-            $table->string('cantidad')->nullable();
+            // $table->foreign('servicio_id')->references('id')->on('servicios');
+            // $table->unsignedBigInteger('servicio_id')->nullable();
+            // $table->string('cantidad')->nullable();
             $table->decimal('monto', 15, 2)->nullable();
             $table->datetime('fecha')->nullable();
             $table->string('descripcion')->nullable();

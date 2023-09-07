@@ -106,16 +106,16 @@ class ServicioController extends Controller
             $movimiento->save();
 
             // GUARDAMOS EN LA TABLA PAGOS
-            $pago              = new Pago();
-            $pago->creador_id  = Auth::user()->id;
-            $pago->servicio_id = $request->input('servicio_id');
-            $pago->cantidad    = $request->input('cantidad');
-            $pago->monto       = $request->input('total_pagar');
-            $pago->fecha       = date('Y-m-d H:i:s');
-            $pago->tipo_pago   = $request->input('tipo_pago');
-            $pago->estado      = "Salida";
-            $pago->descripcion = $request->input('descripcion');
-            $pago->save();
+            // $pago              = new Pago();
+            // $pago->creador_id  = Auth::user()->id;
+            // $pago->servicio_id = $request->input('servicio_id');
+            // $pago->cantidad    = $request->input('cantidad');
+            // $pago->monto       = $request->input('total_pagar');
+            // $pago->fecha       = date('Y-m-d H:i:s');
+            // $pago->tipo_pago   = $request->input('tipo_pago');
+            // $pago->estado      = "Salida";
+            // $pago->descripcion = $request->input('descripcion');
+            // $pago->save();
 
             $data['listado'] = $this->listadoArrayProducto();
             $data['estado'] = 'success';

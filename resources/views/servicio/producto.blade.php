@@ -50,7 +50,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        {{-- <div class="row">
                             <div class="col-md-4">
                                 <div class="fv-row mb-4">
                                     <label class="required fw-semibold fs-6 mb-2">Tipo Pago</label>
@@ -69,7 +69,7 @@
                                     <input type="text" class="form-control form-control-solid" required name="total_pagar" id="total_pagar" readonly>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     </form>
 
                     <div class="row">
