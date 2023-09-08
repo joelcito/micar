@@ -65,11 +65,15 @@
         @endforeach
     </tbody>
     <tfoot>
-        <th>
-            <td colspan="4"><b>TOTAL</b></td>
-            <td><b>{{ number_format($totalCredito, 2) }}</b></td>
-            <td><b>{{ number_format($totalDebito, 2) }}</b></td>
-        </th>
+        <tr>
+            <th colspan="5"><b>TOTAL</b></th>
+            <th><b>{{ number_format($totalCredito, 2) }} Bs.</b></th>
+            <th><b>{{ number_format($totalDebito, 2) }} Bs.</b></th>
+        </tr>
+        <tr class="bg-light-primary">
+            <th colspan="6" class="text-center"><b>TOTAL EFECTIVO CAJA</b></th>
+            <th><b>{{ number_format(($totalCredito - $totalDebito), 2) }} Bs.</b></th>
+        </tr>
     </tfoot>
 </table>
 <!--end::Table-->

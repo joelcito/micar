@@ -229,6 +229,24 @@ class PagoController extends Controller
         return $data;
     }
 
+    public function guardarTipoIngresoSalida(Request $request){
+        if($request->ajax()){
+            // dd($request->all());
+            $pago             = new Pago();
+            $pago->creador_id = Auth::user()->id;
+            // $pago->factura_id = $factura->id;
+            $pago->monto      = $request->input('monto');
+            $pago->fecha      = date('Y-m-d H:i:s');
+            $pago->tipo_pago  = 'efectivo';
+            $pago->estado     = 'Salida';
+            $pago->save();
+            $data['estado'] = 'success';
+        }else{
+            $data['estado'] = 'error';
+        }
+        return $data;
+    }
+
 
 
     // public function ajaxServiciosMasa(Request $request){
