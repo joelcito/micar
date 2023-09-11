@@ -25,9 +25,9 @@ class Pago extends Model
         'deleted_at',
     ];
 
-    // public function vehiculo(){
-    //     return $this->belongsTo('App\Models\Vehiculo', 'vehiculo_id');
-    // }
+    public function usuario(){
+        return $this->belongsTo('App\Models\User', 'creador_id');
+    }
 
     // public function lavador(){
     //     return $this->belongsTo('App\Models\User', 'lavador_id');

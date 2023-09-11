@@ -9,7 +9,7 @@
             <th>Transaccion</th>
             <th>Credito</th>
             <th>Debito</th>
-            <th>Actions</th>
+            <th>Usuario</th>
         </tr>
     </thead>
     <tbody class="text-gray-600 fw-semibold">
@@ -60,7 +60,9 @@
                         {{ number_format(0, 2) }}
                     @endif
                 </td>
-                <td></td>
+                <td>
+                    {{ $p->usuario->name }}
+                </td>
             </tr>
         @endforeach
     </tbody>

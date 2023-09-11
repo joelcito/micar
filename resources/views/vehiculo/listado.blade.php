@@ -9,6 +9,97 @@
 
 
 <!--begin::Modal - Add task-->
+<div class="modal fade" id="modalAperturaCaja" tabindex="-1" aria-hidden="true">
+    <!--begin::Modal dialog-->
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <!--begin::Modal content-->
+        <div class="modal-content">
+            <!--begin::Modal header-->
+            <div class="modal-header" id="kt_modal_add_user_header">
+                <!--begin::Modal title-->
+                <h2 class="fw-bold">Formulario de apertura de caja</h2>
+                <!--end::Modal title-->
+                <!--begin::Close-->
+                <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-users-modal-action="close">
+                    <i class="ki-duotone ki-cross fs-1">
+                        <span class="path1"></span>
+                        <span class="path2"></span>
+                    </i>
+                </div>
+                <!--end::Close-->
+            </div>
+            <!--end::Modal header-->
+            <!--begin::Modal body-->
+            <div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
+
+                <form id="formularioNuevoCliente">
+                    @csrf
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="fv-row mb-7">
+                                <label class="required fw-semibold fs-6 mb-2">Ap Paterno</label>
+                                <input type="text" class="form-control" required name="paterno" id="paterno">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="fv-row mb-7">
+                                <label class="required fw-semibold fs-6 mb-2">Ap Materno</label>
+                                <input type="text" class="form-control" required name="materno" id="materno">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="fv-row mb-7">
+                                <label class="required fw-semibold fs-6 mb-2">Nombres</label>
+                                <input type="text" class="form-control" required name="nombres" id="nombres">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="fv-row mb-7">
+                                <label class="required fw-semibold fs-6 mb-2">Cedula</label>
+                                <input type="text" class="form-control" required name="cedula" id="cedula">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-5">
+                        <div class="col-md-4">
+                            <div class="fv-row mb-7">
+                                <label class="required fw-semibold fs-6 mb-2">Correo</label>
+                                <input type="text" class="form-control" required name="correo" id="correo">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="fv-row mb-7">
+                                <label class="required fw-semibold fs-6 mb-2">Celular</label>
+                                <input type="text" class="form-control" required name="celular" id="celular">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="fv-row mb-7">
+                                <label class="required fw-semibold fs-6 mb-2">Fecha Nacimiento</label>
+                                <input type="date" class="form-control" required name="fecha_naci" id="fecha_naci">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <button class="btn btn-dark w-100" onclick="cancelarRegistroCliente()">Cancelar</button>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-success w-100" onclick="guardarRegistroCliente()">Guardar</button>
+                    </div>
+                </div>
+            </div>
+            <!--end::Modal body-->
+        </div>
+        <!--end::Modal content-->
+    </div>
+    <!--end::Modal dialog-->
+</div>
+<!--end::Modal - Add task-->
+
+<!--begin::Modal - Add task-->
 <div class="modal fade" id="modalAnular" tabindex="-1" aria-hidden="true">
     <!--begin::Modal dialog-->
     <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -99,7 +190,6 @@
 </div>
 <!--end::Modal - Add task-->
 
-
 <!--begin::Modal - Add task-->
 <div class="modal fade" id="modal_registro_vehiculo" tabindex="-1" aria-hidden="true">
     <!--begin::Modal dialog-->
@@ -176,21 +266,26 @@
 </div>
 <!--end::Modal - Add task-->
 
-
 <!--begin::Card-->
 <div class="card">
     <!--begin::Card header-->
-    <div class="card-header border-0 pt-6">
-        <div class="row w-100" >
-            <div class="col-md-12s">
-                <input type="text" class="form-control" placeholder="Buscar por placa" id="buscar_placa">
-            </div>
+    <div class="card-header border-0 pt-6 bg-light-primary">
+        <div class="card-title ">
+            <h1>Listado de Vehiculos</h1>
         </div>
-        <!--end::Card toolbar-->
+        <div class="card-actions">
+            <button class="btn btn-success btn-icon btn-sm" onclick="modalAperturaCaja()" title="Apertura de caja"><i class="fa-solid fa-solar-panel"></i></button>
+            {{-- <button class="btn btn-danger btn-icon btn-sm" onclick="modalSalida()"><i class="fas fa-money-bill"></i> <i class="fas fa-arrow-up"></i></button> --}}
+        </div>
     </div>
     <!--end::Card header-->
     <!--begin::Card body-->
     <div class="card-body py-4">
+        <div class="row w-100" >
+            <div class="col-md-12s">
+                <input type="text" class="form-control" placeholder="Buscar por placa" id="buscar_placa" autocomplete="off">
+            </div>
+        </div>
         <div class="row" id="bloque_cliente" style="display: none;">
             <div class="col-md-4">
                 <span class="text-primary"><b>CLIENTE:</b></span><span id="cliente_text"></span>
@@ -1104,6 +1199,10 @@
         function relizarPago(){
             let valor = $('#tipo_pago').val();
             $("#realizo_pago").prop("checked", (valor != "")? true : false);
+        }
+
+        function modalAperturaCaja(){
+            $('#modalAperturaCaja').modal('show')
         }
 
     </script>
