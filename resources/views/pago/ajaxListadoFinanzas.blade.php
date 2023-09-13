@@ -86,10 +86,13 @@
             <th><b>{{ number_format($totalCredito, 2) }} Bs.</b></th>
             <th><b>{{ number_format($totalCreditoTrmsQR, 2) }} Bs.</b></th>
             <th><b>{{ number_format($totalDebito, 2) }} Bs.</b></th>
+            <th></th>
         </tr>
         <tr class="bg-light-primary">
             <th colspan="7" class="text-center"><b>TOTAL EFECTIVO CAJA</b></th>
             <th><b>{{ number_format(($totalCredito - $totalDebito), 2) }} Bs.</b></th>
+            <th></th>
+            <th></th>
         </tr>
     </tfoot>
 </table>
