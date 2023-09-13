@@ -591,6 +591,16 @@
                         </a>
                     </div>
                 </div>
+                <div class="menu-sub menu-sub-accordion">
+                    <div class="menu-item">
+                        <a class="menu-link" href="{{ url('pago/infomearqueo') }}">
+                            <span class="menu-bullet">
+                                <span class="bullet bullet-dot"></span>
+                            </span>
+                            <span class="menu-title">Infome Arqueo</span>
+                        </a>
+                    </div>
+                </div>
             </div>
 
             <div data-kt-menu-trigger="click" class="menu-item menu-accordion">

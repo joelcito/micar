@@ -32,62 +32,34 @@
             <!--begin::Modal body-->
             <div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
 
-                <form id="formularioNuevoCliente">
+                <form id="formularioAperturaCaja">
                     @csrf
                     <div class="row">
-                        <div class="col-md-3">
-                            <div class="fv-row mb-7">
-                                <label class="required fw-semibold fs-6 mb-2">Ap Paterno</label>
-                                <input type="text" class="form-control" required name="paterno" id="paterno">
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="fv-row mb-7">
-                                <label class="required fw-semibold fs-6 mb-2">Ap Materno</label>
-                                <input type="text" class="form-control" required name="materno" id="materno">
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="fv-row mb-7">
-                                <label class="required fw-semibold fs-6 mb-2">Nombres</label>
-                                <input type="text" class="form-control" required name="nombres" id="nombres">
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="fv-row mb-7">
-                                <label class="required fw-semibold fs-6 mb-2">Cedula</label>
-                                <input type="text" class="form-control" required name="cedula" id="cedula">
-                            </div>
+                        <div class="col-md-12">
+                            <label class="required fw-semibold fs-6 mb-2">Usuario Cargo</label>
+                            <input type="text" class="form-control" value="{{ Auth::user()->name }}" readonly>
                         </div>
                     </div>
-                    <div class="row mt-5">
+
+                    <div class="row mt-3">
                         <div class="col-md-4">
                             <div class="fv-row mb-7">
-                                <label class="required fw-semibold fs-6 mb-2">Correo</label>
-                                <input type="text" class="form-control" required name="correo" id="correo">
+                                <label class="required fw-semibold fs-6 mb-2">Monto</label>
+                                <input type="text" class="form-control" required name="monto_ape_caja" id="monto_ape_caja">
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-8">
                             <div class="fv-row mb-7">
-                                <label class="required fw-semibold fs-6 mb-2">Celular</label>
-                                <input type="text" class="form-control" required name="celular" id="celular">
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="fv-row mb-7">
-                                <label class="required fw-semibold fs-6 mb-2">Fecha Nacimiento</label>
-                                <input type="date" class="form-control" required name="fecha_naci" id="fecha_naci">
+                                <label class="required fw-semibold fs-6 mb-2">Descripcion</label>
+                                <input type="text" class="form-control" required name="descripcion_ape_caja" id="descripcion_ape_caja">
                             </div>
                         </div>
                     </div>
                 </form>
 
                 <div class="row">
-                    <div class="col-md-6">
-                        <button class="btn btn-dark w-100" onclick="cancelarRegistroCliente()">Cancelar</button>
-                    </div>
-                    <div class="col-md-6">
-                        <button class="btn btn-success w-100" onclick="guardarRegistroCliente()">Guardar</button>
+                    <div class="col-md-12">
+                        <button class="btn btn-success w-100 btn-sm" onclick="registrarCajaApertura()">Gurdar</button>
                     </div>
                 </div>
             </div>
@@ -1203,6 +1175,27 @@
 
         function modalAperturaCaja(){
             $('#modalAperturaCaja').modal('show')
+        }
+
+        function registrarCajaApertura(){
+            if($("#formularioAperturaCaja")[0].checkValidity()){
+                let datos = $("#formularioAperturaCaja").serializeArray();
+                $.ajax({
+                    url: "{{ url('pago/aperturaCaja') }}",
+                    data: datos,
+                    type: 'POST',
+                    dataType:'json',
+                    success: function(data) {
+                        {{--  if(data.estado === 'success'){
+                            var k = (total-input.value).toFixed(2);
+                            $('#subTotalCalculdo_'+pago).text(k);
+                            $('#motoTotalFac').val(parseFloat(((data.valor)-$('#descuento_adicional').val()).toFixed(2)).toFixed(2))
+                        }  --}}
+                    }
+                });
+            }else{
+                $("#formularioAperturaCaja")[0].reportValidity();
+            }
         }
 
     </script>

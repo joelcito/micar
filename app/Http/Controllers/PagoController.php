@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Caja;
 use App\Models\Factura;
 use App\Models\MotivoAnulacion;
 use App\Models\Pago;
@@ -245,6 +246,34 @@ class PagoController extends Controller
             $data['estado'] = 'error';
         }
         return $data;
+    }
+
+    public function aperturaCaja(Request $request){
+        if($request->ajax()){
+
+            $caja                 = new Caja();
+            $caja->creador_id     = Auth::user()->id;
+            $caja->monto_apertura = $request->input('monto_ape_caja');
+            $caja->fecha          = date('Y-m-d H:i:s');
+            $caja->descripcion = $request->input('descripcion_ape_caja');
+            $caja->save();
+
+            $pago              = new Pago();
+            $pago->creador_id  = Auth::user()->id;
+            $pago->caja_id     = $caja->id;
+            $pago->monto       = $request->input('monto_ape_caja');
+            $pago->descripcion = $request->input('descripcion_ape_caja');
+            $pago->save();
+
+            $data['estado'] =  "success";
+        }else{
+            $data['estado'] =  "error";
+        }
+        return $data;
+    } 
+
+    public function infomearqueo(Request $request){
+        return view('pago.infomearqueo');
     }
 
 

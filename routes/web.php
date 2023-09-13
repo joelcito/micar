@@ -120,6 +120,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/finanza', [PagoController::class, 'finanza']);
         Route::post('/ajaxListadoFinanzas', [PagoController::class, 'ajaxListadoFinanzas']);
         Route::post('/guardarTipoIngresoSalida', [PagoController::class, 'guardarTipoIngresoSalida']);
+        Route::post('/aperturaCaja', [PagoController::class, 'aperturaCaja']);
+        Route::get('/infomearqueo', [PagoController::class, 'infomearqueo']);
+
     });
 
     // Route::post('/pago/ajaxListado', [PagoController::class, 'ajaxListado']);

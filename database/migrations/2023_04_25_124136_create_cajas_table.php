@@ -22,7 +22,13 @@ return new class extends Migration
             $table->foreign('eliminador_id')->references('id')->on('users');
             $table->unsignedBigInteger('eliminador_id')->nullable();
 
+            $table->decimal('total_venta',12,2)->nullable();
+            $table->decimal('venta_contado',12,2)->nullable();
+            $table->decimal('venta_credito',12,2)->nullable();
+            $table->decimal('monto_apertura',12,2)->nullable();
+            $table->decimal('monto_cierre',12,2)->nullable();
             $table->datetime('fecha')->nullable();
+            $table->string('descripcion')->nullable();
 
             $table->string('estado')->nullable();
             $table->datetime('deleted_at')->nullable();
