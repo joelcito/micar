@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Caja;
 use App\Models\Cliente;
 use App\Models\Servicio;
 use App\Models\User;
@@ -11,6 +12,7 @@ use App\Models\TipoEvento;
 use App\Models\Vehiculo;
 use App\Models\Detalle;
 use App\Models\Venta;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -32,7 +34,6 @@ class VehiculoController extends Controller
 
         // NUMOER DE FACTURA
         $fac = app(FacturaController::class);
-        // dd($fac->numeroFactura());
         $numFac = $fac->numeroFactura()+1;
 
         $tipoDocumento = TipoDocumento::all();
@@ -51,9 +52,8 @@ class VehiculoController extends Controller
     }
 
     protected function listadoArray(){
-        // $vehiculos = Vehiculo::all()->limit(100);
         $vehiculos = Vehiculo::orderBy('id', 'desc')->limit(100)->get();
-        return view('vehiculo.ajaxListado')->with(compact('vehiculos'))->render();
+        return view('vehiculo.ajaxListado')->with(compact('vehiculos', 'vender'))->render();
     }
 
     protected function listadoArrayVentas($pago_id){
@@ -149,8 +149,25 @@ class VehiculoController extends Controller
                                         ->limit(200)
                                         ->get();
             }
+
+            // PARA LA APERTURA DE LA CAJA
+            $ultimaCajaAperturada = Caja::latest()->first();
+
+            if($ultimaCajaAperturada){
+                $fechaActual =  Carbon::now()->format('Y-m-d H:i:s');
+                $fechaAperturaCaja = $ultimaCajaAperturada->fecha_apertura;
+                $fecha1 = Carbon::parse($fechaActual);
+                $fecha2 = Carbon::parse($fechaAperturaCaja);
+                if ($fecha1->gt($fecha2)) {
+                    $vender = true;
+                } else {
+                    $vender = false;
+                }
+            }else{
+                $vender = false;
+            }
             $data['estado'] = 'success';
-            $data['listado'] = view('vehiculo.ajaxListado')->with(compact('vehiculos'))->render();
+            $data['listado'] = view('vehiculo.ajaxListado')->with(compact('vehiculos', 'vender'))->render();
         }else{
             $data['estado'] = 'error';
         }

@@ -235,11 +235,12 @@ class PagoController extends Controller
             // dd($request->all());
             $pago             = new Pago();
             $pago->creador_id = Auth::user()->id;
-            // $pago->factura_id = $factura->id;
-            $pago->monto      = $request->input('monto');
-            $pago->fecha      = date('Y-m-d H:i:s');
-            $pago->tipo_pago  = 'efectivo';
-            $pago->estado     = 'Salida';
+              // $pago->factura_id = $factura->id;
+            $pago->monto       = $request->input('monto');
+            $pago->fecha       = date('Y-m-d H:i:s');
+            $pago->tipo_pago   = 'efectivo';
+            $pago->descripcion = $request->input('descripcion');
+            $pago->estado      = 'Salida';
             $pago->save();
             $data['estado'] = 'success';
         }else{
@@ -254,15 +255,18 @@ class PagoController extends Controller
             $caja                 = new Caja();
             $caja->creador_id     = Auth::user()->id;
             $caja->monto_apertura = $request->input('monto_ape_caja');
-            $caja->fecha          = date('Y-m-d H:i:s');
-            $caja->descripcion = $request->input('descripcion_ape_caja');
+            $caja->fecha_apertura = date('Y-m-d H:i:s');
+            $caja->descripcion    = $request->input('descripcion_ape_caja');
             $caja->save();
 
             $pago              = new Pago();
             $pago->creador_id  = Auth::user()->id;
             $pago->caja_id     = $caja->id;
+            $pago->fecha       = date('Y-m-d H:i:s');
             $pago->monto       = $request->input('monto_ape_caja');
             $pago->descripcion = $request->input('descripcion_ape_caja');
+            $pago->tipo_pago   = 'efectivo';
+            $pago->estado      = 'Ingreso';
             $pago->save();
 
             $data['estado'] =  "success";
@@ -270,10 +274,35 @@ class PagoController extends Controller
             $data['estado'] =  "error";
         }
         return $data;
-    } 
+    }
 
     public function infomearqueo(Request $request){
         return view('pago.infomearqueo');
+    }
+
+    public function ajaxListadoCajas(REquest $request){
+        if($request->ajax()){
+            // dd($request->all());
+            $fechaIni = $request->input('fechaIni');
+            $fechaFin = $request->input('fechaFin');
+            $data['estado'] = 'success';
+            $data['listado']=$this->listadoArrayCajas($fechaIni, $fechaFin);
+        }else{
+            $data['estado'] = 'error';
+        }
+        return $data;
+    }
+
+    private function listadoArrayCajas($fechaIni, $fechaFin){
+        $query = Caja::orderBy('id', 'desc');
+        if(!is_null($fechaIni) && !is_null($fechaFin)){
+            $query->whereBetween('fecha_apertura',[$fechaIni.' 00:00:00', $fechaFin.' 23:59:59']);
+            $query->limit(20);
+        }else{
+            $query->limit(10);
+        }
+        $cajas = $query->get();
+        return view('pago.ajaxListadoCajas')->with(compact('cajas'))->render();
     }
 
 

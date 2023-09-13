@@ -8,7 +8,7 @@
 @section('content')
 
     <!--begin::Modal - Add task-->
-     <div class="modal fade" id="modalIngreso" tabindex="-1" aria-hidden="true">
+     {{-- <div class="modal fade" id="modalIngreso" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -44,7 +44,7 @@
             <!--end::Modal content-->
         </div>
         <!--end::Modal dialog-->
-    </div>
+    </div> --}}
     <!--end::Modal - Add task-->
 
 
@@ -59,21 +59,21 @@
                 <button class="btn btn-danger btn-icon btn-sm" onclick="modalSalida()"><i class="fas fa-money-bill"></i> <i class="fas fa-arrow-up"></i></button>  --}}
             </div>
              <!-- Iconos o imágenes -->
-           
+
         </div>
         <!--begin::Card body-->
         <div class="card-body py-4">
             <form id="formularioBusqeuda">
                 <div class="row">
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <label for="">Fecha Inicio</label>
                         <input type="date" class="form-control" id="fechaIni" name="fechaIni">
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <label for="">Fecha Fin</label>
                         <input type="date" class="form-control" id="fechaFin" name="fechaFin">
                     </div>
-                    <div class="col-md-3">
+                    {{-- <div class="col-md-4">
                         <label for="">Tipo de pago</label>
                         <select name="tipo_pago" id="tipo_pago" class="form-control">
                             <option value="">Seleccionar</option>
@@ -81,13 +81,13 @@
                             <option value="tramsferencia">Tramsferencia</option>
                             <option value="qr">Qr</option>
                         </select>
-                    </div>
-                    <div class="col-md-3">
-                        <button class="btn btn-success w-100 btn-sm mt-7" type="button" onclick="ajaxListadoFinanzas()"><i class="fa fa-search"></i></button>
+                    </div> --}}
+                    <div class="col-md-4">
+                        <button class="btn btn-success w-100 btn-sm mt-7" type="button" onclick="ajaxListadoCajas()"><i class="fa fa-search"></i></button>
                     </div>
                 </div>
             </form>
-            <div id="table_pagos">
+            <div id="table_cajas">
 
             </div>
         </div>
@@ -109,65 +109,65 @@
         })
 
         $( document ).ready(function() {
-            ajaxListadoFinanzas();
+            ajaxListadoCajas();
         });
 
-        function ajaxListadoFinanzas(){
+        function ajaxListadoCajas(){
             let datos = $('#formularioBusqeuda').serializeArray();
             $.ajax({
-                url: "{{ url('pago/ajaxListadoFinanzas') }}",
+                url: "{{ url('pago/ajaxListadoCajas') }}",
                 type: 'POST',
                 data:datos,
                 dataType: 'json',
                 success: function(data) {
                     if(data.estado === 'success')
-                        $('#table_pagos').html(data.listado);
+                        $('#table_cajas').html(data.listado);
                 }
             });
         }
 
-        function modalIngreso(){
-            $('#tipo').val('Ingreso')
-            $('#text_tipoo_modal').text('Ingreso')
-            $('#monto').val(0)
-            $('#descripcion').val('')
-            $('#modalIngreso').modal('show')
-        }
+        // function modalIngreso(){
+        //     $('#tipo').val('Ingreso')
+        //     $('#text_tipoo_modal').text('Ingreso')
+        //     $('#monto').val(0)
+        //     $('#descripcion').val('')
+        //     $('#modalIngreso').modal('show')
+        // }
 
-        function modalSalida(){
-            $('#tipo').val('Salida')
-            $('#monto').val(0)
-            $('#descripcion').val('')
-            $('#text_tipoo_modal').text('Salida')
-            $('#modalIngreso').modal('show')
-        }
+        // function modalSalida(){
+        //     $('#tipo').val('Salida')
+        //     $('#monto').val(0)
+        //     $('#descripcion').val('')
+        //     $('#text_tipoo_modal').text('Salida')
+        //     $('#modalIngreso').modal('show')
+        // }
 
-        function guardarTipoIngresoSalida(){
-            if($("#formularioIngresoSalida")[0].checkValidity()){
-                datos = $("#formularioIngresoSalida").serializeArray()
-                $.ajax({
-                    url: "{{ url('pago/guardarTipoIngresoSalida') }}",
-                    data:datos,
-                    type: 'POST',
-                    dataType: 'json',
-                    success: function(data) {
-                        if(data.estado === 'success'){
-                            Swal.fire({
-                                icon             : 'success',
-                                title            : 'Se registro con exito',
-                                showConfirmButton: false,       // No mostrar botón de confirmación
-                                timer            : 2000,        // 5 segundos
-                                timerProgressBar : true
-                            });
-                            $('#modalIngreso').modal('hide')
-                            ajaxListadoFinanzas();
-                        }
-                    }
-                });
-            }else{
-    			$("#formularioIngresoSalida")[0].reportValidity()
-            }
-        }
+        // function guardarTipoIngresoSalida(){
+        //     if($("#formularioIngresoSalida")[0].checkValidity()){
+        //         datos = $("#formularioIngresoSalida").serializeArray()
+        //         $.ajax({
+        //             url: "{{ url('pago/guardarTipoIngresoSalida') }}",
+        //             data:datos,
+        //             type: 'POST',
+        //             dataType: 'json',
+        //             success: function(data) {
+        //                 if(data.estado === 'success'){
+        //                     Swal.fire({
+        //                         icon             : 'success',
+        //                         title            : 'Se registro con exito',
+        //                         showConfirmButton: false,       // No mostrar botón de confirmación
+        //                         timer            : 2000,        // 5 segundos
+        //                         timerProgressBar : true
+        //                     });
+        //                     $('#modalIngreso').modal('hide')
+        //                     ajaxListadoFinanzas();
+        //                 }
+        //             }
+        //         });
+        //     }else{
+    	// 		$("#formularioIngresoSalida")[0].reportValidity()
+        //     }
+        // }
 
     //    function guardarVenta(){
     //         if($("#formularioRol")[0].checkValidity()){

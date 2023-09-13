@@ -27,7 +27,8 @@ return new class extends Migration
             $table->decimal('venta_credito',12,2)->nullable();
             $table->decimal('monto_apertura',12,2)->nullable();
             $table->decimal('monto_cierre',12,2)->nullable();
-            $table->datetime('fecha')->nullable();
+            $table->datetime('fecha_apertura')->nullable();
+            $table->datetime('fecha_cierre')->nullable();
             $table->string('descripcion')->nullable();
 
             $table->string('estado')->nullable();

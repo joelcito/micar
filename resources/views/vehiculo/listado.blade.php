@@ -7,7 +7,6 @@
 @endsection
 @section('content')
 
-
 <!--begin::Modal - Add task-->
 <div class="modal fade" id="modalAperturaCaja" tabindex="-1" aria-hidden="true">
     <!--begin::Modal dialog-->
@@ -243,7 +242,7 @@
     <!--begin::Card header-->
     <div class="card-header border-0 pt-6 bg-light-primary">
         <div class="card-title ">
-            <h1>Listado de Vehiculos</h1>
+            <h1>Formulario de Facturacion</h1>
         </div>
         <div class="card-actions">
             <button class="btn btn-success btn-icon btn-sm" onclick="modalAperturaCaja()" title="Apertura de caja"><i class="fa-solid fa-solar-panel"></i></button>
@@ -338,8 +337,12 @@
             </div>
         </form>
 
-        <div id="table_vehiculos">
+        <div class="row">
+            <div class="col-md-12">
+                <div id="table_vehiculos">
 
+                </div>
+            </div>
         </div>
 
         <div class="row">
@@ -476,7 +479,8 @@
         let cantidadProductos       = 0;
 
         $( document ).ready(function() {
-            ajaxListado();
+            // ajaxListado();
+            buscarVehiculo()
 
             $('#cantidad').on('input',function(){
                 let total = $('#cantidad').val()*$('#precio').val();
@@ -1186,11 +1190,17 @@
                     type: 'POST',
                     dataType:'json',
                     success: function(data) {
-                        {{--  if(data.estado === 'success'){
-                            var k = (total-input.value).toFixed(2);
-                            $('#subTotalCalculdo_'+pago).text(k);
-                            $('#motoTotalFac').val(parseFloat(((data.valor)-$('#descuento_adicional').val()).toFixed(2)).toFixed(2))
-                        }  --}}
+                        if(data.estado === 'success'){
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'SE APERTURO CON EXTIO',
+                                showConfirmButton: false, // No mostrar botón de confirmación
+                                timer: 2000, // 5 segundos
+                                timerProgressBar: true
+                            });
+                            $('#modalAperturaCaja').modal('hide')
+                            buscarVehiculo()
+                        }
                     }
                 });
             }else{

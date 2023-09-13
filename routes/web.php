@@ -122,7 +122,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/guardarTipoIngresoSalida', [PagoController::class, 'guardarTipoIngresoSalida']);
         Route::post('/aperturaCaja', [PagoController::class, 'aperturaCaja']);
         Route::get('/infomearqueo', [PagoController::class, 'infomearqueo']);
-
+        Route::post('/ajaxListadoCajas', [PagoController::class, 'ajaxListadoCajas']);
     });
 
     // Route::post('/pago/ajaxListado', [PagoController::class, 'ajaxListado']);

@@ -7,31 +7,35 @@
             <th>Descripcion</th>
             <th>Tipo de Pago</th>
             <th>Transaccion</th>
-            <th>Credito</th>
-            <th>Debito</th>
+            <th>Total Venta</th>
+            <th>Credito (Efectivo)</th>
+            <th>Credito (Trams / QR)</th>
+            <th>Debito (Salida)</th>
             <th>Usuario</th>
         </tr>
     </thead>
     <tbody class="text-gray-600 fw-semibold">
         @php
-            $totalCredito = 0;
-            $totalDebito = 0;
+            $totalCredito       = 0;
+            $totalCreditoTrmsQR = 0;
+            $totalDebito        = 0;
+            $totalVenta         = 0;
         @endphp
         @foreach ( $pagos as $p)
             @php
 
                 if($p->estado === 'Ingreso')
                     $totalCredito+=$p->monto;
-                else
+
+                if($p->factura_id != null || $p->caja_id != null)
+                    $totalVenta+=$p->monto;
+
+                if($p->tipo_pago == 'tramsferencia' || $p->tipo_pago == 'qr')
+                    $totalCreditoTrmsQR+=$p->monto;
+
+                if($p->estado == 'Salida' && $p->tipo_pago != 'tramsferencia' && $p->tipo_pago != 'qr')
                     $totalDebito+=$p->monto;
 
-                /*
-                if ($p->tipo_pago == 'efectivo')
-                    $totalCredito+=$p->monto;
-
-                if ($p->tipo_pago != 'efectivo')
-                    $totalDebito+=$p->monto;
-                    */
             @endphp
             <tr>
                 <td>{{ $p->id }}</td>
@@ -39,12 +43,14 @@
                 <td>{{ $p->descripcion }}</td>
                 <td>{{ $p->tipo_pago }}</td>
                 <td>
-                    {{--  @if ($p->tipo_pago == 'efectivo')
-                        Ingreso
-                    @else
-                        Salida
-                    @endif  --}}
                     {{ $p->estado }}
+                </td>
+                <td>
+                    @if ($p->factura_id != null || $p->caja_id != null)
+                        {{ number_format($p->monto, 2) }}
+                    @else
+                        {{ number_format(0, 2) }}
+                    @endif
                 </td>
                 <td>
                     @if ($p->estado == 'Ingreso')
@@ -54,7 +60,14 @@
                     @endif
                 </td>
                 <td>
-                    @if ($p->estado == 'Salida')
+                    @if ($p->tipo_pago == 'tramsferencia' || $p->tipo_pago == 'qr')
+                        {{ number_format($p->monto, 2) }}
+                    @else
+                        {{ number_format(0, 2) }}
+                    @endif
+                </td>
+                <td>
+                    @if ($p->estado == 'Salida' && $p->tipo_pago != 'tramsferencia' && $p->tipo_pago != 'qr')
                         {{ number_format($p->monto, 2) }}
                     @else
                         {{ number_format(0, 2) }}
@@ -69,11 +82,13 @@
     <tfoot>
         <tr>
             <th colspan="5"><b>TOTAL</b></th>
+            <th><b>{{ number_format($totalVenta, 2) }} Bs.</b></th>
             <th><b>{{ number_format($totalCredito, 2) }} Bs.</b></th>
+            <th><b>{{ number_format($totalCreditoTrmsQR, 2) }} Bs.</b></th>
             <th><b>{{ number_format($totalDebito, 2) }} Bs.</b></th>
         </tr>
         <tr class="bg-light-primary">
-            <th colspan="6" class="text-center"><b>TOTAL EFECTIVO CAJA</b></th>
+            <th colspan="7" class="text-center"><b>TOTAL EFECTIVO CAJA</b></th>
             <th><b>{{ number_format(($totalCredito - $totalDebito), 2) }} Bs.</b></th>
         </tr>
     </tfoot>
