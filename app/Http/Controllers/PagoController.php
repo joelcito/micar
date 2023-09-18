@@ -328,12 +328,55 @@ class PagoController extends Controller
             if($ultimaCajaAperturada){
 
                 // PARA EL TOTAL VENTA
-                // $ultimaCajaAperturada->total_venta = ;
+                $query = Pago::where('caja_id', $caja_id)
+                            ->where('estado', 'Ingreso')
+                            ->orWhere(function ($query) {
+                                $query->where('tipo_pago', 'qr')
+                                    ->orWhere('tipo_pago', 'tramsferencia');
+                            })
+                            ->selectRaw('SUM(monto) as total');
+                            $total_venta = $query->first();
 
-                $ultimaCajaAperturada->monto_cierre = $request->input('monto_cie_caja');
-                $ultimaCajaAperturada->fecha_cierre = date('Y-m-d H:i:s');
-                $ultimaCajaAperturada->estado       = 'Cerrado';
-                // $ultimaCajaAperturada->save();
+                // PARA EL TOTAL VENTA EFECTIVO
+                $query = Pago::where('caja_id', $caja_id)
+                            ->where('estado', 'Ingreso')
+                            ->selectRaw('SUM(monto) as total');
+                        $venta_contado = $query->first();
+
+                        
+                // PARA OTROS INGRESOS
+                $query = Pago::where('caja_id', $caja_id)
+                            ->where('estado', 'Ingreso')
+                            ->whereNull('factura_id')
+                            ->selectRaw('SUM(monto) as total');
+                        $otros_ingresos = $query->first();
+
+                // PARA TOTAL QR Y TRAMFERENCIA
+                $query = Pago::where('caja_id', $caja_id)
+                                ->whereIn('tipo_pago', ['qr', 'tramsferencia'])
+                                ->selectRaw('SUM(monto) as total');
+                            $total_qrtramsferencia = $query->first();
+                            
+                // PARA TOTAL SALIDAS GASTOS
+                $query = Pago::where('caja_id', $caja_id)
+                            ->where('estado', 'Salida')
+                            ->where('tipo_pago','!=' ,'qr')
+                            ->where('tipo_pago','!=' ,'tramsferencia')
+                            ->selectRaw('SUM(monto) as total');
+                        $total_salidas_gasto = $query->first();
+
+                $ultimaCajaAperturada->total_venta           = $total_venta->total;
+                $ultimaCajaAperturada->venta_contado         = $venta_contado->total;
+                $ultimaCajaAperturada->otros_ingresos        = $otros_ingresos->total;
+                $ultimaCajaAperturada->total_ingresos        = (float)$venta_contado->total + (float)$otros_ingresos->total;
+                $ultimaCajaAperturada->total_qrtramsferencia = $total_qrtramsferencia->total;
+                $ultimaCajaAperturada->total_salidas_gasto   = $total_salidas_gasto->total;
+                $ultimaCajaAperturada->total_salidas         = (float)$total_qrtramsferencia->total+(float)$total_salidas_gasto->total;
+                $ultimaCajaAperturada->saldo                 = (float)$ultimaCajaAperturada->total_ingresos-(float)$ultimaCajaAperturada->total_salidas;
+                $ultimaCajaAperturada->monto_cierre          = $request->input('monto_cie_caja');
+                $ultimaCajaAperturada->fecha_cierre          = date('Y-m-d H:i:s');
+                $ultimaCajaAperturada->estado                = 'Cerrado';
+                $ultimaCajaAperturada->save();
 
                 $data['estado'] = 'success';
             }else{

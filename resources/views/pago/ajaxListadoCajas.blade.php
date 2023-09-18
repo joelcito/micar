@@ -7,36 +7,36 @@
             <th>Usuario</th>
             <th>T Venta</th>
             <th>T Contado</th>
-            <th>V Credito</th>
             <th>O Ingreso</th>
             <th>T Ingresos</th>
-            <th>T Saldos</th>
+            <th>T qr / Trams</th>
+            <th>T Gastos</th>
+            <th>T Salida</th>
             <th>Saldo</th>
             <th>T Declarado</th>
             <th>T Diferencia</th>
             <th>Estado</th>
-            {{--  <th>Actions</th>  --}}
         </tr>
     </thead>
     <tbody class="text-gray-600 fw-semibold">
         @foreach ( $cajas as $c)
             @php
                 $pagado = App\Models\Pago::where('factura_id', $c->id)->sum('monto');
-                // dd($pagado);
             @endphp
             <tr>
                 <td>{{ $c->id }}</td>
                 <td>{{ date('d/m/Y h:i a', strtotime($c->created_at)) }}</td>
                 <td>{{ Auth::user()->name }}</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>{{ $c->total_venta }}</td>
+                <td>{{ $c->venta_contado }}</td>
+                <td>{{ $c->otros_ingresos }}</td>
+                <td>{{ $c->total_ingresos }}</td>
+                <td>{{ $c->total_qrtramsferencia }}</td>
+                <td>{{ $c->total_salidas_gasto }}</td>
+                <td>{{ $c->total_salidas }}</td>
+                <td>{{ $c->saldo }}</td>
+                <td>{{ $c->monto_cierre }}</td>
+                <td> </td>
                 <td></td>
             </tr>
         @endforeach

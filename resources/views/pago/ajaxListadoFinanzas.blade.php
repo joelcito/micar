@@ -28,9 +28,14 @@
                 if($p->estado === 'Ingreso')
                     $totalCredito+=$p->monto;
 
-                //if($p->factura_id != null || $p->caja_id != null)
-                if(($p->factura_id != null || $p->caja_id != null) && $p->estado == 'Ingreso')
+                // if($p->factura_id != null || $p->caja_id != null)
+                if(($p->factura_id != null || $p->caja_id != null) && $p->estado == 'Ingreso'){
                     $totalVenta+=$p->monto;
+                }else{
+                    if($p->tipo_pago == 'tramsferencia' || $p->tipo_pago == 'qr'){
+                        $totalVenta+=$p->monto;
+                   }
+                }
 
                 //Credito (Trams / QR)
                 if($p->tipo_pago == 'tramsferencia' || $p->tipo_pago == 'qr')
@@ -52,10 +57,14 @@
                 <td>
                     {{--  Total Venta  --}}
                     {{--  @if (($p->factura_id != null || $p->caja_id != null) && $p->estado == 'Ingreso')  --}}
-                    @if ($p->factura_id != null || $p->caja_id != null)
+                    @if (($p->factura_id != null || $p->caja_id != null) && $p->estado == 'Ingreso')
                         {{ number_format($p->monto, 2) }}
                     @else
-                        {{ number_format(0, 2) }}
+                        @if ($p->tipo_pago == 'tramsferencia' || $p->tipo_pago == 'qr')
+                            {{ number_format($p->monto, 2) }}
+                        @else
+                            {{ number_format(0, 2) }}
+                        @endif
                     @endif
                 </td>
                 <td>
