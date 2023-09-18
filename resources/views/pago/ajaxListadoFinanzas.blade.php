@@ -24,15 +24,19 @@
         @foreach ( $pagos as $p)
             @php
 
+                //Credito (Efectivo)
                 if($p->estado === 'Ingreso')
                     $totalCredito+=$p->monto;
 
-                if($p->factura_id != null || $p->caja_id != null)
+                //if($p->factura_id != null || $p->caja_id != null)
+                if(($p->factura_id != null || $p->caja_id != null) && $p->estado == 'Ingreso')
                     $totalVenta+=$p->monto;
 
+                //Credito (Trams / QR)
                 if($p->tipo_pago == 'tramsferencia' || $p->tipo_pago == 'qr')
                     $totalCreditoTrmsQR+=$p->monto;
 
+                //Debito (Salida)
                 if($p->estado == 'Salida' && $p->tipo_pago != 'tramsferencia' && $p->tipo_pago != 'qr')
                     $totalDebito+=$p->monto;
 
@@ -43,9 +47,11 @@
                 <td>{{ $p->descripcion }}</td>
                 <td>{{ $p->tipo_pago }}</td>
                 <td>
-                    {{ $p->estado }}
+                    <span class="badge badge-{{ ($p->estado == 'Ingreso')? 'success' : 'danger' }}">{{ $p->estado }}</span>
                 </td>
                 <td>
+                    {{--  Total Venta  --}}
+                    {{--  @if (($p->factura_id != null || $p->caja_id != null) && $p->estado == 'Ingreso')  --}}
                     @if ($p->factura_id != null || $p->caja_id != null)
                         {{ number_format($p->monto, 2) }}
                     @else
@@ -53,6 +59,7 @@
                     @endif
                 </td>
                 <td>
+                    {{--  Credito (Efectivo)  --}}
                     @if ($p->estado == 'Ingreso')
                         {{ number_format($p->monto, 2) }}
                     @else
@@ -60,6 +67,7 @@
                     @endif
                 </td>
                 <td>
+                    {{--  Credito (Trams / QR)  --}}
                     @if ($p->tipo_pago == 'tramsferencia' || $p->tipo_pago == 'qr')
                         {{ number_format($p->monto, 2) }}
                     @else
@@ -67,6 +75,7 @@
                     @endif
                 </td>
                 <td>
+                    {{--  Debito (Salida)  --}}
                     @if ($p->estado == 'Salida' && $p->tipo_pago != 'tramsferencia' && $p->tipo_pago != 'qr')
                         {{ number_format($p->monto, 2) }}
                     @else

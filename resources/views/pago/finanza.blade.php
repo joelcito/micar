@@ -23,6 +23,7 @@
                                     <label class="required fw-semibold fs-6 mb-2">Monto</label>
                                     <input type="number" id="monto" name="monto" class="form-control form-control-solid mb-3 mb-lg-0">
                                     <input type="text" id="tipo" name="tipo">
+                                    <input type="text" value="{{ $vender }}" id="caja_abierto_ingre_cerra" name="caja_abierto_ingre_cerra">
                                 </div>
                             </div>
                             <div class="col-md-8">
@@ -48,6 +49,70 @@
     <!--end::Modal - Add task-->
 
 
+    <!--begin::Modal - Add task-->
+    <div class="modal fade" id="modalCierreCaja" tabindex="-1" aria-hidden="true">
+        <!--begin::Modal dialog-->
+        <div class="modal-dialog modal-dialog-centered">
+            <!--begin::Modal content-->
+            <div class="modal-content">
+                <!--begin::Modal header-->
+                <div class="modal-header" id="kt_modal_add_user_header">
+                    <!--begin::Modal title-->
+                    <h2 class="fw-bold">Formulario de cierre de caja</h2>
+                    <!--end::Modal title-->
+                    <!--begin::Close-->
+                    <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-users-modal-action="close">
+                        <i class="ki-duotone ki-cross fs-1">
+                            <span class="path1"></span>
+                            <span class="path2"></span>
+                        </i>
+                    </div>
+                    <!--end::Close-->
+                </div>
+                <!--end::Modal header-->
+                <!--begin::Modal body-->
+                <div class="modal-body scroll-y">
+                    <form id="formularioCierreCaja">
+                        @csrf
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label class="required fw-semibold fs-6 mb-2">Usuario Cargo</label>
+                                <input type="text" class="form-control" value="{{ Auth::user()->name }}" readonly>
+                                <input type="text" value="{{ $vender }}" name="caja_abierto_cierre" id="caja_abierto_cierre" >
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-md-4">
+                                <div class="fv-row mb-7">
+                                    <label class="required fw-semibold fs-6 mb-2">Monto</label>
+                                    <input type="text" class="form-control" required name="monto_cie_caja" id="monto_cie_caja">
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="fv-row mb-7">
+                                    <label class="required fw-semibold fs-6 mb-2">Descripcion</label>
+                                    <input type="text" class="form-control" required name="descripcion_cie_caja" id="descripcion_cie_caja">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button class="btn btn-success w-100 btn-sm" onclick="registrarCajaCierre()">Gurdar</button>
+                        </div>
+                    </div>
+                </div>
+                <!--end::Modal body-->
+            </div>
+            <!--end::Modal content-->
+        </div>
+        <!--end::Modal dialog-->
+    </div>
+    <!--end::Modal - Add task-->
+
+
     <!--begin::Card-->
     <div class="card">
         <div class="card-header border-0 pt-6 bg-light-primary">
@@ -59,8 +124,11 @@
                 Informe financiero
             </div> --}}
             <div class="card-actions">
-                <button class="btn btn-success btn-icon btn-sm" onclick="modalIngreso()"><i class="fas fa-money-bill"></i> <i class="fas fa-arrow-down"></i></button>
-                <button class="btn btn-danger btn-icon btn-sm" onclick="modalSalida()"><i class="fas fa-money-bill"></i> <i class="fas fa-arrow-up"></i></button>
+                <button class="btn btn-danger btn-icon btn-sm" onclick="modalCierreCaja()" title="Cierre de caja"><i class="fa-solid fa-solar-panel"></i></button>
+                @if ($vender != 0)
+                    <button class="btn btn-success btn-icon btn-sm" onclick="modalIngreso()"><i class="fas fa-money-bill"></i> <i class="fas fa-arrow-down"></i></button>
+                    <button class="btn btn-danger btn-icon btn-sm" onclick="modalSalida()"><i class="fas fa-money-bill"></i> <i class="fas fa-arrow-up"></i></button>
+                @endif
             </div>
              <!-- Iconos o imágenes -->
             {{-- <div class="card-icons">
@@ -214,6 +282,39 @@
                 });
             }else{
     			$("#formularioIngresoSalida")[0].reportValidity()
+            }
+        }
+
+        function modalCierreCaja(){
+            $('#modalCierreCaja').modal('show')
+        }
+
+        function registrarCajaCierre(){
+            if($("#formularioCierreCaja")[0].checkValidity()){
+                let datos = $("#formularioCierreCaja").serializeArray();
+                $.ajax({
+                    url: "{{ url('pago/cierreCaja') }}",
+                    data: datos,
+                    type: 'POST',
+                    dataType:'json',
+                    success: function(data) {
+                        if(data.estado === 'success'){
+
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'SE CERRO CON EXTIO',
+                                showConfirmButton: false, // No mostrar botón de confirmación
+                                timer: 2000, // 5 segundos
+                                timerProgressBar: true
+                            });
+                            $('#modalCierreCaja').modal('hide')
+                            //buscarVehiculo()
+
+                        }
+                    }
+                });
+            }else{
+                $("#formularioCierreCaja")[0].reportValidity();
             }
         }
 

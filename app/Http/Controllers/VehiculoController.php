@@ -38,7 +38,27 @@ class VehiculoController extends Controller
 
         $tipoDocumento = TipoDocumento::all();
 
-        return view('vehiculo.listado')->with(compact('servicios', 'lavadores', 'clientes', 'verificacionSiat', 'numFac', 'tipoDocumento'));
+        // PARA VER SI HAY CAJA O NO
+        $ultimaCajaAperturada = Caja::where('estado', 'Abierto')
+                                    ->latest()
+                                    ->first();
+
+        if($ultimaCajaAperturada){
+            $fechaActual =  Carbon::now()->format('Y-m-d H:i:s');
+            $fechaAperturaCaja = $ultimaCajaAperturada->fecha_apertura;
+            $fecha1 = Carbon::parse($fechaActual);
+            $fecha2 = Carbon::parse($fechaAperturaCaja);
+            if ($fecha1->gt($fecha2)) {
+                $vender = $ultimaCajaAperturada->id;
+            } else {
+                $vender = 0;
+            }
+        }else{
+            $vender = 0;
+        }
+
+
+        return view('vehiculo.listado')->with(compact('servicios', 'lavadores', 'clientes', 'verificacionSiat', 'numFac', 'tipoDocumento', 'vender'));
     }
 
     public function ajaxListado(Request $request){
@@ -151,7 +171,9 @@ class VehiculoController extends Controller
             }
 
             // PARA LA APERTURA DE LA CAJA
-            $ultimaCajaAperturada = Caja::latest()->first();
+            $ultimaCajaAperturada = Caja::where('estado', 'Abierto')
+                                        ->latest()
+                                        ->first();
 
             if($ultimaCajaAperturada){
                 $fechaActual =  Carbon::now()->format('Y-m-d H:i:s');

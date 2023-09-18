@@ -263,7 +263,8 @@
             </div>
             <div class="col-md-4">
                 <span class="text-primary"><b>VEHICULO:</b></span><span id="vehiculo_text"></span>
-                <input type="hidden" id="vehiculo_id">
+                <input type="text" id="vehiculo_id">
+                <input type="text" id="caja_id" value="{{ $vender }}">
                 <input type="text" id="complemento">
             </div>
             <div class="col-md-4">
@@ -917,7 +918,8 @@
                 var datosVehiculo = {
                     'vehiculo_id' : $('#vehiculo_id').val(),
                     'pagos'       : arrayPagos,
-                    'realizo_pago': $("#realizo_pago").prop("checked")
+                    'realizo_pago': $("#realizo_pago").prop("checked"),
+                    'caja'        : $('#caja_id').val()
                 };
 
                 var datosRecepcion = {
@@ -988,7 +990,8 @@
                     tipo_pago          : $('#tipo_pago').val(),
                     monto_pagado       : $('#miInput').val(),
                     cambio             : $('#cambio').val(),
-                    realizo_pago       : $("#realizo_pago").prop("checked")
+                    realizo_pago       : $("#realizo_pago").prop("checked"),
+                    caja               : $('#caja_id').val()
                 },
                 dataType: 'json',
                 success: function(data) {
@@ -1198,6 +1201,7 @@
                                 timer: 2000, // 5 segundos
                                 timerProgressBar: true
                             });
+                            $('#caja_id').val(data.caja)
                             $('#modalAperturaCaja').modal('hide')
                             buscarVehiculo()
                         }

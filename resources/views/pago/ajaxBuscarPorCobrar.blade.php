@@ -34,7 +34,7 @@
                 <td>{{ number_format($pagado, 2) }}</td>
                 <td>{{ number_format(((int)$f->total - (int)$pagado), 2) }}</td>
                 <td>
-                    <button class="btn btn-sm btn-success btn-icon" onclick="abreModalPagar(
+                    <button {{ ($vender==0)? 'disabled' : '' }} class="btn btn-sm btn-success btn-icon" onclick="abreModalPagar(
                                                                                 '{{ $f->id }}',
                                                                                 '{{ $f->cliente->ap_paterno.' '.$f->cliente->ap_materno.' '.$f->cliente->nombres }}',
                                                                                 '{{ $f->vehiculo->placa }}',

@@ -9,6 +9,7 @@ use App\Models\Pago;
 use App\Models\TipoDocumento;
 use App\Models\Venta;
 use App\Models\Detalle;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -114,50 +115,29 @@ class PagoController extends Controller
     public function ajaxBuscarPorCobrar(Request $request){
         if($request->ajax()){
 
-            // $facturas = Factura::select('facturas.*')
-            //                     ->leftJoin('pagos', 'facturas.id', '=', 'pagos.factura_id')
-            //                     ->where('facturas.estado_pago', 'Deuda')
-            //                     ->get();
-
             $facturas = Factura::where('estado_pago', 'Deuda')->get();
 
-            // dd($facturas);
+            // PARA VER SI HAY CAJA O NO
+            $ultimaCajaAperturada = Caja::where('estado', 'Abierto')
+                                        ->latest()
+                                        ->first();
 
-            // $query = Pago::join('vehiculos as v', 'pagos.vehiculo_id', '=', 'v.id')
-            //                 ->join('clientes as c', 'v.cliente_id', '=', 'c.id')
-            //                 ->where('pagos.estado', 'Porcobrar')
-            //                 ->select('pagos.vehiculo_id', \DB::raw('COUNT(*) as cantidad'), 'v.*', 'c.*')
-            //                 ->groupBy('pagos.vehiculo_id');
-
-            //                 if(!is_null($request->input('nombre'))) {
-            //                     $nombre = $request->input('nombre');
-            //                     $query->where('c.nombres', 'like', '%' . $nombre . '%');
-            //                 }
-
-            //                 if (!is_null($request->input('appaterno'))) {
-            //                     $appaterno = $request->input('nombre');
-            //                     $query->where('c.ap_paterno', 'like', '%' . $appaterno . '%');
-            //                 }
-
-            //                 if (!is_null($request->input('apmaterno'))) {
-            //                     $apmaterno = $request->input('nombre');
-            //                     $query->where('c.ap_materno', 'like', '%' . $apmaterno . '%');
-            //                 }
-
-            //                 if (!is_null($request->input('cedula'))) {
-            //                     $cedula = $request->input('nombre');
-            //                     $query->where('c.cedula', 'like', '%' . $cedula . '%');
-            //                 }
-
-            //                 if (!is_null($request->input('placa'))) {
-            //                     $placa = $request->input('placa');
-            //                     $query->where('v.placa', 'like', '%' . $placa . '%');
-            //                 }
-
-            // $pagosPorCobrar = $pagosPorCobrar = $query->get();
+            if($ultimaCajaAperturada){
+                $fechaActual =  Carbon::now()->format('Y-m-d H:i:s');
+                $fechaAperturaCaja = $ultimaCajaAperturada->fecha_apertura;
+                $fecha1 = Carbon::parse($fechaActual);
+                $fecha2 = Carbon::parse($fechaAperturaCaja);
+                if ($fecha1->gt($fecha2)) {
+                    $vender = $ultimaCajaAperturada->id;
+                } else {
+                    $vender = 0;
+                }
+            }else{
+                $vender = 0;
+            }
 
             $data['estado'] = 'success';
-            $data['listado'] = view('pago.ajaxBuscarPorCobrar')->with(compact('facturas'))->render();
+            $data['listado'] = view('pago.ajaxBuscarPorCobrar')->with(compact('facturas', 'vender'))->render();
 
         }else{
             $data['estado'] = 'error';
@@ -171,13 +151,19 @@ class PagoController extends Controller
 
             $factura_id = $request->input('factura_id');
 
-            $pago             = new Pago();
-            $pago->creador_id = Auth::user()->id;
-            $pago->factura_id = $request->input('factura_id');
-            $pago->monto      = $request->input('importe_pagar');
-            $pago->fecha      = date('Y-m-d H:i:s');
-            $pago->tipo_pago  = $request->input('tipo_pago');
-            $pago->estado     = ($pago->tipo_pago === 'efectivo' )? 'Ingreso' : 'Salida';
+            $ultimaCajaAperturada = Caja::where('estado', 'Abierto')
+                                        ->latest()
+                                        ->first();
+
+            $pago                = new Pago();
+            $pago->creador_id    = Auth::user()->id;
+            $pago->factura_id    = $request->input('factura_id');
+            $pago->caja_id       = $ultimaCajaAperturada->id;
+            $pago->monto         = $request->input('importe_pagar');
+            $pago->fecha         = date('Y-m-d H:i:s');
+            $pago->apertura_caja = "No";
+            $pago->tipo_pago     = $request->input('tipo_pago');
+            $pago->estado        = ($pago->tipo_pago === 'efectivo' )? 'Ingreso' : 'Salida';
             $pago->save();
 
             // VERIFICAR SI LA FACTURA FUE PAGADA EN TOTALIDAD
@@ -198,7 +184,27 @@ class PagoController extends Controller
     }
 
     public function finanza(REquest $request){
-        return view('pago.finanza');
+
+        // PARA VER SI HAY CAJA O NO
+        $ultimaCajaAperturada = Caja::where('estado', 'Abierto')
+                                    ->latest()
+                                    ->first();
+
+        if($ultimaCajaAperturada){
+            $fechaActual =  Carbon::now()->format('Y-m-d H:i:s');
+            $fechaAperturaCaja = $ultimaCajaAperturada->fecha_apertura;
+            $fecha1 = Carbon::parse($fechaActual);
+            $fecha2 = Carbon::parse($fechaAperturaCaja);
+            if ($fecha1->gt($fecha2)) {
+                $vender = $ultimaCajaAperturada->id;
+            } else {
+                $vender = 0;
+            }
+        }else{
+            $vender = 0;
+        }
+
+        return view('pago.finanza')->with(compact('vender'));
     }
 
     public function  ajaxListadoFinanzas(Request $request) {
@@ -233,14 +239,15 @@ class PagoController extends Controller
     public function guardarTipoIngresoSalida(Request $request){
         if($request->ajax()){
             // dd($request->all());
-            $pago             = new Pago();
-            $pago->creador_id = Auth::user()->id;
-              // $pago->factura_id = $factura->id;
-            $pago->monto       = $request->input('monto');
-            $pago->fecha       = date('Y-m-d H:i:s');
-            $pago->tipo_pago   = 'efectivo';
-            $pago->descripcion = $request->input('descripcion');
-            $pago->estado      = 'Salida';
+            $pago                = new Pago();
+            $pago->creador_id    = Auth::user()->id;
+            $pago->caja_id       = $request->input('caja_abierto_ingre_cerra');
+            $pago->apertura_caja = "No";
+            $pago->monto         = $request->input('monto');
+            $pago->fecha         = date('Y-m-d H:i:s');
+            $pago->tipo_pago     = 'efectivo';
+            $pago->descripcion   = $request->input('descripcion');
+            $pago->estado        = $request->input('tipo');
             $pago->save();
             $data['estado'] = 'success';
         }else{
@@ -257,19 +264,22 @@ class PagoController extends Controller
             $caja->monto_apertura = $request->input('monto_ape_caja');
             $caja->fecha_apertura = date('Y-m-d H:i:s');
             $caja->descripcion    = $request->input('descripcion_ape_caja');
+            $caja->estado         = "Abierto";
             $caja->save();
 
-            $pago              = new Pago();
-            $pago->creador_id  = Auth::user()->id;
-            $pago->caja_id     = $caja->id;
-            $pago->fecha       = date('Y-m-d H:i:s');
-            $pago->monto       = $request->input('monto_ape_caja');
-            $pago->descripcion = $request->input('descripcion_ape_caja');
-            $pago->tipo_pago   = 'efectivo';
-            $pago->estado      = 'Ingreso';
+            $pago                = new Pago();
+            $pago->creador_id    = Auth::user()->id;
+            $pago->caja_id       = $caja->id;
+            $pago->fecha         = date('Y-m-d H:i:s');
+            $pago->monto         = $request->input('monto_ape_caja');
+            $pago->descripcion   = $request->input('descripcion_ape_caja');
+            $pago->apertura_caja = "Si";
+            $pago->tipo_pago     = 'efectivo';
+            $pago->estado        = 'Ingreso';
             $pago->save();
 
-            $data['estado'] =  "success";
+            $data['estado'] = "success";
+            $data['caja']   = $caja->id;
         }else{
             $data['estado'] =  "error";
         }
@@ -303,6 +313,37 @@ class PagoController extends Controller
         }
         $cajas = $query->get();
         return view('pago.ajaxListadoCajas')->with(compact('cajas'))->render();
+    }
+
+    public function cierreCaja(Request $request){
+        if($request->ajax()){
+            // $ultimaCajaAperturada = Caja::where('estado', 'Abierto')
+            //                             ->latest()
+            //                             ->first();
+
+            $caja_id = $request->input('caja_abierto_cierre');
+
+            $ultimaCajaAperturada = Caja::find($caja_id);
+
+            if($ultimaCajaAperturada){
+
+                // PARA EL TOTAL VENTA
+                // $ultimaCajaAperturada->total_venta = ;
+
+                $ultimaCajaAperturada->monto_cierre = $request->input('monto_cie_caja');
+                $ultimaCajaAperturada->fecha_cierre = date('Y-m-d H:i:s');
+                $ultimaCajaAperturada->estado       = 'Cerrado';
+                // $ultimaCajaAperturada->save();
+
+                $data['estado'] = 'success';
+            }else{
+                $data['msg'] = 'No hay caja aperturada';
+                $data['estado'] = 'error';
+            }
+        }else{
+            $data['estado'] = 'error';
+        }
+        return $data;
     }
 
 

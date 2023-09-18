@@ -20,8 +20,8 @@
                                 <div class="fv-row mb-7">
                                     <label class="fw-semibold fs-6 mb-2">Cliente</label>
                                     <input type="text" class="form-control" name="cliente" id="cliente" disabled>
-                                    <input type="hidden" name="factura_id" id="factura_id">
-                                </div> 
+                                    <input type="text" name="factura_id" id="factura_id">
+                                </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="fv-row mb-7">
@@ -35,19 +35,19 @@
                                 <div class="fv-row mb-7">
                                     <label class="fw-semibold fs-6 mb-2">Importe Total</label>
                                     <input type="text" class="form-control" name="impor_total" id="impor_total" disabled>
-                                </div> 
+                                </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="fv-row mb-7">
                                     <label class="fw-semibold fs-6 mb-2">Importe Pagado</label>
                                     <input type="text" class="form-control" name="impor_pagado" id="impor_pagado" disabled>
-                                </div> 
+                                </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="fv-row mb-7">
                                     <label class="fw-semibold fs-6 mb-2">Importe Saldo</label>
                                     <input type="text" class="form-control" name="impor_saldo" id="impor_saldo" disabled>
-                                </div> 
+                                </div>
                             </div>
                         </div>
                         <div class="row">
@@ -55,7 +55,7 @@
                                 <div class="fv-row mb-7">
                                     <label class="required fw-semibold fs-6 mb-2">Fecha</label>
                                     <input type="date" class="form-control" name="fecha_pago" id="fecha_pago" readonly required value="{{ date('Y-m-d') }}">
-                                </div> 
+                                </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="fv-row mb-7">
@@ -66,13 +66,13 @@
                                         <option value="tramsferencia">Tramsferencia</option>
                                         <option value="qr">Qr</option>
                                     </select>
-                                </div> 
+                                </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="fv-row mb-7">
                                     <label class="required fw-semibold fs-6 mb-2">Importe a pagar</label>
                                     <input type="number" type="button" class="form-control" name="importe_pagar" id="importe_pagar" required min="1" value="0">
-                                </div> 
+                                </div>
                             </div>
                         </div>
                     </form>

@@ -309,14 +309,16 @@ class FacturaController extends Controller
                     ->update(['estado' => 'Finalizado']);
 
             if($datosVehiculo['realizo_pago'] === "true"){
-                $pago              = new Pago();
-                $pago->creador_id  = Auth::user()->id;
-                $pago->factura_id  = $facturaNew->id;
-                $pago->monto       = (int)$request->input('monto_pagado')-(int)$request->input('cambio');
-                $pago->descripcion = "VENTA";
-                $pago->fecha       = date('Y-m-d H:i:s');
-                $pago->tipo_pago   = $request->input('tipo_pago');
-                $pago->estado      = ($pago->tipo_pago === 'efectivo' )? 'Ingreso' : 'Salida';
+                $pago                = new Pago();
+                $pago->creador_id    = Auth::user()->id;
+                $pago->factura_id    = $facturaNew->id;
+                $pago->caja_id       = $datosVehiculo['caja'];
+                $pago->monto         = (int)$request->input('monto_pagado')-(int)$request->input('cambio');
+                $pago->descripcion   = "VENTA";
+                $pago->apertura_caja = "No";
+                $pago->fecha         = date('Y-m-d H:i:s');
+                $pago->tipo_pago     = $request->input('tipo_pago');
+                $pago->estado        = ($pago->tipo_pago === 'efectivo' )? 'Ingreso' : 'Salida';
                 $pago->save();
             }else{
 
@@ -1376,14 +1378,16 @@ class FacturaController extends Controller
             $sipago = $request->input('realizo_pago');
 
             if($sipago === "true"){
-                $pago              = new Pago();
-                $pago->creador_id  = Auth::user()->id;
-                $pago->factura_id  = $factura->id;
-                $pago->monto       = (int)$request->input('monto_pagado')-(int)$request->input('cambio');
-                $pago->fecha       = date('Y-m-d H:i:s');
-                $pago->descripcion = "VENTA";
-                $pago->tipo_pago   = $request->input('tipo_pago');
-                $pago->estado      = ($pago->tipo_pago === 'efectivo' )? 'Ingreso' : 'Salida';
+                $pago                = new Pago();
+                $pago->creador_id    = Auth::user()->id;
+                $pago->factura_id    = $factura->id;
+                $pago->caja_id       = $request->input('caja');
+                $pago->monto         = (int)$request->input('monto_pagado')-(int)$request->input('cambio');
+                $pago->fecha         = date('Y-m-d H:i:s');
+                $pago->descripcion   = "VENTA";
+                $pago->apertura_caja = "No";
+                $pago->tipo_pago     = $request->input('tipo_pago');
+                $pago->estado        = ($pago->tipo_pago === 'efectivo' )? 'Ingreso' : 'Salida';
                 $pago->save();
             }else{
 

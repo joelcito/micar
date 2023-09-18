@@ -25,6 +25,10 @@ return new class extends Migration
             $table->decimal('total_venta',12,2)->nullable();
             $table->decimal('venta_contado',12,2)->nullable();
             $table->decimal('venta_credito',12,2)->nullable();
+            $table->decimal('otros_ingresos',12,2)->nullable();
+            $table->decimal('total_ingresos',12,2)->nullable();
+            $table->decimal('total_saldos',12,2)->nullable();
+            $table->decimal('saldo',12,2)->nullable();
             $table->decimal('monto_apertura',12,2)->nullable();
             $table->decimal('monto_cierre',12,2)->nullable();
             $table->datetime('fecha_apertura')->nullable();

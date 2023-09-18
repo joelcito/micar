@@ -29,6 +29,7 @@ return new class extends Migration
             $table->decimal('monto', 15, 2)->nullable();
             $table->datetime('fecha')->nullable();
             $table->string('descripcion')->nullable();
+            $table->string('apertura_caja', 3)->nullable();
             $table->string('tipo_pago', 15)->nullable();
 
             // $table->foreign('creador_id')->references('id')->on('users');
