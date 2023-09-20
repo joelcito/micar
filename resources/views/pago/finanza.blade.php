@@ -181,15 +181,15 @@
         <div class="card-body py-4">
             <form id="formularioBusqeuda">
                 <div class="row">
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <label for="">Fecha Inicio</label>
-                        <input type="date" class="form-control" id="fechaIni" name="fechaIni">
+                        <input type="date" class="form-control" id="fechaIni" name="fechaIni" value="{{ date('Y-m-d') }}">
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <label for="">Fecha Fin</label>
-                        <input type="date" class="form-control" id="fechaFin" name="fechaFin">
+                        <input type="date" class="form-control" id="fechaFin" name="fechaFin" value="{{ date('Y-m-d') }}">
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <label for="">Tipo de pago</label>
                         <select name="tipo_pago" id="tipo_pago" class="form-control">
                             <option value="">Seleccionar</option>
@@ -198,7 +198,16 @@
                             <option value="qr">Qr</option>
                         </select>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
+                        <label for="">Cajero</label>
+                        <select name="cajero_id" id="cajero_id" class="form-control">
+                            <option value="">SELECCIONE</option>
+                            @foreach ($cajeros as $c)
+                                <option value="{{ $c->id }}" {{ (Auth::user()->id == $c->id)? 'selected':'' }}>{{ $c->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-2">
                         <button class="btn btn-success w-100 btn-sm mt-7" type="button" onclick="ajaxListadoFinanzas()"><i class="fa fa-search"></i></button>
                     </div>
                 </div>

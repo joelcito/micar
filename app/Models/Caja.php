@@ -24,4 +24,9 @@ class Caja extends Model
         'estado',
         'deleted_at',
     ];
+
+    public function usuario(){
+        return $this->belongsTo('App\Models\User', 'creador_id');
+    }
+
 }

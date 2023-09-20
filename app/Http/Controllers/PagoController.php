@@ -9,6 +9,7 @@ use App\Models\Pago;
 use App\Models\TipoDocumento;
 use App\Models\Venta;
 use App\Models\Detalle;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -204,11 +205,15 @@ class PagoController extends Controller
             $vender = 0;
         }
 
-        return view('pago.finanza')->with(compact('vender'));
+        $cajeros = User::where('rol_id',4)->get();
+
+        return view('pago.finanza')->with(compact('vender', 'cajeros'));
     }
 
     public function  ajaxListadoFinanzas(Request $request) {
         if($request->ajax()){
+
+            // dd($request->all());
 
             $query = Pago::orderBy('id', 'desc');
 
@@ -218,10 +223,14 @@ class PagoController extends Controller
                 $query->whereBetween('fecha',[$fechaIni.' 00:00:00', $fechaFin.' 23:59:59']);
             }
 
-
             if(!is_null($request->input('tipo_pago'))){
                 $tipoPago = $request->input('tipo_pago');
                 $query->where('tipo_pago',$tipoPago);
+            }
+
+            if(!is_null($request->input('cajero_id'))){
+                $cajero_id = $request->input('cajero_id');
+                $query->where('creador_id', $cajero_id);
             }
 
             $pagos = $query->get();
@@ -304,7 +313,7 @@ class PagoController extends Controller
     }
 
     private function listadoArrayCajas($fechaIni, $fechaFin){
-        $query = Caja::orderBy('id', 'desc');
+        $query = Caja::orderBy('id', 'asc');
         if(!is_null($fechaIni) && !is_null($fechaFin)){
             $query->whereBetween('fecha_apertura',[$fechaIni.' 00:00:00', $fechaFin.' 23:59:59']);
             $query->limit(20);
@@ -317,6 +326,7 @@ class PagoController extends Controller
 
     public function cierreCaja(Request $request){
         if($request->ajax()){
+            // dd("entras al menos");
             // $ultimaCajaAperturada = Caja::where('estado', 'Abierto')
             //                             ->latest()
             //                             ->first();
@@ -328,14 +338,30 @@ class PagoController extends Controller
             if($ultimaCajaAperturada){
 
                 // PARA EL TOTAL VENTA
-                $query = Pago::where('caja_id', $caja_id)
-                            ->where('estado', 'Ingreso')
-                            ->orWhere(function ($query) {
-                                $query->where('tipo_pago', 'qr')
-                                    ->orWhere('tipo_pago', 'tramsferencia');
-                            })
-                            ->selectRaw('SUM(monto) as total');
-                            $total_venta = $query->first();
+                $total_venta = Pago::where(function ($query) use ($caja_id) {
+                        $query->whereIn('id', function ($subquery) use ($caja_id) {
+                            $subquery->select('id')
+                                ->from('pagos')
+                                ->where('caja_id', $caja_id);
+                        })->where('estado', 'Ingreso');
+                    })
+                    ->orWhere(function ($query) use ($caja_id) {
+                        $query->whereIn('tipo_pago', ['qr', 'tramsferencia'])
+                            ->where('caja_id', $caja_id);
+                    // })->selectRaw('SUM(monto) as total')->toSql();
+                    })->selectRaw('SUM(monto) as total')->first();
+
+                // $query = Pago::where('caja_id', $caja_id)
+                //             ->where('estado', 'Ingreso')
+                //             ->orWhere(function ($query) {
+                //                 $query->where('tipo_pago', 'qr')
+                //                     ->orWhere('tipo_pago', 'tramsferencia');
+                //             })
+                //             ->selectRaw('SUM(monto) as total');
+                //             $total_venta = $query->first();
+                            // $total_venta = $query->toSql();
+                // dd($total_venta);
+
 
                 // PARA EL TOTAL VENTA EFECTIVO
                 $query = Pago::where('caja_id', $caja_id)
@@ -343,7 +369,7 @@ class PagoController extends Controller
                             ->selectRaw('SUM(monto) as total');
                         $venta_contado = $query->first();
 
-                        
+
                 // PARA OTROS INGRESOS
                 $query = Pago::where('caja_id', $caja_id)
                             ->where('estado', 'Ingreso')
@@ -355,8 +381,8 @@ class PagoController extends Controller
                 $query = Pago::where('caja_id', $caja_id)
                                 ->whereIn('tipo_pago', ['qr', 'tramsferencia'])
                                 ->selectRaw('SUM(monto) as total');
-                            $total_qrtramsferencia = $query->first();
-                            
+                        $total_qrtramsferencia = $query->first();
+
                 // PARA TOTAL SALIDAS GASTOS
                 $query = Pago::where('caja_id', $caja_id)
                             ->where('estado', 'Salida')
@@ -366,13 +392,13 @@ class PagoController extends Controller
                         $total_salidas_gasto = $query->first();
 
                 $ultimaCajaAperturada->total_venta           = $total_venta->total;
-                $ultimaCajaAperturada->venta_contado         = $venta_contado->total;
                 $ultimaCajaAperturada->otros_ingresos        = $otros_ingresos->total;
-                $ultimaCajaAperturada->total_ingresos        = (float)$venta_contado->total + (float)$otros_ingresos->total;
+                $ultimaCajaAperturada->total_ingresos        = ((float)$venta_contado->total + (float)$otros_ingresos->total) - (float)$total_salidas_gasto->total;
                 $ultimaCajaAperturada->total_qrtramsferencia = $total_qrtramsferencia->total;
                 $ultimaCajaAperturada->total_salidas_gasto   = $total_salidas_gasto->total;
-                $ultimaCajaAperturada->total_salidas         = (float)$total_qrtramsferencia->total+(float)$total_salidas_gasto->total;
-                $ultimaCajaAperturada->saldo                 = (float)$ultimaCajaAperturada->total_ingresos-(float)$ultimaCajaAperturada->total_salidas;
+                $ultimaCajaAperturada->venta_contado         = (float)$venta_contado->total - (float)$total_salidas_gasto->total;
+                $ultimaCajaAperturada->total_salidas         = (float)$total_qrtramsferencia->total + (float)$total_salidas_gasto->total;
+                $ultimaCajaAperturada->saldo                 = (float)$ultimaCajaAperturada->total_ingresos - (float)$ultimaCajaAperturada->total_salidas;
                 $ultimaCajaAperturada->monto_cierre          = $request->input('monto_cie_caja');
                 $ultimaCajaAperturada->fecha_cierre          = date('Y-m-d H:i:s');
                 $ultimaCajaAperturada->estado                = 'Cerrado';
@@ -382,6 +408,7 @@ class PagoController extends Controller
             }else{
                 $data['msg'] = 'No hay caja aperturada';
                 $data['estado'] = 'error';
+                dd("dd");
             }
         }else{
             $data['estado'] = 'error';

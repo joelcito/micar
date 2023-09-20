@@ -26,7 +26,7 @@
             <tr>
                 <td>{{ $c->id }}</td>
                 <td>{{ date('d/m/Y h:i a', strtotime($c->created_at)) }}</td>
-                <td>{{ Auth::user()->name }}</td>
+                <td>{{ $c->usuario->name }}</td>
                 <td>{{ $c->total_venta }}</td>
                 <td>{{ $c->venta_contado }}</td>
                 <td>{{ $c->otros_ingresos }}</td>
@@ -36,7 +36,7 @@
                 <td>{{ $c->total_salidas }}</td>
                 <td>{{ $c->saldo }}</td>
                 <td>{{ $c->monto_cierre }}</td>
-                <td> </td>
+                <td>{{ number_format(($c->monto_cierre - $c->venta_contado), 2) }}</td>
                 <td></td>
             </tr>
         @endforeach
