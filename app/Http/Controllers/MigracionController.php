@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Cliente;
 use App\Models\Servicio;
 use App\Models\Vehiculo;
+use App\Models\Movimiento;
 use Illuminate\Http\Request;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use Illuminate\Support\Facades\Auth;
 
 use Maatwebsite\Excel\Facades\Excel;
 //use Excel;
@@ -41,8 +43,19 @@ class MigracionController extends Controller
                 $servicio->descripcion  = $row[1];
                 $servicio->unidad_venta = $row[3];
                 $servicio->precio       = $row[4];
-                $servicio->estado       = $row[5];
+                $servicio->estado       = $row[6];
                 $servicio->save();
+
+                if($row[6] === 'producto' && $row[5] > 0){
+                    $movimiento              = new Movimiento();
+                    $movimiento->creador_id  = Auth::user()->id;
+                    $movimiento->servicio_id = $servicio->id;
+                    $movimiento->ingreso     = $row[5];
+                    $movimiento->salida      = 0;
+                    $movimiento->fecha       = date('Y-m-d H:i:s');
+                    $movimiento->descripcion = "MIGRACION";
+                    $movimiento->save();
+                }
             }
         }
 
@@ -126,20 +139,6 @@ class MigracionController extends Controller
                 $vehiculo->placa        = $placa;
                 $vehiculo->save();
             }
-
-            // if($key !== 0 && is_numeric(substr($column0, 0, 3))){
-            //     $vehiculo               = new Vehiculo();
-            //     $vehiculo->creador_id   = 1;
-            //     $vehiculo->cliente_id   = 1;
-            //     $vehiculo->placa        = $row[0];
-            //     $vehiculo->nit          = $row[1];
-            //     $vehiculo->razon_social = $row[2];
-            //     $vehiculo->save();
-            //     $contador++;
-            // }
-
-            // if($key === 20)
-            //     break;
         }
 
     }

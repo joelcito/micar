@@ -125,4 +125,17 @@ class ServicioController extends Controller
         return $data;
     }
 
+    public function cantidadAlmacen(Request $request){
+        if($request->ajax()){
+            $servicio_id = $request->input('servicio');
+            $sumaIngreso = Movimiento::where('servicio_id', $servicio_id)->sum('ingreso');
+            $sumaSalida  = Movimiento::where('servicio_id', $servicio_id)->sum('salida');
+            $data['cantidaAlacen'] = ($sumaIngreso-$sumaSalida);
+            $data['estado'] = 'success';
+        }else{
+            $data['estado'] = 'error';
+        }
+        return $data;
+    }
+
 }

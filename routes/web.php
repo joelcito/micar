@@ -73,6 +73,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/producto', [ServicioController::class, 'producto']);
         Route::post('/ajaxListadoProducto', [ServicioController::class, 'ajaxListadoProducto']);
         Route::post('/guardaProdcuto', [ServicioController::class, 'guardaProdcuto']);
+        Route::post('/cantidadAlmacen', [ServicioController::class, 'cantidadAlmacen']);
+
 
     });
 

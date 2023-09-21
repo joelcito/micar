@@ -205,7 +205,7 @@ class PagoController extends Controller
             $vender = 0;
         }
 
-        $cajeros = User::where('rol_id',4)->get();
+        $cajeros = User::whereIn('rol_id',[4,1])->get();
 
         return view('pago.finanza')->with(compact('vender', 'cajeros'));
     }

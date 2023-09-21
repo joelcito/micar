@@ -294,9 +294,9 @@
         <hr>
         <form id="formularioAgregaVenta">
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div id="table_agrega_servicios" style="display: none">
-                        <label class="required fw-semibold fs-6 mb-2">Servicio</label>
+                        <label class="required fw-semibold fs-6 mb-2">Servicio / Producto</label>
                         <select name="serivicio_id" id="serivicio_id" class="form-control" onchange="identificaSericio(this)" required>
                             <option value="">SELECCIONE</option>
                             @foreach ($servicios as $s)
@@ -305,10 +305,31 @@
                         </select>
                     </div>
                 </div>
+                <div class="col" style="display: block">
+                    <label class="required fw-semibold fs-6 mb-2">Cantidad Alamcen</label>
+                    <input type="text" readonly class="form-control" id="cantidad_almacen" name="cantidad_almacen">
+                </div>
+                <div class="col serviPro" style="display: none">
+                    <label class="required fw-semibold fs-6 mb-2">Precio</label>
+                    <input type="text" readonly class="form-control" id="precio" name="precio" required>
+                </div>
+
+                <div class="col-md-2 serviPro" style="display: none">
+                    <label class="required fw-semibold fs-6 mb-2">Cantidad Venta</label>
+                    <input type="text" class="form-control" id="cantidad" name="cantidad" required>
+                </div>
+                <div class="col-md-2 serviPro" style="display: none">
+                    <label class="required fw-semibold fs-6 mb-2">Total</label>
+                    <input type="text" class="form-control" id="total" name="total" readonly value="0" required>
+                </div>
+                
+            </div>
+            <div class="row mt-2">
                 <div class="col serviPro" style="display: none">
                     <label class="required fw-semibold fs-6 mb-2">Unidad</label>
                     <input type="text" readonly class="form-control" id="unidad" name="unidad">
                 </div>
+
                 <div class="col servi" style="display: none">
                     <label class="required fw-semibold fs-6 mb-2">Lavador</label>
                     <select name="lavador_id" id="lavador_id" class="form-control" required>
@@ -318,20 +339,7 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col-md-3 serviPro" style="display: none">
-                    <label class="required fw-semibold fs-6 mb-2">Precio</label>
-                    <input type="text" readonly class="form-control" id="precio" name="precio" required>
-                </div>
-            </div>
-            <div class="row mt-2">
-                <div class="col-md-3 serviPro" style="display: none">
-                    <label class="required fw-semibold fs-6 mb-2">Cantidad</label>
-                    <input type="text" class="form-control" id="cantidad" name="cantidad" required>
-                </div>
-                <div class="col-md-3 serviPro" style="display: none">
-                    <label class="required fw-semibold fs-6 mb-2">Total</label>
-                    <input type="text" class="form-control" id="total" name="total" readonly value="0" required>
-                </div>
+                
                 <div class="col-md-6 serviPro" style="display: none">
                     <button class="btn btn-success btn-icon btn-sm w-100 mt-10" type="button" onclick="agregarVenta()"><i class="fa fa-car-alt"></i>  Agregar</button>
                 </div>
@@ -642,11 +650,27 @@
                 $('.servi').show('toggle');
                 $('.serviPro').show('toggle');
                 $("#lavador_id").prop("required", true);
+                $('#cantidad').removeAttr('max');
             }else{
-                $('.servi').hide('toggle');
-                $('.serviPro').show('toggle');
-                $("#lavador_id").prop("required", false);
+                $.ajax({
+                    url: "{{ url('servicio/cantidadAlmacen') }}",
+                    type: 'POST',
+                    data:{servicio:json.id},
+                    dataType: 'json',
+                    success: function(data) {
+                        if(data.estado === 'success'){
+                            $('#cantidad_almacen').val(data.cantidaAlacen)
+                            $('#cantidad').attr('max', data.cantidaAlacen)
+                            $('.servi').hide('toggle');
+                            $('.serviPro').show('toggle');
+                            $("#lavador_id").prop("required", false);
+                        }
+                    }
+                });
+                
             }
+
+            
         }
 
         function agregarVenta(){
@@ -691,6 +715,10 @@
                             $('#precio').val(0)
                             $('#cantidad').val(0)
                             $('#total').val(0)
+
+                            var select2Element = $('#lavador_id');
+                            select2Element.val(null);
+                            select2Element.trigger('change');
 
                             $('#bloqueDatosFactura').hide('toggle');
 

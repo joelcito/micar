@@ -2,50 +2,37 @@
     <table class="table align-middle table-row-dashed fs-6 gy-5" id="tabla_user">
         <thead>
             <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
-                <th class="w-10px pe-2">
-                    <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
-                        <input class="form-check-input" type="checkbox" data-kt-check="true" data-kt-check-target="#kt_table_users .form-check-input" value="1" />
-                    </div>
-                </th>
                 <th class="min-w-125px">Nombre</th>
                 <th class="min-w-125px">Ape. Paterno</th>
                 <th class="min-w-125px">Ape. Materno</th>
                 <th class="min-w-125px">Cedula</th>
                 <th class="min-w-125px">Correo</th>
+                <th class="min-w-125px">Rol</th>
                 <th class="text-end min-w-100px">Actions</th>
             </tr>
         </thead>
         <tbody class="text-gray-600 fw-semibold">
             @forelse ( $usuarios as  $u )
                 <tr>
-                    <td>
-                        <div class="form-check form-check-sm form-check-custom form-check-solid">
-                            <input class="form-check-input" type="checkbox" value="1" />
-                        </div>
-                    </td>
                     <td class="d-flex align-items-center">
-                        <div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
-                            <a href="../../demo1/dist/apps/user-management/users/view.html">
-                                <div class="symbol-label">
-                                    <img src="assets/media/avatars/300-6.jpg" alt="Emma Smith" class="w-100" />
-                                </div>
-                            </a>
-                        </div>
                         <div class="d-flex flex-column">
-                            <a class="text-gray-800 text-hover-primary mb-1">{{ $u->nombres }}</a>-
+                            <a class="text-gray-800 text-hover-primary mb-1">{{ $u->nombres }}</a>
                         </div>
                     </td>
                     <td>
-                        <a class="text-gray-800 text-hover-primary mb-1">{{ $u->ap_paterno }}</a>-
+                        <a class="text-gray-800 text-hover-primary mb-1">{{ $u->ap_paterno }}</a>
                     </td>
                     <td>
-                        <a class="text-gray-800 text-hover-primary mb-1">{{ $u->ap_materno }}</a>-
+                        <a class="text-gray-800 text-hover-primary mb-1">{{ $u->ap_materno }}</a>
                     </td>
                     <td>
-                        <a class="text-gray-800 text-hover-primary mb-1">{{ $u->cedula }}</a>-
+                        <a class="text-gray-800 text-hover-primary mb-1">{{ $u->cedula }}</a>
                     </td>
                     <td>
                         <span class="badge badge-light-success fw-bold">{{ $u->email }}</span>
+                    </td>
+                    <td>
+                        <span class="badge badge-primary fw-bold">{{ $u->rol->nombre }}</span>
                     </td>
                     <td class="text-end">
                         <a href="#" class="btn btn-light btn-active-light-primary btn-flex btn-center btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
