@@ -24,6 +24,8 @@ return new class extends Migration
 
             $table->foreign('servicio_id')->references('id')->on('servicios');
             $table->unsignedBigInteger('servicio_id')->nullable();
+            $table->foreign('detalle_id')->references('id')->on('detalles');
+            $table->unsignedBigInteger('detalle_id')->nullable();
             $table->decimal('ingreso', 12, 2)->nullable();
             $table->decimal('salida', 12, 2)->nullable();
             $table->datetime('fecha')->nullable();

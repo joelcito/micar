@@ -11,6 +11,7 @@ use App\Models\TipoDocumento;
 use App\Models\TipoEvento;
 use App\Models\Vehiculo;
 use App\Models\Detalle;
+use App\Models\Movimiento;
 use App\Models\Venta;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -101,6 +102,8 @@ class VehiculoController extends Controller
     public function ajaxRegistraVenta(Request $request){
         if($request->ajax()){
 
+            // dd($request->all());
+
             $vehiculo_id = $request->input('vehiculo_id');
 
             $detalle = new Detalle();
@@ -121,6 +124,20 @@ class VehiculoController extends Controller
                                         ->where('servicios.estado', 'producto')
                                         ->where('detalles.vehiculo_id', $vehiculo_id)
                                         ->count();
+
+            $servicio = Servicio::find($request->input('servicio_id'));
+
+            if($servicio->estado == 'producto'){
+                $movimeinto              = new Movimiento();
+                $movimeinto->creador_id  = Auth::user()->id;
+                $movimeinto->servicio_id = $servicio->id;
+                $movimeinto->detalle_id  = $detalle->id;
+                $movimeinto->ingreso     = 0;
+                $movimeinto->salida      = $request->input('cantidad');
+                $movimeinto->fecha       = date('Y-m-d H:i:s');
+                $movimeinto->descripcion = "VENTA";
+                $movimeinto->save();
+            }
 
             $data['estado'] = 'success';
             $data['cantida_productos'] = $cantidadProductos;

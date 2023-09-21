@@ -9,6 +9,7 @@ use App\Models\Pago;
 use App\Models\TipoDocumento;
 use App\Models\Venta;
 use App\Models\Detalle;
+use App\Models\Movimiento;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -65,9 +66,7 @@ class PagoController extends Controller
             $vehiculo_id = $request->input('vehiculo');
             $detalle_id  = $request->input('id') ;
             Detalle::destroy($detalle_id);
-
-
-
+            Movimiento::where('detalle_id',$detalle_id)->delete();
             $data['listado']           = $this->listadoArrayPagos($vehiculo_id);
             // $data['cantida_productos'] = $cantidadProductos;
             $data['estado']            = 'success';

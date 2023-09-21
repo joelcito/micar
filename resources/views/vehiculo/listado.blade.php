@@ -306,8 +306,8 @@
                     </div>
                 </div>
                 <div class="col" style="display: block">
-                    <label class="required fw-semibold fs-6 mb-2">Cantidad Alamcen</label>
-                    <input type="text" readonly class="form-control" id="cantidad_almacen" name="cantidad_almacen">
+                    <label class="required fw-semibold fs-6 mb-2">Cantidad Almacen</label>
+                    <input type="number" readonly class="form-control" id="cantidad_almacen" name="cantidad_almacen" value="0" min="1" required>
                 </div>
                 <div class="col serviPro" style="display: none">
                     <label class="required fw-semibold fs-6 mb-2">Precio</label>
@@ -316,13 +316,13 @@
 
                 <div class="col-md-2 serviPro" style="display: none">
                     <label class="required fw-semibold fs-6 mb-2">Cantidad Venta</label>
-                    <input type="text" class="form-control" id="cantidad" name="cantidad" required>
+                    <input type="number" class="form-control" id="cantidad" name="cantidad" min="1" required>
                 </div>
                 <div class="col-md-2 serviPro" style="display: none">
                     <label class="required fw-semibold fs-6 mb-2">Total</label>
                     <input type="text" class="form-control" id="total" name="total" readonly value="0" required>
                 </div>
-                
+
             </div>
             <div class="row mt-2">
                 <div class="col serviPro" style="display: none">
@@ -339,7 +339,7 @@
                         @endforeach
                     </select>
                 </div>
-                
+
                 <div class="col-md-6 serviPro" style="display: none">
                     <button class="btn btn-success btn-icon btn-sm w-100 mt-10" type="button" onclick="agregarVenta()"><i class="fa fa-car-alt"></i>  Agregar</button>
                 </div>
@@ -667,10 +667,10 @@
                         }
                     }
                 });
-                
+
             }
 
-            
+
         }
 
         function agregarVenta(){
@@ -715,6 +715,7 @@
                             $('#precio').val(0)
                             $('#cantidad').val(0)
                             $('#total').val(0)
+                            $('#cantidad_almacen').val(0)
 
                             var select2Element = $('#lavador_id');
                             select2Element.val(null);
