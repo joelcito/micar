@@ -267,6 +267,7 @@ class FacturaController extends Controller
             if($tipo_factura === "online"){
                 $siat = app(SiatController::class);
                 $for  = json_decode($siat->recepcionFactura($archivoZip, $valoresCabecera['fechaEmision'],$hashArchivo));
+                // dd($for);
                 if($for->estado === "error"){
                     $codigo_descripcion = null;
                     $codigo_trancaccion = null;

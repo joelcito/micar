@@ -415,6 +415,56 @@ class PagoController extends Controller
         return $data;
     }
 
+    public function liquidacion(Request $request){
+        return view('pago.liquidacion');
+    }
+
+    public function buscarServicios(Request $request){
+        if($request->ajax()){
+
+            $query = User::where('rol_id',3);
+
+            if(!is_null($request->input('cedula'))){
+                $cedula = $request->input('cedula');
+                $query->where('cedula', $cedula);
+            }
+
+            if(!is_null($request->input('paterno'))){
+                $paterno = $request->input('paterno');
+                $query->where('ap_paterno','LIKE', "%$paterno%");
+            }
+
+            if(!is_null($request->input('materno'))){
+                $materno = $request->input('materno');
+                $query->where('ap_materno','LIKE', "%$materno%");
+            }
+
+            if(!is_null($request->input('nombre'))){
+                $nombre = $request->input('nombre');
+                $query->where('nombres','LIKE', "%$nombre%");
+            }
+
+            $lavadores = $query->get();
+
+            $data['estado'] = 'success';
+            $data['listado'] = view('pago.ajaxListadolavadores')->with(compact('lavadores'))->render();
+        }else{
+            $data['estado'] = 'error';
+        }
+        return $data;
+    }
+
+
+    public function buscarLavadores(REquest $request){
+        if($request->ajax()){
+            dd($request->all());
+            $data['estado'] = 'success';
+        }else{
+            $data['estado'] = 'error';
+        }
+        return $data;
+    }
+
 
 
     // public function ajaxServiciosMasa(Request $request){

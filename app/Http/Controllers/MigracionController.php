@@ -55,6 +55,10 @@ class MigracionController extends Controller
                     $movimiento->fecha       = date('Y-m-d H:i:s');
                     $movimiento->descripcion = "MIGRACION";
                     $movimiento->save();
+                }else{
+                    $servicio->liquidacion      = $row[7];
+                    $servicio->tipo_liquidacion = $row[8];
+                    $servicio->save();
                 }
             }
         }

@@ -305,7 +305,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="col" style="display: block">
+                <div class="col serviAlma" style="display: none">
                     <label class="required fw-semibold fs-6 mb-2">Cantidad Almacen</label>
                     <input type="number" readonly class="form-control" id="cantidad_almacen" name="cantidad_almacen" value="0" min="1" required>
                 </div>
@@ -651,6 +651,7 @@
                 $('.serviPro').show('toggle');
                 $("#lavador_id").prop("required", true);
                 $('#cantidad').removeAttr('max');
+                $('.serviAlma').hide('toggle');
             }else{
                 $.ajax({
                     url: "{{ url('servicio/cantidadAlmacen') }}",
@@ -664,6 +665,7 @@
                             $('.servi').hide('toggle');
                             $('.serviPro').show('toggle');
                             $("#lavador_id").prop("required", false);
+                            $('.serviAlma').show('toggle');
                         }
                     }
                 });
@@ -678,12 +680,12 @@
             if($('#formularioAgregaVenta')[0].checkValidity()){
 
                 let servicio_id = (JSON.parse($('#serivicio_id').val())).id
-                let lavador_id = $('#lavador_id').val();
+                let lavador_id  = $('#lavador_id').val();
                 let vehiculo_id = $('#vehiculo_id').val();
-                let precio = $('#precio').val();
-                let cantidad = $('#cantidad').val();
-                let total = $('#total').val();
-                let pago_id = $('#pago_id').val();
+                let precio      = $('#precio').val();
+                let cantidad    = $('#cantidad').val();
+                let total       = $('#total').val();
+                let pago_id     = $('#pago_id').val();
 
                 console.log(
                 servicio_id,

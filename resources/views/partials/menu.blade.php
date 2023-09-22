@@ -326,7 +326,17 @@
                             <span class="menu-bullet">
                                 <span class="bullet bullet-dot"></span>
                             </span>
-                            <span class="menu-title">Infome Arqueo</span>
+                            <span class="menu-title">Informe Arqueo</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="menu-sub menu-sub-accordion">
+                    <div class="menu-item">
+                        <a class="menu-link" href="{{ url('pago/liquidacion') }}">
+                            <span class="menu-bullet">
+                                <span class="bullet bullet-dot"></span>
+                            </span>
+                            <span class="menu-title">Liquidacion</span>
                         </a>
                     </div>
                 </div>

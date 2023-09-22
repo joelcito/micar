@@ -30,6 +30,8 @@ return new class extends Migration
             $table->string('codigoActividad')->nullable();
             $table->string('codigoProducto')->nullable();
             $table->string('unidadMedida')->nullable();
+            $table->decimal('liquidacion', 12,2)->nullable();
+            $table->string('tipo_liquidacion', 15)->nullable();
             $table->string('estado')->nullable();
             $table->datetime('deleted_at')->nullable();
             $table->timestamps();

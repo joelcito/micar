@@ -126,6 +126,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/infomearqueo', [PagoController::class, 'infomearqueo']);
         Route::post('/ajaxListadoCajas', [PagoController::class, 'ajaxListadoCajas']);
         Route::post('/cierreCaja', [PagoController::class, 'cierreCaja']);
+        Route::get('/liquidacion', [PagoController::class, 'liquidacion']);
+        Route::post('/buscarServicios', [PagoController::class, 'buscarServicios']);
+        Route::post('/buscarLavadores', [PagoController::class, 'buscarLavadores']);
     });
 
     // Route::post('/pago/ajaxListado', [PagoController::class, 'ajaxListado']);
