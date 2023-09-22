@@ -454,13 +454,24 @@ class PagoController extends Controller
         return $data;
     }
 
-
-    public function buscarLavadores(REquest $request){
+    public function selecionarLavador(Request $request){
         if($request->ajax()){
-            dd($request->all());
-            $data['estado'] = 'success';
+
+            $lavador_id = $request->input('lavador');
+            $fecha      = $request->input('fecha');
+
+            // $detalles = Detalle::where('lavador_id',$lavador_id)->get();
+
+            $detalles = Detalle::select('servicios.id', DB::raw('SUM(detalles.cantidad) as cantidad'),'servicios.descripcion', 'servicios.liquidacion', 'servicios.tipo_liquidacion')
+                                ->join('servicios', 'detalles.servicio_id', '=', 'servicios.id')
+                                ->where('lavador_id', $lavador_id)
+                                ->groupBy('servicio_id')
+                                ->get();
+
+            $data['estado']  = 'success';
+            $data['listado']  = view('pago.selecionarLavador')->with(compact('detalles'))->render();
         }else{
-            $data['estado'] = 'error';
+            $data['estado']  = 'error';
         }
         return $data;
     }

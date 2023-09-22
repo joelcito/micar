@@ -7,112 +7,6 @@
 @endsection
 @section('content')
 
-
-    {{--  <!--begin::Modal - Add task-->
-     <div class="modal fade" id="modalIngreso" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 class="fw-bold">Formulario de <span id="text_tipoo_modal" class="text-info"></span></h2>
-                </div>
-                <div class="modal-body scroll-y">
-                    <form id="formularioIngresoSalida">
-                        @csrf
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="fv-row mb-7">
-                                    <label class="required fw-semibold fs-6 mb-2">Monto</label>
-                                    <input type="number" id="monto" name="monto" class="form-control form-control-solid mb-3 mb-lg-0">
-                                    <input type="text" id="tipo" name="tipo">
-                                    <input type="text" value="{{ $vender }}" id="caja_abierto_ingre_cerra" name="caja_abierto_ingre_cerra">
-                                </div>
-                            </div>
-                            <div class="col-md-8">
-                                <div class="fv-row mb-7">
-                                    <label class="required fw-semibold fs-6 mb-2">Descripcion</label>
-                                    <input type="text" id="descripcion" name="descripcion" class="form-control form-control-solid mb-3 mb-lg-0">
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <button class="btn btn-success w-100" onclick="guardarTipoIngresoSalida()">Guardar</button>
-                        </div>
-                    </div>
-                </div>
-                <!--end::Modal body-->
-            </div>
-            <!--end::Modal content-->
-        </div>
-        <!--end::Modal dialog-->
-    </div>
-    <!--end::Modal - Add task-->
-
-    <!--begin::Modal - Add task-->
-    <div class="modal fade" id="modalCierreCaja" tabindex="-1" aria-hidden="true">
-        <!--begin::Modal dialog-->
-        <div class="modal-dialog modal-dialog-centered">
-            <!--begin::Modal content-->
-            <div class="modal-content">
-                <!--begin::Modal header-->
-                <div class="modal-header" id="kt_modal_add_user_header">
-                    <!--begin::Modal title-->
-                    <h2 class="fw-bold">Formulario de cierre de caja</h2>
-                    <!--end::Modal title-->
-                    <!--begin::Close-->
-                    <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-users-modal-action="close">
-                        <i class="ki-duotone ki-cross fs-1">
-                            <span class="path1"></span>
-                            <span class="path2"></span>
-                        </i>
-                    </div>
-                    <!--end::Close-->
-                </div>
-                <!--end::Modal header-->
-                <!--begin::Modal body-->
-                <div class="modal-body scroll-y">
-                    <form id="formularioCierreCaja">
-                        @csrf
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label class="required fw-semibold fs-6 mb-2">Usuario Cargo</label>
-                                <input type="text" class="form-control" value="{{ Auth::user()->name }}" readonly>
-                                <input type="text" value="{{ $vender }}" name="caja_abierto_cierre" id="caja_abierto_cierre" >
-                            </div>
-                        </div>
-
-                        <div class="row mt-3">
-                            <div class="col-md-4">
-                                <div class="fv-row mb-7">
-                                    <label class="required fw-semibold fs-6 mb-2">Monto</label>
-                                    <input type="text" class="form-control" required name="monto_cie_caja" id="monto_cie_caja">
-                                </div>
-                            </div>
-                            <div class="col-md-8">
-                                <div class="fv-row mb-7">
-                                    <label class="required fw-semibold fs-6 mb-2">Descripcion</label>
-                                    <input type="text" class="form-control" required name="descripcion_cie_caja" id="descripcion_cie_caja">
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-
-                    <div class="row">
-                        <div class="col-md-12">
-                            <button class="btn btn-success w-100 btn-sm" onclick="registrarCajaCierre()">Gurdar</button>
-                        </div>
-                    </div>
-                </div>
-                <!--end::Modal body-->
-            </div>
-            <!--end::Modal content-->
-        </div>
-        <!--end::Modal dialog-->
-    </div>
-    <!--end::Modal - Add task-->  --}}
-
-
     <!--begin::Card-->
     <div class="card">
         <div class="card-header border-0 pt-6 bg-light-primary">
@@ -154,6 +48,9 @@
             <div id="table_lavadores">
 
             </div>
+            <div id="datos_lavador">
+
+            </div>
         </div>
         <!--end::Card body-->
     </div>
@@ -177,7 +74,7 @@
             $(".formBus").on("input", function () {
                 var inputText = $(this).val();
                 if (inputText.length >= 3) {
-                    console.log("Texto ingresado en uno de los campos: " + inputText)
+                    $('#table_lavadores').show('toogle')    
                     $.ajax({
                         url: "{{ url('pago/buscarServicios') }}",
                         type: 'POST',
@@ -208,6 +105,24 @@
                 success: function(data) {
                     if(data.estado === 'success'){
                         $('#table_pagos').html(data.listado);
+                    }
+                }
+            });
+        }
+
+        function selecionarLavador(lavador){
+            $.ajax({
+                url: "{{ url('pago/selecionarLavador') }}",
+                type: 'POST',
+                data:{
+                    lavador: lavador,
+                    fecha  : $('#fecha_lavador_'+lavador).val()
+                },
+                dataType: 'json',
+                success: function(data) {
+                    if(data.estado === 'success'){
+                        $('#table_lavadores').hide('toogle')
+                        $('#datos_lavador').html(data.listado);
                     }
                 }
             });

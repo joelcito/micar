@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Rol;
+use App\Models\Servicio;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -57,5 +58,14 @@ class UserController extends Controller
         }
 
         return json_encode($data);
+    }
+
+    public function detalle(Request $request, $usuario_id){
+        // dd($usuario_id);
+
+        $servicios = Servicio::where('tipo_liquidacion', 'depende')->get();
+
+        $usuario = User::find($usuario_id);
+        return view('user.detalle')->with(compact('usuario', 'servicios'));
     }
 }

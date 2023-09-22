@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Categoria;
 use App\Models\Servicio;
+use App\Models\LiquidacionLavador;
 use App\Models\Movimiento;
 use App\Models\Pago;
 use Illuminate\Http\Request;
@@ -134,6 +135,48 @@ class ServicioController extends Controller
             $data['estado'] = 'success';
         }else{
             $data['estado'] = 'error';
+        }
+        return $data;
+    }
+
+    public function ajaxListadoAsignaciones(Request $request) {
+        if($request->ajax()){
+            $usuario      = $request->input('usuario');
+            $asignaciones = LiquidacionLavador::where('lavador_id', $usuario)->get();
+            $data['estado'] = 'success';
+            $data['listado'] = view('servicio.ajaxListadoAsignaciones')->with(compact('asignaciones'))->render();
+        }else{
+            $data['estado'] = 'success';
+        }
+        return $data;
+    }
+
+    public function guardarAsignacion(Request $request){
+        if($request->ajax()){
+
+            $usuario  = $request->input('usuario');
+            $servicio = $request->input('servicio');
+
+            $datos = LiquidacionLavador::where('lavador_id',$usuario)
+                                        ->where('servicio_id', $servicio)
+                                        ->get();
+
+            if(count($datos) == 0){
+                $liquidacionlavador                   = new LiquidacionLavador();
+                $liquidacionlavador->creador_id       = Auth::user()->id;
+                $liquidacionlavador->lavador_id       = $usuario;
+                $liquidacionlavador->servicio_id      = $servicio;
+                $liquidacionlavador->liquidacion      = $request->input('porcentaje');
+                $liquidacionlavador->tipo_liquidacion = 'porcentaje';
+                $liquidacionlavador->save();
+                $data['estado']  = 'success';
+            }else{
+                $data['estado'] = 'error';
+                $data['msg']    = 'Ya existe la Asignacion';
+            }
+        }else{
+            $data['estado']  = 'error';
+            $data['msg']    = 'Error en el Ajax!';
         }
         return $data;
     }
