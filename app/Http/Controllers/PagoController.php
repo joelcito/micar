@@ -462,10 +462,27 @@ class PagoController extends Controller
 
             // $detalles = Detalle::where('lavador_id',$lavador_id)->get();
 
-            $detalles = Detalle::select('servicios.id', DB::raw('SUM(detalles.cantidad) as cantidad'),'servicios.descripcion', 'servicios.liquidacion', 'servicios.tipo_liquidacion')
+            // $detalles = Detalle::select('servicios.id', DB::raw('SUM(detalles.cantidad) as cantidad'),'servicios.descripcion', 'servicios.liquidacion', 'servicios.tipo_liquidacion')
+            //                     ->join('servicios', 'detalles.servicio_id', '=', 'servicios.id')
+            //                     ->where('lavador_id', $lavador_id)
+            //                     ->groupBy('servicio_id')
+            //                     ->get();
+
+            $detalles = Detalle::select(
+                                    'detalles.servicio_id',
+                                    DB::raw('SUM(detalles.cantidad) as cantidad'),
+                                    'servicios.precio',
+                                    'servicios.descripcion',
+                                    'servicios.liquidacion as liquidacionServicio',
+                                    'servicios.tipo_liquidacion as tipoLiquidacionServicio',
+                                    'liquidacion_lavadores.tipo_liquidacion as tipoLiquidacionLl',
+                                    'liquidacion_lavadores.liquidacion as liquidacionLl'
+                                )
                                 ->join('servicios', 'detalles.servicio_id', '=', 'servicios.id')
-                                ->where('lavador_id', $lavador_id)
-                                ->groupBy('servicio_id')
+                                ->leftJoin('liquidacion_lavadores', 'detalles.servicio_id', '=', 'liquidacion_lavadores.servicio_id')
+                                ->where('detalles.lavador_id', 2)
+                                ->whereBetween('detalles.fecha', ['2023-09-24', '2023-09-24'])
+                                ->groupBy('detalles.servicio_id', 'liquidacion_lavadores.tipo_liquidacion', 'liquidacion_lavadores.liquidacion')
                                 ->get();
 
             $data['estado']  = 'success';
