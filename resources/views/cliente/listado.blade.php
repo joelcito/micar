@@ -95,18 +95,31 @@
                             </div>
                             <div class="col-md-5">
                                 <div class="fv-row mb-7">
-                                    <label class="required fw-semibold fs-6 mb-2">Tipo Cliente</label>
-                                    
-
-
-
-
-                                
-
-
-
-
-
+                                    <div class="mb-10">
+                                        <label class="required fw-semibold mb-5">Tipo Cliente</label>
+                                        {{-- <label class="required fw-semibold fs-6 mb-5">Tipo Cliente</label> --}}
+                                        {{-- <div class="d-flex fv-row"> --}}
+                                        <div class="d-flex">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-check form-check-custom form-check-solid">
+                                                        <input class="form-check-input me-3" name="user_role" type="radio" value="0" id="cliente" checked='checked' />
+                                                        <label class="form-check-label" for="cliente">
+                                                            <div class="fw-bold text-gray-800">Cliente</div>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-check form-check-custom form-check-solid">
+                                                        <input class="form-check-input me-3" name="user_role" type="radio" value="0" id="lavador" />
+                                                        <label class="form-check-label" for="lavador">
+                                                            <div class="fw-bold text-gray-800">Lavador</div>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
