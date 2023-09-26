@@ -32,6 +32,7 @@ class ClienteController extends Controller
 
     public function guarda(Request $request){
         if($request->ajax()){
+
             $cliente_id  = $request->input('cliente_id');
             if($cliente_id === "0"){
                 $cliente                = new Cliente();
@@ -50,6 +51,18 @@ class ClienteController extends Controller
             $cliente->razon_social  = $request->input('razon_social');
             $cliente->correo        = $request->input('correo');
             $cliente->celular       = $request->input('celular');
+            $cliente->save();
+
+            if($request->input('tipo_cliente') === 'lavador'){
+                $vehiculo             = new Vehiculo();
+                $vehiculo->creador_id = Auth::user()->id;
+                $vehiculo->cliente_id = $cliente->id;
+                $vehiculo->placa      = '0000-AAA';
+                $vehiculo->save();
+                $cliente->tipo_cliente = 'lavador';
+            }else{
+                $cliente->tipo_cliente = 'cliente';
+            }
             $cliente->save();
 
             $data['estado'] = 'success';

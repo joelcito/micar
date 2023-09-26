@@ -176,16 +176,61 @@ class VehiculoController extends Controller
 
     public function buscarVehiculo(Request $request){
         if($request->ajax()){
+
+            // dd($request->all());
+
+            $query = Vehiculo::select('vehiculos.id  as idvehiculo','vehiculos.marca' ,'vehiculos.color','vehiculos.placa','clientes.ap_paterno','clientes.ap_materno','clientes.nombres','clientes.id as idcliente')
+                                ->join('clientes','vehiculos.cliente_id', '=', 'clientes.id');
+
             if(!is_null($request->input('placa'))){
                 $placa = $request->input('placa');
-                $vehiculos = Vehiculo::where('placa', 'LIKE',"%$placa%")
-                                    ->limit(100)
-                                    ->get();
-            }else{
-                $vehiculos = Vehiculo::orderBy('id', 'desc')
-                                        ->limit(200)
-                                        ->get();
+                $query->where('vehiculos.placa', 'LIKE',"%$placa%");
             }
+
+            if(!is_null($request->input('cedula'))){
+                $cedula = $request->input('cedula');
+                $query->where('clientes.cedula', 'LIKE', "%$cedula%");
+            }
+
+            if(!is_null($request->input('paterno'))){
+                $paterno = $request->input('paterno');
+                $query->where('clientes.ap_paterno', 'LIKE', "%$paterno%");
+            }
+
+            if(!is_null($request->input('materno'))){
+                $materno = $request->input('materno');
+                $query->where('clientes.ap_materno', 'LIKE', "%$materno%");
+            }
+
+            if(!is_null($request->input('nombre'))){
+                $nombre = $request->input('nombre');
+                $query->where('clientes.nombres', 'LIKE', "%$nombre%");
+            }
+
+            if(
+                !is_null($request->input('placa')) &&
+                !is_null($request->input('cedula')) &&
+                !is_null($request->input('paterno')) &&
+                !is_null($request->input('materno')) &&
+                !is_null($request->input('nombre'))
+                ){
+                    $vehiculos = $query->limit(50)->get();
+            }else{
+                $vehiculos = $query->orderBy('vehiculos.id', 'desc')->limit(100)->get();
+            }
+
+
+
+            // if(!is_null($request->input('placa'))){
+            //     $placa = $request->input('placa');
+            //     $vehiculos = Vehiculo::where('placa', 'LIKE',"%$placa%")
+            //                         ->limit(100)
+            //                         ->get();
+            // }else{
+            //     $vehiculos = Vehiculo::orderBy('id', 'desc')
+            //                             ->limit(200)
+            //                             ->get();
+            // }
 
             // PARA LA APERTURA DE LA CAJA
             $ultimaCajaAperturada = Caja::where('estado', 'Abierto')

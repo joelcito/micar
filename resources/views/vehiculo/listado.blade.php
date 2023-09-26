@@ -253,8 +253,25 @@
     <!--begin::Card body-->
     <div class="card-body py-4">
         <div class="row w-100" >
-            <div class="col-md-12s">
+            <div class="col-md-3">
+                <label class="fw-semibold fs-6 mb-2">Placa</label>
                 <input type="text" class="form-control" placeholder="Buscar por placa" id="buscar_placa" autocomplete="off">
+            </div>
+            <div class="col-md-2">
+                <label class="fw-semibold fs-6 mb-2">Cedula</label>
+                <input type="number" class="form-control" placeholder="Buscar por cedula" id="buscar_cedula" autocomplete="off">
+            </div>
+            <div class="col-md-2">
+                <label class="fw-semibold fs-6 mb-2">Paterno</label>
+                <input type="text" class="form-control" placeholder="Buscar por paterno" id="buscar_paterno" autocomplete="off">
+            </div>
+            <div class="col-md-2">
+                <label class="fw-semibold fs-6 mb-2">Materno</label>
+                <input type="text" class="form-control" placeholder="Buscar por materno" id="buscar_materno" autocomplete="off">
+            </div>
+            <div class="col-md-3">
+                <label class="fw-semibold fs-6 mb-2">Nombre</label>
+                <input type="text" class="form-control" placeholder="Buscar por nombres" id="buscar_nombre" autocomplete="off">
             </div>
         </div>
         <div class="row" id="bloque_cliente" style="display: none;">
@@ -496,7 +513,7 @@
                 $('#total').val(total)
             })
 
-            $('#buscar_placa').on('keyup input', function() {
+            $('#buscar_placa, #buscar_cedula, #buscar_paterno, #buscar_materno, #buscar_nombre').on('keyup input', function() {
                 buscarVehiculo();
                 $('#table_vehiculos').show('toggle');
             });
@@ -745,12 +762,20 @@
         }
 
         function buscarVehiculo(){
-            let placa = $('#buscar_placa').val();
+            let placa   = $('#buscar_placa').val();
+            let cedula  = $('#buscar_cedula').val();
+            let paterno = $('#buscar_paterno').val();
+            let materno = $('#buscar_materno').val();
+            let nombre  = $('#buscar_nombre').val();
             $.ajax({
                 url: "{{ url('vehiculo/buscarVehiculo') }}",
                 type: 'POST',
                 data:{
-                    placa     :placa,
+                    placa  : placa,
+                    cedula : cedula,
+                    paterno: paterno,
+                    materno: materno,
+                    nombre : nombre
                 },
                 dataType: 'json',
                 success: function(data) {

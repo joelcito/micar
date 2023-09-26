@@ -103,7 +103,7 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-check form-check-custom form-check-solid">
-                                                        <input class="form-check-input me-3" name="user_role" type="radio" value="0" id="cliente" checked='checked' />
+                                                        <input class="form-check-input me-3" name="tipo_cliente" type="radio" value="cliente" id="cliente" checked='checked' />
                                                         <label class="form-check-label" for="cliente">
                                                             <div class="fw-bold text-gray-800">Cliente</div>
                                                         </label>
@@ -111,7 +111,7 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-check form-check-custom form-check-solid">
-                                                        <input class="form-check-input me-3" name="user_role" type="radio" value="0" id="lavador" />
+                                                        <input class="form-check-input me-3" name="tipo_cliente" type="radio" value="lavador" id="lavador" />
                                                         <label class="form-check-label" for="lavador">
                                                             <div class="fw-bold text-gray-800">Lavador</div>
                                                         </label>

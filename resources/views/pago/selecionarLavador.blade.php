@@ -89,10 +89,10 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-2 bg-danger">
+                <div class="col-md-6">
                     CUENTAS POR COBRAR:
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-4">
                     <label class="required fw-semibold fs-6 mb-2">Lavador</label>
                     <select name="cliente_lavador" id="cliente_lavador" class="form-control" onchange="buscarCuentasPorCobrar()">
                         <option value="">Seleccione</option>
@@ -103,6 +103,13 @@
                 </div>
                 <div class="col-md-2">
                     <input type="number" step="0.01" class="form-control" value="0" readonly>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="facturas_pendientes" style="display: none">
+                        
+                    </div>
                 </div>
             </div>
             <div class="row">

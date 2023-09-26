@@ -12,6 +12,7 @@ use App\Models\Venta;
 use App\Models\Detalle;
 use App\Models\Movimiento;
 use App\Models\User;
+use App\Models\Vehiculo;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -475,8 +476,8 @@ class PagoController extends Controller
                                 )
                                 ->join('servicios', 'detalles.servicio_id', '=', 'servicios.id')
                                 ->leftJoin('liquidacion_lavadores', 'detalles.servicio_id', '=', 'liquidacion_lavadores.servicio_id')
-                                ->where('detalles.lavador_id', 2)
-                                ->whereBetween('detalles.fecha', ['2023-09-25', '2023-09-25'])
+                                ->where('detalles.lavador_id', $lavador_id)
+                                ->whereBetween('detalles.fecha', [$fecha, $fecha])
                                 ->groupBy('detalles.servicio_id', 'liquidacion_lavadores.tipo_liquidacion', 'liquidacion_lavadores.liquidacion')
                                 ->get();
 
@@ -492,13 +493,20 @@ class PagoController extends Controller
 
     public function buscarCuentasPorCobrar(Request $request){
         if($request->ajax()){
+            $clienteLvador = $request->input('lavador');
+            $vehiculo  = Vehiculo::where('cliente_id', $clienteLvador)->first();
 
-            $facturas = Factura::where('estado_pago', 'Deuda')->get();
+            if($vehiculo){
+                $facturas = Factura::where('estado_pago', 'Deuda')
+                                    ->where('vehiculo_id',$vehiculo->id)
+                                    ->where('cliente_id',$clienteLvador)
+                                    ->get();
 
-
-            dd($request->all());
-            
-            $data['estado'] = 'success';
+                $data['listado'] = view('pago.buscarCuentasPorCobrar')->with(compact('facturas'))->render();
+                $data['estado'] = 'success';
+            }else{
+                $data['estado'] = 'error';
+            }
         }else{
             $data['estado'] = 'error';
         }
