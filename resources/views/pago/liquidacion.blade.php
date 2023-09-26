@@ -128,6 +128,23 @@
             });
         }
 
+        function buscarCuentasPorCobrar(){
+            let lavador = $('#cliente_lavador').val()
+            $.ajax({
+                url: "{{ url('pago/buscarCuentasPorCobrar') }}",
+                type: 'POST',
+                data:{
+                    lavador: lavador
+                },
+                dataType: 'json',
+                success: function(data) {
+                    if(data.estado === 'success'){
+                        
+                    }
+                }
+            });
+        }
+
         /*
         function ajaxListadoFinanzas(){
             let datos = $('#formularioBusqeuda').serializeArray();

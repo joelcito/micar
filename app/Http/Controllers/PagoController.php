@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Caja;
+use App\Models\Cliente;
 use App\Models\Factura;
 use App\Models\MotivoAnulacion;
 use App\Models\Pago;
@@ -460,14 +461,6 @@ class PagoController extends Controller
             $lavador_id = $request->input('lavador');
             $fecha      = $request->input('fecha');
 
-            // $detalles = Detalle::where('lavador_id',$lavador_id)->get();
-
-            // $detalles = Detalle::select('servicios.id', DB::raw('SUM(detalles.cantidad) as cantidad'),'servicios.descripcion', 'servicios.liquidacion', 'servicios.tipo_liquidacion')
-            //                     ->join('servicios', 'detalles.servicio_id', '=', 'servicios.id')
-            //                     ->where('lavador_id', $lavador_id)
-            //                     ->groupBy('servicio_id')
-            //                     ->get();
-
             $lavador = User::find($lavador_id);
 
             $detalles = Detalle::select(
@@ -487,10 +480,27 @@ class PagoController extends Controller
                                 ->groupBy('detalles.servicio_id', 'liquidacion_lavadores.tipo_liquidacion', 'liquidacion_lavadores.liquidacion')
                                 ->get();
 
+            $clientesLavadores = Cliente::where('tipo_cliente','lavador')->get();
+
             $data['estado']  = 'success';
-            $data['listado']  = view('pago.selecionarLavador')->with(compact('detalles', 'lavador', 'fecha'))->render();
+            $data['listado']  = view('pago.selecionarLavador')->with(compact('detalles', 'lavador', 'fecha', 'clientesLavadores'))->render();
         }else{
             $data['estado']  = 'error';
+        }
+        return $data;
+    }
+
+    public function buscarCuentasPorCobrar(Request $request){
+        if($request->ajax()){
+
+            $facturas = Factura::where('estado_pago', 'Deuda')->get();
+
+
+            dd($request->all());
+            
+            $data['estado'] = 'success';
+        }else{
+            $data['estado'] = 'error';
         }
         return $data;
     }

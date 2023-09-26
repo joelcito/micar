@@ -132,6 +132,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/liquidacion', [PagoController::class, 'liquidacion']);
         Route::post('/buscarServicios', [PagoController::class, 'buscarServicios']);
         Route::post('/selecionarLavador', [PagoController::class, 'selecionarLavador']);
+        Route::post('/buscarCuentasPorCobrar', [PagoController::class, 'buscarCuentasPorCobrar']);
     });
 
     // Route::post('/pago/ajaxListado', [PagoController::class, 'ajaxListado']);

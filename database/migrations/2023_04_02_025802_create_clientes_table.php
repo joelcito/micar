@@ -31,6 +31,7 @@ return new class extends Migration
             $table->string('correo',100)->nullable();
             $table->string('celular',10)->nullable();
             $table->date('fecha_nacimiento')->nullable();
+            $table->string('tipo_cliente',10)->nullable();
             $table->string('estado')->nullable();
             $table->datetime('deleted_at')->nullable();
             $table->timestamps();

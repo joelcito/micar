@@ -89,12 +89,16 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-5">
+                <div class="col-md-2 bg-danger">
                     CUENTAS POR COBRAR:
                 </div>
-                <div class="col-md-5">
-                    <select name="" id="" class="form-control">
-                        <option value=""></option>
+                <div class="col-md-2">
+                    <label class="required fw-semibold fs-6 mb-2">Lavador</label>
+                    <select name="cliente_lavador" id="cliente_lavador" class="form-control" onchange="buscarCuentasPorCobrar()">
+                        <option value="">Seleccione</option>
+                        @foreach($clientesLavadores as $key => $lavador)
+                            <option value="{{ $lavador->id }}">{{ $lavador->nombres." ".$lavador->ap_paterno." ".$lavador->ap_materno }}</option>
+                        @endforeach
                     </select>
                 </div>
                 <div class="col-md-2">
