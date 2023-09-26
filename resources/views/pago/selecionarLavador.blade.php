@@ -1,3 +1,7 @@
+<div class="row mt-5">
+    <div class="col-md-6 text-center"><h3>Lavador: <span class="text-info">{{ $lavador->name }}</span></h3></div>
+    <div class="col-md-6 text-center"><h3>Fecha: <span class="text-info">{{ $fecha }}</span></h3></div>
+</div>
 <table class="table align-middle table-row-dashed fs-6 gy-5" id="tabla_user">
     <thead>
         <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
@@ -73,6 +77,46 @@
         </tr>
     </tfoot>
 </table>
+<div class="row">
+    <div class="col-md-12">
+        <form action="">
+            <div class="row">
+                <div class="col-md-10">
+                    SUMATORIA TOTAL:
+                </div>
+                <div class="col-md-2">
+                    <input type="number" step="0.01" class="form-control" value="{{ $sumaTatalPagar }}" readonly>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    CUENTAS POR COBRAR:
+                </div>
+                <div class="col-md-5">
+                    <select name="" id="" class="form-control">
+                        <option value=""></option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <input type="number" step="0.01" class="form-control" value="0" readonly>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-10">
+                    LIQUIDO PAGABLE:
+                </div>
+                <div class="col-md-2">
+                    <input type="number" step="0.01" class="form-control" value="{{ $sumaTatalPagar }}">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <button class="btn btn-sm w-100 btn-success">PAGAR</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 <script>
     $('#tabla_user').DataTable({
         ordering: false

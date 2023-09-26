@@ -468,6 +468,8 @@ class PagoController extends Controller
             //                     ->groupBy('servicio_id')
             //                     ->get();
 
+            $lavador = User::find($lavador_id);
+
             $detalles = Detalle::select(
                                     'detalles.servicio_id',
                                     DB::raw('SUM(detalles.cantidad) as cantidad'),
@@ -481,12 +483,12 @@ class PagoController extends Controller
                                 ->join('servicios', 'detalles.servicio_id', '=', 'servicios.id')
                                 ->leftJoin('liquidacion_lavadores', 'detalles.servicio_id', '=', 'liquidacion_lavadores.servicio_id')
                                 ->where('detalles.lavador_id', 2)
-                                ->whereBetween('detalles.fecha', ['2023-09-24', '2023-09-24'])
+                                ->whereBetween('detalles.fecha', ['2023-09-25', '2023-09-25'])
                                 ->groupBy('detalles.servicio_id', 'liquidacion_lavadores.tipo_liquidacion', 'liquidacion_lavadores.liquidacion')
                                 ->get();
 
             $data['estado']  = 'success';
-            $data['listado']  = view('pago.selecionarLavador')->with(compact('detalles'))->render();
+            $data['listado']  = view('pago.selecionarLavador')->with(compact('detalles', 'lavador', 'fecha'))->render();
         }else{
             $data['estado']  = 'error';
         }

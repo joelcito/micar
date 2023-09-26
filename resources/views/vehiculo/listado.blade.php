@@ -503,7 +503,6 @@
 
             // Agregar un evento para el enfoque (cuando el usuario hace clic en el campo)
             $("#miInput").on("keyup", function() {
-                console.log($(this).val())
                 let dato = $(this).val() - $("#motoTotalFac").val()
                 $('#cambio').val((dato < 0)? 0 : dato)
             });
@@ -687,14 +686,6 @@
                 let total       = $('#total').val();
                 let pago_id     = $('#pago_id').val();
 
-                console.log(
-                servicio_id,
-                lavador_id,
-                vehiculo_id,
-                precio,
-                cantidad,
-                total)
-
                 $.ajax({
                     url: "{{ url('vehiculo/ajaxRegistraVenta') }}",
                     type: 'POST',
@@ -765,7 +756,6 @@
                 success: function(data) {
                     if(data.estado === 'success'){
                         $('#table_vehiculos').html(data.listado)
-                        console.log(data)
                     }
                 }
             });
@@ -773,7 +763,6 @@
 
         function registraNuevoVehiculo(){
             $('#modal_registro_vehiculo').modal('show');
-            {{--  console.log("este es nuevo registro de vehiulo")  --}}
         }
 
         function modalNuevoUsuario(){
@@ -828,7 +817,6 @@
                     if(data.estado === 'success'){
                         arrayPagos = data.detalles;
                         arrayProductos = JSON.parse(data.lista)
-                        console.log(arrayPagos, arrayProductos)
                     }
                 }
             });
@@ -1066,7 +1054,6 @@
 
         function guardarValorInicial(input) {
             valorIniDescuento = input.value;
-            console.log("Valor inicial guardado: " + valorIniDescuento);
         }
 
         function caluculaTotal(event){
@@ -1085,7 +1072,6 @@
         }
 
         function bloqueCAFC(){
-            console.log($('#tipo_facturacion').val())
             if($('#tipo_facturacion').val() === "offline"){
                 $('#bloque_cafc').show('toggle')
             }else{
@@ -1101,7 +1087,6 @@
         function verificarRadioSeleccionado() {
             var valorSeleccionado = $('input[name="uso_cafc"]:checked').val();
             if (valorSeleccionado === 'No') {
-                console.log('El radio seleccionado es "No"');
                 $.ajax({
                     url: "{{ url('factura/sacaNumeroFactura') }}",
                     method: "POST",
@@ -1120,7 +1105,6 @@
                     }
                 })
             } else if (valorSeleccionado === 'Si') {
-                console.log('El radio seleccionado es "Si"');
                 $.ajax({
                     url: "{{ url('factura/sacaNumeroCafcUltimo') }}",
                     method: "POST",
@@ -1142,7 +1126,6 @@
         }
 
         function verificaNit(){
-            console.log($('#tipo_documento').val())
             let tipoDocumento = $('#tipo_documento').val();
             if(tipoDocumento === "5"){
                 let nit = $('#nit_factura').val();
