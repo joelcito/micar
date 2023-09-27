@@ -1,5 +1,5 @@
 <!--begin::Table-->
-<table class="table align-middle table-row-dashed fs-6 gy-5" id="tabla_user">
+<table class="table align-middle table-row-dashed fs-6 gy-5" id="porCobrarTable">
     <thead>
         <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
             <th>ID</th>
@@ -34,7 +34,7 @@
                 <td>{{ number_format($pagado, 2) }}</td>
                 <td>{{ number_format(((int)$f->total - (int)$pagado), 2) }}</td>
                 <td>
-                    <button {{ ($vender==0)? 'disabled' : '' }} class="btn btn-sm btn-success btn-icon" onclick="abreModalPagar(
+                    <button type="button" {{ ($vender==0)? 'disabled' : '' }} class="btn btn-sm btn-success btn-icon" onclick="abreModalPagar(
                                                                                 '{{ $f->id }}',
                                                                                 '{{ $f->cliente->ap_paterno.' '.$f->cliente->ap_materno.' '.$f->cliente->nombres }}',
                                                                                 '{{ $f->vehiculo->placa }}',
@@ -75,7 +75,7 @@
 </table>
 <!--end::Table-->
 <script>
-    $('#tabla_user').DataTable({
+    $('#porCobrarTable').DataTable({
         ordering: false
     });
 </script>

@@ -7,6 +7,87 @@
 @endsection
 @section('content')
 
+
+<div class="modal fade" id="modalCobrar" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" id="kt_modal_add_user_header">
+                <h2 class="fw-bold">Formulario de Pago</h2>
+            </div>
+            <div class="modal-body scroll-y">
+                <form id="formulario_cobro">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="fv-row mb-7">
+                                <label class="fw-semibold fs-6 mb-2">Cliente</label>
+                                <input type="text" class="form-control" name="cliente" id="cliente" disabled>
+                                <input type="text" name="factura_id" id="factura_id">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="fv-row mb-7">
+                                <label class="fw-semibold fs-6 mb-2">Palca</label>
+                                <input type="text" class="form-control" name="placa" id="placa" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="fv-row mb-7">
+                                <label class="fw-semibold fs-6 mb-2">Importe Total</label>
+                                <input type="text" class="form-control" name="impor_total" id="impor_total" disabled>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="fv-row mb-7">
+                                <label class="fw-semibold fs-6 mb-2">Importe Pagado</label>
+                                <input type="text" class="form-control" name="impor_pagado" id="impor_pagado" disabled>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="fv-row mb-7">
+                                <label class="fw-semibold fs-6 mb-2">Importe Saldo</label>
+                                <input type="text" class="form-control" name="impor_saldo" id="impor_saldo" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="fv-row mb-7">
+                                <label class="required fw-semibold fs-6 mb-2">Fecha</label>
+                                <input type="date" class="form-control" name="fecha_pago" id="fecha_pago" readonly required value="{{ date('Y-m-d') }}">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="fv-row mb-7">
+                                <label class="required fw-semibold fs-6 mb-2">Tipo Pago</label>
+                                <select name="tipo_pago" id="tipo_pago" class="form-control" required>
+                                    <option value="">Seleccionar</option>
+                                    <option value="efectivo">Efectivo</option>
+                                    <option value="tramsferencia">Tramsferencia</option>
+                                    <option value="qr">Qr</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="fv-row mb-7">
+                                <label class="required fw-semibold fs-6 mb-2">Importe a pagar</label>
+                                <input type="number" type="button" class="form-control" name="importe_pagar" id="importe_pagar" required min="1" value="0">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="row">
+                    <div class="col-md-12">
+                        <button class="btn btn-sm btn-success w-100" onclick="pagarCuenta()">Pagar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
     <!--begin::Card-->
     <div class="card">
         <div class="card-header border-0 pt-6 bg-light-primary">
@@ -74,7 +155,7 @@
             $(".formBus").on("input", function () {
                 var inputText = $(this).val();
                 if (inputText.length >= 3) {
-                    $('#table_lavadores').show('toogle')    
+                    $('#table_lavadores').show('toogle')
                     $.ajax({
                         url: "{{ url('pago/buscarServicios') }}",
                         type: 'POST',
@@ -139,10 +220,22 @@
                 dataType: 'json',
                 success: function(data) {
                     if(data.estado === 'success'){
-                        
+                        $('#facturas_pendientes').html(data.listado)
+                        $('#facturas_pendientes').show('toogle')
                     }
                 }
             });
+        }
+
+        function abreModalPagar(){
+            $('#cliente').val(cliente)
+            $('#factura_id').val(factura)
+            $('#placa').val(placa)
+            $('#impor_total').val(total)
+            $('#impor_pagado').val(pagado)
+            $('#impor_saldo').val((total)-(pagado))
+            $("#importe_pagar").attr("max", (total)-(pagado));
+            $('#modalCobrar').modal('show')
         }
 
         /*

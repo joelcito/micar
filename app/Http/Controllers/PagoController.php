@@ -125,15 +125,17 @@ class PagoController extends Controller
                                         ->first();
 
             if($ultimaCajaAperturada){
-                $fechaActual =  Carbon::now()->format('Y-m-d H:i:s');
-                $fechaAperturaCaja = $ultimaCajaAperturada->fecha_apertura;
-                $fecha1 = Carbon::parse($fechaActual);
-                $fecha2 = Carbon::parse($fechaAperturaCaja);
-                if ($fecha1->gt($fecha2)) {
-                    $vender = $ultimaCajaAperturada->id;
-                } else {
-                    $vender = 0;
-                }
+                // $fechaActual =  Carbon::now()->format('Y-m-d H:i:s');
+                // $fechaAperturaCaja = $ultimaCajaAperturada->fecha_apertura;
+                // $fecha1 = Carbon::parse($fechaActual);
+                // $fecha2 = Carbon::parse($fechaAperturaCaja);
+                // if ($fecha1->gt($fecha2)) {
+                //     $vender = $ultimaCajaAperturada->id;
+                // } else {
+                //     $vender = 0;
+                // }
+
+                $vender = $ultimaCajaAperturada->id;
             }else{
                 $vender = 0;
             }
@@ -502,7 +504,19 @@ class PagoController extends Controller
                                     ->where('cliente_id',$clienteLvador)
                                     ->get();
 
-                $data['listado'] = view('pago.buscarCuentasPorCobrar')->with(compact('facturas'))->render();
+
+                // PARA VER SI HAY CAJA O NO
+                $ultimaCajaAperturada = Caja::where('estado', 'Abierto')
+                                            ->latest()
+                                            ->first();
+
+                if($ultimaCajaAperturada)
+                    $vender = $ultimaCajaAperturada->id;
+                else
+                    $vender = 0;
+
+                // $data['listado'] = view('pago.buscarCuentasPorCobrar')->with(compact('facturas', 'vender'))->render();
+                $data['listado'] = view('pago.ajaxBuscarPorCobrar')->with(compact('facturas', 'vender'))->render();
                 $data['estado'] = 'success';
             }else{
                 $data['estado'] = 'error';
