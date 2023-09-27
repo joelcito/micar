@@ -515,8 +515,8 @@ class PagoController extends Controller
                 else
                     $vender = 0;
 
-                // $data['listado'] = view('pago.buscarCuentasPorCobrar')->with(compact('facturas', 'vender'))->render();
-                $data['listado'] = view('pago.ajaxBuscarPorCobrar')->with(compact('facturas', 'vender'))->render();
+                $data['listado'] = view('pago.buscarCuentasPorCobrar')->with(compact('facturas', 'vender'))->render();
+                // $data['listado'] = view('pago.ajaxBuscarPorCobrar')->with(compact('facturas', 'vender'))->render();
                 $data['estado'] = 'success';
             }else{
                 $data['estado'] = 'error';

@@ -151,7 +151,6 @@
         })
 
         $( document ).ready(function() {
-            //ajaxListadoFinanzas();
             $(".formBus").on("input", function () {
                 var inputText = $(this).val();
                 if (inputText.length >= 3) {
@@ -174,7 +173,21 @@
                     });
                 }
             });
+
+            // $('#cuentas_por_cobrar_pagar').on("input", function() {
+            //     console.log("haber")
+            //     // let total_servico           = $("#total_servicios_lavador").val();
+            //     // let total_acuenta_porcobrar = $(this).val();
+            //     // console.log(total_servico, total_acuenta_porcobrar, (total_servico - total_acuenta_porcobrar))
+            // });
         });
+
+        function realizarCalculo(){
+            let total_servico           = $("#total_servicios_lavador").val();
+            let total_acuenta_porcobrar = $("#cuentas_por_cobrar_pagar").val();
+            let total                   = total_servico - total_acuenta_porcobrar;
+            $("#total_liquido_pagable").val(total)
+        }
 
         function buscarServicios(){
             let datos = $('#formularioBusqueda').serializeArray();
@@ -238,97 +251,22 @@
             $('#modalCobrar').modal('show')
         }
 
-        /*
-        function ajaxListadoFinanzas(){
-            let datos = $('#formularioBusqeuda').serializeArray();
+        function cancelarVendedor(){
             $.ajax({
-                url: "{{ url('pago/ajaxListadoFinanzas') }}",
+                url: "{{ url('pago/buscarCuentasPorCobrar') }}",
                 type: 'POST',
-                data:datos,
+                data:{
+                    lavador: lavador
+                },
                 dataType: 'json',
                 success: function(data) {
-                    if(data.estado === 'success')
-                        $('#table_pagos').html(data.listado);
+                    if(data.estado === 'success'){
+                        $('#facturas_pendientes').html(data.listado)
+                        $('#facturas_pendientes').show('toogle')
+                    }
                 }
             });
         }
-
-        function modalIngreso(){
-            $('#tipo').val('Ingreso')
-            $('#text_tipoo_modal').text('Ingreso')
-            $('#monto').val(0)
-            $('#descripcion').val('')
-            $('#modalIngreso').modal('show')
-        }
-
-        function modalSalida(){
-            $('#tipo').val('Salida')
-            $('#monto').val(0)
-            $('#descripcion').val('')
-            $('#text_tipoo_modal').text('Salida')
-            $('#modalIngreso').modal('show')
-        }
-
-        function guardarTipoIngresoSalida(){
-            if($("#formularioIngresoSalida")[0].checkValidity()){
-                datos = $("#formularioIngresoSalida").serializeArray()
-                $.ajax({
-                    url: "{{ url('pago/guardarTipoIngresoSalida') }}",
-                    data:datos,
-                    type: 'POST',
-                    dataType: 'json',
-                    success: function(data) {
-                        if(data.estado === 'success'){
-                            Swal.fire({
-                                icon             : 'success',
-                                title            : 'Se registro con exito',
-                                showConfirmButton: false,       // No mostrar botón de confirmación
-                                timer            : 2000,        // 5 segundos
-                                timerProgressBar : true
-                            });
-                            $('#modalIngreso').modal('hide')
-                            ajaxListadoFinanzas();
-                        }
-                    }
-                });
-            }else{
-    			$("#formularioIngresoSalida")[0].reportValidity()
-            }
-        }
-
-        function modalCierreCaja(){
-            $('#modalCierreCaja').modal('show')
-        }
-
-        function registrarCajaCierre(){
-            if($("#formularioCierreCaja")[0].checkValidity()){
-                let datos = $("#formularioCierreCaja").serializeArray();
-                $.ajax({
-                    url: "{{ url('pago/cierreCaja') }}",
-                    data: datos,
-                    type: 'POST',
-                    dataType:'json',
-                    success: function(data) {
-                        if(data.estado === 'success'){
-
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'SE CERRO CON EXTIO',
-                                showConfirmButton: false, // No mostrar botón de confirmación
-                                timer: 2000, // 5 segundos
-                                timerProgressBar: true
-                            });
-                            $('#modalCierreCaja').modal('hide')
-                            //buscarVehiculo()
-
-                        }
-                    }
-                });
-            }else{
-                $("#formularioCierreCaja")[0].reportValidity();
-            }
-        }
-        */
     </script>
 @endsection
 

@@ -62,37 +62,33 @@
     <tfoot>
         <tr>
             <th colspan="5">TOTAL</th>
-            <th>{{ number_format($sumaTatalPagar,2)  }}</th>
-            <th></th>
-        </tr>
-        <tr>
-            <th colspan="5">CUENTAS POR COBRAR</th>
-            <th>{{ number_format($sumaTatalPagar,2)  }}</th>
-            <th></th>
-        </tr>
-        <tr>
-            <th colspan="5">LIQUIDO PAGABLE</th>
-            <th>{{ number_format($sumaTatalPagar,2)  }}</th>
+            <th><b>{{ number_format($sumaTatalPagar,2)  }}</b></th>
             <th></th>
         </tr>
     </tfoot>
 </table>
+<hr>
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="text-info text-center">Cuentas por Cobrar</h2>
+    </div>
+</div>
 <div class="row">
     <div class="col-md-12">
         <form action="">
-            <div class="row">
+            {{-- <div class="row">
                 <div class="col-md-10">
                     SUMATORIA TOTAL:
                 </div>
                 <div class="col-md-2">
                     <input type="number" step="0.01" class="form-control" value="{{ $sumaTatalPagar }}" readonly>
                 </div>
-            </div>
+            </div> --}}
             <div class="row">
-                <div class="col-md-6">
-                    CUENTAS POR COBRAR:
+                <div class="col-md-6 mt-10">
+                    <h5>CUENTAS POR COBRAR:</h5>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <label class="required fw-semibold fs-6 mb-2">Lavador</label>
                     <select name="cliente_lavador" id="cliente_lavador" class="form-control" onchange="buscarCuentasPorCobrar()">
                         <option value="">Seleccione</option>
@@ -101,9 +97,9 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col-md-2">
+                {{-- <div class="col-md-2">
                     <input type="number" step="0.01" class="form-control" value="0" readonly>
-                </div>
+                </div> --}}
             </div>
             <div class="row">
                 <div class="col-md-12">
@@ -113,16 +109,20 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-10">
-                    LIQUIDO PAGABLE:
+                <div class="col-md-3">
+                    <label class="required fw-semibold fs-6 mb-2">Total Servicios</label>
+                    <input type="number" step="0.01" readonly class="form-control form-control-solid" required name="total_servicios_lavador" id="total_servicios_lavador" value="{{ $sumaTatalPagar }}">
                 </div>
-                <div class="col-md-2">
-                    <input type="number" step="0.01" class="form-control" value="{{ $sumaTatalPagar }}">
+                <div class="col-md-3">
+                    <label class="required fw-semibold fs-6 mb-2">Cuentas por cobrar</label>
+                    <input type="number" class="form-control form-control-solid" required name="cuentas_por_cobrar_pagar" id="cuentas_por_cobrar_pagar" value="0" max="{{ $sumaTatalPagar }}"  oninput="realizarCalculo()">
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <button class="btn btn-sm w-100 btn-success">PAGAR</button>
+                <div class="col-md-3">
+                    <label class="required fw-semibold fs-6 mb-2">Liquido Pagable</label>
+                    <input type="number" class="form-control form-control-solid" required name="total_liquido_pagable" id="total_liquido_pagable" value="{{ $sumaTatalPagar }}" readonly>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-success w-100 btn-sm mt-9" onclick="cancelarVendedor()">Pagar</button>
                 </div>
             </div>
         </form>
@@ -131,5 +131,15 @@
 <script>
     $('#tabla_user').DataTable({
         ordering: false
+    });
+
+    $( document ).ready(function() {
+
+        // $('#cuentas_por_cobrar_pagar').on("input", function() {
+        //     console.log("haber")
+        //     // let total_servico           = $("#total_servicios_lavador").val();
+        //     // let total_acuenta_porcobrar = $(this).val();
+        //     // console.log(total_servico, total_acuenta_porcobrar, (total_servico - total_acuenta_porcobrar))
+        // });
     });
 </script>
