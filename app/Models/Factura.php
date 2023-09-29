@@ -18,4 +18,14 @@ class Factura extends Model
     public function cliente(){
         return $this->belongsTo('App\Models\Cliente', 'cliente_id');
     }
+
+    public static function facturasDeudoras($vehiculo, $cliente){
+        $facturas = Factura::where('estado_pago', 'Deuda')
+                            ->where('vehiculo_id',$vehiculo)
+                            ->where('cliente_id',$cliente)
+                            ->orderBy('id', 'asc')
+                            ->get();
+
+        return $facturas;
+    }
 }

@@ -35,6 +35,7 @@ return new class extends Migration
             $table->decimal('descuento',12,2)->nullable();
             $table->decimal('importe',12,2)->nullable();
             $table->date('fecha')->nullable();
+            $table->string('estado_liquidacion')->nullable();
             $table->string('estado')->nullable();
             $table->datetime('deleted_at')->nullable();
             $table->timestamps();

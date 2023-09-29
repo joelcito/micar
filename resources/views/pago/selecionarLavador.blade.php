@@ -92,8 +92,8 @@
                     <label class="required fw-semibold fs-6 mb-2">Lavador</label>
                     <select name="cliente_lavador" id="cliente_lavador" class="form-control" onchange="buscarCuentasPorCobrar()">
                         <option value="">Seleccione</option>
-                        @foreach($clientesLavadores as $key => $lavador)
-                            <option value="{{ $lavador->id }}">{{ $lavador->nombres." ".$lavador->ap_paterno." ".$lavador->ap_materno }}</option>
+                        @foreach($clientesLavadores as $key => $lav)
+                            <option value="{{ $lav->id }}">{{ $lav->nombres." ".$lav->ap_paterno." ".$lav->ap_materno }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -122,7 +122,7 @@
                     <input type="number" class="form-control form-control-solid" required name="total_liquido_pagable" id="total_liquido_pagable" value="{{ $sumaTatalPagar }}" readonly>
                 </div>
                 <div class="col-md-3">
-                    <button class="btn btn-success w-100 btn-sm mt-9" onclick="cancelarVendedor()">Pagar</button>
+                    <button class="btn btn-success w-100 btn-sm mt-9" type="button" onclick="cancelarVendedor()">Pagar</button>
                 </div>
             </div>
         </form>
@@ -133,13 +133,26 @@
         ordering: false
     });
 
-    $( document ).ready(function() {
+    function cancelarVendedor(){
 
-        // $('#cuentas_por_cobrar_pagar').on("input", function() {
-        //     console.log("haber")
-        //     // let total_servico           = $("#total_servicios_lavador").val();
-        //     // let total_acuenta_porcobrar = $(this).val();
-        //     // console.log(total_servico, total_acuenta_porcobrar, (total_servico - total_acuenta_porcobrar))
-        // });
-    });
+        $.ajax({
+            url: "{{ url('pago/cancelarVendedor') }}",
+            type: 'POST',
+            data:{
+                total_servicios_lavador : $('#total_servicios_lavador').val(),
+                cuentas_por_cobrar_pagar: $('#cuentas_por_cobrar_pagar').val(),
+                total_liquido_pagable   : $('#total_liquido_pagable').val(),
+                lavador_cliente         : $('#cliente_lavador').val(),
+                fecha                   : "{{ $fecha }}",
+                lavador_usuario         : "{{ $lavador->id }}"
+            },
+            dataType: 'json',
+            success: function(data) {
+                if(data.estado === 'success'){
+                    $('#facturas_pendientes').html(data.listado)
+                    $('#facturas_pendientes').show('toogle')
+                }
+            }
+        });
+    }
 </script>

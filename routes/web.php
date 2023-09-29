@@ -113,26 +113,29 @@ Route::middleware('auth')->group(function () {
     // PAGOS
     Route::prefix('/pago')->group(function(){
         Route::get('/listado', [PagoController::class, 'listado']);
-        Route::post('/ajaxListado', [PagoController::class, 'ajaxListado']);
         Route::get('/detalle/{pago_id}', [PagoController::class, 'detalle']);
+        Route::get('/porcobrar', [PagoController::class, 'porcobrar']);
+        Route::get('/finanza', [PagoController::class, 'finanza']);
+        Route::get('/infomearqueo', [PagoController::class, 'infomearqueo']);
+        Route::get('/liquidacionNew', [PagoController::class, 'liquidacionNew']);
+        Route::get('/liquidacionList', [PagoController::class, 'liquidacionList']);
+
+        Route::post('/ajaxListado', [PagoController::class, 'ajaxListado']);
         Route::post('/eliminarPago', [PagoController::class, 'eliminarPago']);
         Route::post('/emitirPorCobrar', [PagoController::class, 'emitirPorCobrar']);
-        Route::get('/porcobrar', [PagoController::class, 'porcobrar']);
         Route::post('/ajaxBuscarPorCobrar', [PagoController::class, 'ajaxBuscarPorCobrar']);
         Route::post('/ajaxServiciosMasa', [PagoController::class, 'ajaxServiciosMasa']);
         Route::post('/arrayCuotasPorCobrar', [PagoController::class, 'arrayCuotasPorCobrar']);
         Route::post('/pagarCuenta', [PagoController::class, 'pagarCuenta']);
-        Route::get('/finanza', [PagoController::class, 'finanza']);
         Route::post('/ajaxListadoFinanzas', [PagoController::class, 'ajaxListadoFinanzas']);
         Route::post('/guardarTipoIngresoSalida', [PagoController::class, 'guardarTipoIngresoSalida']);
         Route::post('/aperturaCaja', [PagoController::class, 'aperturaCaja']);
-        Route::get('/infomearqueo', [PagoController::class, 'infomearqueo']);
         Route::post('/ajaxListadoCajas', [PagoController::class, 'ajaxListadoCajas']);
         Route::post('/cierreCaja', [PagoController::class, 'cierreCaja']);
-        Route::get('/liquidacion', [PagoController::class, 'liquidacion']);
         Route::post('/buscarServicios', [PagoController::class, 'buscarServicios']);
         Route::post('/selecionarLavador', [PagoController::class, 'selecionarLavador']);
         Route::post('/buscarCuentasPorCobrar', [PagoController::class, 'buscarCuentasPorCobrar']);
+        Route::post('/cancelarVendedor', [PagoController::class, 'cancelarVendedor']);
     });
 
     // Route::post('/pago/ajaxListado', [PagoController::class, 'ajaxListado']);

@@ -106,18 +106,19 @@ class VehiculoController extends Controller
 
             $vehiculo_id = $request->input('vehiculo_id');
 
-            $detalle = new Detalle();
-            $detalle->creador_id       = Auth::user()->id;
-            $detalle->vehiculo_id      = $vehiculo_id;
-            $detalle->servicio_id      = $request->input('servicio_id');
-            $detalle->lavador_id       = $request->input('lavador_id');
-            $detalle->precio           = $request->input('precio');
-            $detalle->cantidad         = $request->input('cantidad');
-            $detalle->total            = $request->input('total');
-            $detalle->descuento        = 0;
-            $detalle->importe          = $request->input('total');
-            $detalle->fecha            = date('Y-m-d');
-            $detalle->estado           = "Parapagar";
+            $detalle                     = new Detalle();
+            $detalle->creador_id         = Auth::user()->id;
+            $detalle->vehiculo_id        = $vehiculo_id;
+            $detalle->servicio_id        = $request->input('servicio_id');
+            $detalle->lavador_id         = $request->input('lavador_id');
+            $detalle->precio             = $request->input('precio');
+            $detalle->cantidad           = $request->input('cantidad');
+            $detalle->total              = $request->input('total');
+            $detalle->descuento          = 0;
+            $detalle->importe            = $request->input('total');
+            $detalle->fecha              = date('Y-m-d');
+            $detalle->estado_liquidacion = "Debe";
+            $detalle->estado             = "Parapagar";
             $detalle->save();
 
             $cantidadProductos = Detalle::join('servicios', 'detalles.servicio_id','=', 'servicios.id')

@@ -250,23 +250,7 @@
             $("#importe_pagar").attr("max", (total)-(pagado));
             $('#modalCobrar').modal('show')
         }
-
-        function cancelarVendedor(){
-            $.ajax({
-                url: "{{ url('pago/buscarCuentasPorCobrar') }}",
-                type: 'POST',
-                data:{
-                    lavador: lavador
-                },
-                dataType: 'json',
-                success: function(data) {
-                    if(data.estado === 'success'){
-                        $('#facturas_pendientes').html(data.listado)
-                        $('#facturas_pendientes').show('toogle')
-                    }
-                }
-            });
-        }
+        
     </script>
 @endsection
 

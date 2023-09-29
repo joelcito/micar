@@ -10,6 +10,7 @@ use App\Models\Pago;
 use App\Models\TipoDocumento;
 use App\Models\Venta;
 use App\Models\Detalle;
+use App\Models\LiquidacionLavadorPago;
 use App\Models\Movimiento;
 use App\Models\User;
 use App\Models\Vehiculo;
@@ -154,10 +155,10 @@ class PagoController extends Controller
         if($request->ajax()){
 
             $factura_id = $request->input('factura_id');
-
+            
             $ultimaCajaAperturada = Caja::where('estado', 'Abierto')
-                                        ->latest()
-                                        ->first();
+            ->latest()
+            ->first();
 
             $pago                = new Pago();
             $pago->creador_id    = Auth::user()->id;
@@ -419,9 +420,13 @@ class PagoController extends Controller
         return $data;
     }
 
-    public function liquidacion(Request $request){
-        return view('pago.liquidacion');
+    public function liquidacionNew(Request $request){
+        return view('pago.liquidacionNew');
     }
+
+    // public function  liquidacionList(Request $request){
+    //     return view('pago.liquidacionList');
+    // }
 
     public function buscarServicios(Request $request){
         if($request->ajax()){
@@ -466,22 +471,24 @@ class PagoController extends Controller
 
             $lavador = User::find($lavador_id);
 
-            $detalles = Detalle::select(
-                                    'detalles.servicio_id',
-                                    DB::raw('SUM(detalles.cantidad) as cantidad'),
-                                    'servicios.precio',
-                                    'servicios.descripcion',
-                                    'servicios.liquidacion as liquidacionServicio',
-                                    'servicios.tipo_liquidacion as tipoLiquidacionServicio',
-                                    'liquidacion_lavadores.tipo_liquidacion as tipoLiquidacionLl',
-                                    'liquidacion_lavadores.liquidacion as liquidacionLl'
-                                )
-                                ->join('servicios', 'detalles.servicio_id', '=', 'servicios.id')
-                                ->leftJoin('liquidacion_lavadores', 'detalles.servicio_id', '=', 'liquidacion_lavadores.servicio_id')
-                                ->where('detalles.lavador_id', $lavador_id)
-                                ->whereBetween('detalles.fecha', [$fecha, $fecha])
-                                ->groupBy('detalles.servicio_id', 'liquidacion_lavadores.tipo_liquidacion', 'liquidacion_lavadores.liquidacion')
-                                ->get();
+            // $detalles = Detalle::select(
+            //                         'detalles.servicio_id',
+            //                         DB::raw('SUM(detalles.cantidad) as cantidad'),
+            //                         'servicios.precio',
+            //                         'servicios.descripcion',
+            //                         'servicios.liquidacion as liquidacionServicio',
+            //                         'servicios.tipo_liquidacion as tipoLiquidacionServicio',
+            //                         'liquidacion_lavadores.tipo_liquidacion as tipoLiquidacionLl',
+            //                         'liquidacion_lavadores.liquidacion as liquidacionLl'
+            //                     )
+            //                     ->join('servicios', 'detalles.servicio_id', '=', 'servicios.id')
+            //                     ->leftJoin('liquidacion_lavadores', 'detalles.servicio_id', '=', 'liquidacion_lavadores.servicio_id')
+            //                     ->where('detalles.lavador_id', $lavador_id)
+            //                     ->whereBetween('detalles.fecha', [$fecha, $fecha])
+            //                     ->groupBy('detalles.servicio_id', 'liquidacion_lavadores.tipo_liquidacion', 'liquidacion_lavadores.liquidacion')
+            //                     ->get();
+
+            $detalles = Detalle::detallesLavadorFecha($lavador_id, $fecha);
 
             $clientesLavadores = Cliente::where('tipo_cliente','lavador')->get();
 
@@ -499,11 +506,12 @@ class PagoController extends Controller
             $vehiculo  = Vehiculo::where('cliente_id', $clienteLvador)->first();
 
             if($vehiculo){
-                $facturas = Factura::where('estado_pago', 'Deuda')
-                                    ->where('vehiculo_id',$vehiculo->id)
-                                    ->where('cliente_id',$clienteLvador)
-                                    ->get();
+                // $facturas = Factura::where('estado_pago', 'Deuda')
+                //                     ->where('vehiculo_id',$vehiculo->id)
+                //                     ->where('cliente_id',$clienteLvador)
+                //                     ->get();
 
+                $facturas = Factura::facturasDeudoras($vehiculo->id, $clienteLvador);
 
                 // PARA VER SI HAY CAJA O NO
                 $ultimaCajaAperturada = Caja::where('estado', 'Abierto')
@@ -521,6 +529,81 @@ class PagoController extends Controller
             }else{
                 $data['estado'] = 'error';
             }
+        }else{
+            $data['estado'] = 'error';
+        }
+        return $data;
+    }
+
+    public function cancelarVendedor(Request $request){
+        if($request->ajax()){
+
+            $lavador_usuario         = $request->input('lavador_usuario');
+            $lavador_cliente         = $request->input('lavador_cliente');
+            $vehiculo                = Vehiculo::where('cliente_id',$lavador_cliente)->first();
+            $fecha_pago              = $request->input('fecha');
+            $cuenta_por_pagar        = $request->input('cuentas_por_cobrar_pagar');
+            $cuenta_por_pagarLol     = $request->input('cuentas_por_cobrar_pagar');
+            $total_servicios_lavador = $request->input('total_servicios_lavador');
+            $liquido_pagable         = $request->input('total_liquido_pagable');
+
+            if((int)$cuenta_por_pagar > 0){
+
+                $conu                 = 0;
+                $facturasDeudroas     = Factura::facturasDeudoras($vehiculo->id, $vehiculo->cliente_id);
+                $ultimaCajaAperturada = Caja::where('estado', 'Abierto')
+                                        ->latest()
+                                        ->first();
+
+                while($cuenta_por_pagar > 0){
+                    $pagado           = Pago::where('factura_id', $facturasDeudroas[$conu]->id)->sum('monto');
+                    $deudaFactura     = ((float)$facturasDeudroas[$conu]->total - (float)$pagado);
+
+                    if($cuenta_por_pagar > $deudaFactura){
+                        $pagarFactura                           = $deudaFactura;
+                        $facturasDeudroas[$conu]->estado_pago   = 'Pagado';
+                        $facturasDeudroas[$conu]->save();
+                    }else{
+                        $pagarFactura = $cuenta_por_pagar;
+                    }
+
+                    $pago                = new Pago();
+                    $pago->creador_id    = Auth::user()->id;
+                    $pago->factura_id    = $facturasDeudroas[$conu]->id;
+                    $pago->caja_id       = $ultimaCajaAperturada->id;
+                    $pago->monto         = $pagarFactura;
+                    $pago->fecha         = date('Y-m-d H:i:s');
+                    $pago->apertura_caja = "No";
+                    $pago->tipo_pago     = "efectivo";
+                    $pago->estado        = 'Ingreso';
+                    $pago->save();
+
+                    $conu++;
+                    $cuenta_por_pagar = $cuenta_por_pagar - $deudaFactura;
+
+                }
+            }
+
+            $detalles_ids = Detalle::select('id')
+                                ->where('lavador_id', $lavador_usuario)
+                                ->where('fecha', $fecha_pago)
+                                ->pluck('id');    
+
+            Detalle::whereIn('id', $detalles_ids)
+                    ->update(['estado_liquidacion'  => 'Pagado']);            
+
+            $LiquidacionLavadorPago                     = new  LiquidacionLavadorPago();
+            $LiquidacionLavadorPago->creador_id         = Auth::user()->id;
+            $LiquidacionLavadorPago->lavador_id_user    = $lavador_usuario;
+            $LiquidacionLavadorPago->lavador_id_cliente = $lavador_cliente;
+            $LiquidacionLavadorPago->fecha_pagado       = $fecha_pago;
+            $LiquidacionLavadorPago->total_servicios    = $total_servicios_lavador;
+            $LiquidacionLavadorPago->cuenta_por_pagar   = $cuenta_por_pagarLol;
+            $LiquidacionLavadorPago->liquido_pagable    = $liquido_pagable;
+            $LiquidacionLavadorPago->detalles_id        = $detalles_ids;
+            $LiquidacionLavadorPago->save();           
+
+            $data['estado'] = 'success';
         }else{
             $data['estado'] = 'error';
         }

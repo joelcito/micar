@@ -330,13 +330,14 @@
                         </a>
                     </div>
                 </div>
+                <!--end:Menu link-->
                 <div class="menu-sub menu-sub-accordion">
                     <div class="menu-item">
-                        <a class="menu-link" href="{{ url('pago/liquidacion') }}">
+                        <a class="menu-link" href="{{ url('pago/liquidacionNew') }}">
                             <span class="menu-bullet">
                                 <span class="bullet bullet-dot"></span>
                             </span>
-                            <span class="menu-title">Liquidacion</span>
+                            <span class="menu-title">Nueva Liquidacion</span>
                         </a>
                     </div>
                 </div>
