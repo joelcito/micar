@@ -230,117 +230,252 @@ class FacturaController extends Controller
             $archivoZip = $gzdato;
             $hashArchivo = hash("sha256", file_get_contents('assets/docs/facturaxml.xml'));
 
-            // GUARDAMOS EN LA FACTURA
-            $factura                            = new Factura();
-            $factura->creador_id                = Auth::user()->id;
-            $factura->vehiculo_id               = $datosVehiculo['vehiculo_id'];
-            $factura->cliente_id                = $vehiculo->cliente_id;
-            $factura->razon_social              = $datos['factura'][0]['cabecera']['nombreRazonSocial'];
-            $factura->carnet                    = $vehiculo->cliente->cedula;
-            $factura->nit                       = $datos['factura'][0]['cabecera']['numeroDocumento'];;
-            $factura->fecha                     = $datos['factura'][0]['cabecera']['fechaEmision'];
-            $factura->total                     = $datos['factura'][0]['cabecera']['montoTotal'];
-            $factura->facturado                 = "Si";
-            $factura->tipo_pago                 = $request->input('tipo_pago');
-            $factura->monto_pagado              = $request->input('monto_pagado');
-            $factura->cambio_devuelto           = $request->input('cambio');
-            $factura->estado_pago               = (((int)$factura->monto_pagado - (int)$factura->cambio_devuelto) == $factura->total)? "Pagado" : "Deuda";
-            $factura->cuf                       = $datos['factura'][0]['cabecera']['cuf'];
-            $factura->codigo_metodo_pago_siat   = $datos['factura'][0]['cabecera']['codigoMetodoPago'];
-            $factura->monto_total_subjeto_iva   = $datos['factura'][0]['cabecera']['montoTotalSujetoIva'];
-            $factura->descuento_adicional       = $datos['factura'][0]['cabecera']['descuentoAdicional'];
-            $factura->productos_xml             = file_get_contents('assets/docs/facturaxml.xml');
-            if($tipo_factura === "online"){
-                $factura->numero                    = $datos['factura'][0]['cabecera']['numeroFactura'];
-            }else{
-                if($datosRecepcion['uso_cafc'] === "Si"){
-                    $factura->numero_cafc           = $datos['factura'][0]['cabecera']['numeroFactura'];
-                    $factura->uso_cafc              = "si";
-                }else{
-                    $factura->numero                    = $datos['factura'][0]['cabecera']['numeroFactura'];
-                }
-            }
-            $factura->tipo_factura              = $tipo_factura;
-            $factura->save();
+            // // GUARDAMOS EN LA FACTURA
+            // $factura                            = new Factura();
+            // $factura->creador_id                = Auth::user()->id;
+            // $factura->vehiculo_id               = $datosVehiculo['vehiculo_id'];
+            // $factura->cliente_id                = $vehiculo->cliente_id;
+            // $factura->razon_social              = $datos['factura'][0]['cabecera']['nombreRazonSocial'];
+            // $factura->carnet                    = $vehiculo->cliente->cedula;
+            // $factura->nit                       = $datos['factura'][0]['cabecera']['numeroDocumento'];;
+            // $factura->fecha                     = $datos['factura'][0]['cabecera']['fechaEmision'];
+            // $factura->total                     = $datos['factura'][0]['cabecera']['montoTotal'];
+            // $factura->facturado                 = "Si";
+            // $factura->tipo_pago                 = $request->input('tipo_pago');
+            // $factura->monto_pagado              = $request->input('monto_pagado');
+            // $factura->cambio_devuelto           = $request->input('cambio');
+            // $factura->estado_pago               = (((int)$factura->monto_pagado - (int)$factura->cambio_devuelto) == $factura->total)? "Pagado" : "Deuda";
+            // $factura->cuf                       = $datos['factura'][0]['cabecera']['cuf'];
+            // $factura->codigo_metodo_pago_siat   = $datos['factura'][0]['cabecera']['codigoMetodoPago'];
+            // $factura->monto_total_subjeto_iva   = $datos['factura'][0]['cabecera']['montoTotalSujetoIva'];
+            // $factura->descuento_adicional       = $datos['factura'][0]['cabecera']['descuentoAdicional'];
+            // $factura->productos_xml             = file_get_contents('assets/docs/facturaxml.xml');
+            // if($tipo_factura === "online"){
+            //     $factura->numero                    = $datos['factura'][0]['cabecera']['numeroFactura'];
+            // }else{
+            //     if($datosRecepcion['uso_cafc'] === "Si"){
+            //         $factura->numero_cafc           = $datos['factura'][0]['cabecera']['numeroFactura'];
+            //         $factura->uso_cafc              = "si";
+            //     }else{
+            //         $factura->numero                    = $datos['factura'][0]['cabecera']['numeroFactura'];
+            //     }
+            // }
+            // $factura->tipo_factura              = $tipo_factura;
+            // $factura->save();
 
-
             if($tipo_factura === "online"){
+
                 $siat = app(SiatController::class);
                 $for  = json_decode($siat->recepcionFactura($archivoZip, $valoresCabecera['fechaEmision'],$hashArchivo));
-                // dd($for);
-                if($for->estado === "error"){
-                    $codigo_descripcion = null;
-                    $codigo_trancaccion = null;
-                    $descripcion        = null;
-                    $codigo_recepcion   = null;
-                }else{
-                    if($for->resultado->RespuestaServicioFacturacion->transaccion){
-                        $codigo_recepcion = $for->resultado->RespuestaServicioFacturacion->codigoRecepcion;
-                        $descripcion      = NULL;
-                    }else{
-                        $codigo_recepcion = NULL;
-                        $descripcion      = $for->resultado->RespuestaServicioFacturacion->mensajesList->descripcion;
-                    }
+
+                // NUEVO CODIGO PARA EVITAR ERROES DE GENERACION DE FACTURAS Y EVITAR QUE SE CREE MAS FACTURAS ASI NOMAS
+                if($for->estado === "success"){
                     $codigo_descripcion = $for->resultado->RespuestaServicioFacturacion->codigoDescripcion;
-                    $codigo_trancaccion = $for->resultado->RespuestaServicioFacturacion->transaccion;
+                    if($for->resultado->RespuestaServicioFacturacion->transaccion){
+
+                        // ESTO ES PARA LA FACTURA LA CREACION
+                        $facturaVerdad                          = new Factura();
+                        $facturaVerdad->creador_id              = Auth::user()->id;
+                        $facturaVerdad->vehiculo_id             = $datosVehiculo['vehiculo_id'];
+                        $facturaVerdad->cliente_id              = $vehiculo->cliente_id;
+                        $facturaVerdad->razon_social            = $datos['factura'][0]['cabecera']['nombreRazonSocial'];
+                        $facturaVerdad->carnet                  = $vehiculo->cliente->cedula;
+                        $facturaVerdad->nit                     = $datos['factura'][0]['cabecera']['numeroDocumento'];;
+                        $facturaVerdad->fecha                   = $datos['factura'][0]['cabecera']['fechaEmision'];
+                        $facturaVerdad->total                   = $datos['factura'][0]['cabecera']['montoTotal'];
+                        $facturaVerdad->facturado               = "Si";
+                        $facturaVerdad->tipo_pago               = $request->input('tipo_pago');
+                        $facturaVerdad->monto_pagado            = $request->input('monto_pagado');
+                        $facturaVerdad->cambio_devuelto         = $request->input('cambio');
+                        $facturaVerdad->estado_pago             = (((int)$facturaVerdad->monto_pagado - (int)$facturaVerdad->cambio_devuelto) == $facturaVerdad->total)? "Pagado" : "Deuda";
+                        $facturaVerdad->cuf                     = $datos['factura'][0]['cabecera']['cuf'];
+                        $facturaVerdad->codigo_metodo_pago_siat = $datos['factura'][0]['cabecera']['codigoMetodoPago'];
+                        $facturaVerdad->monto_total_subjeto_iva = $datos['factura'][0]['cabecera']['montoTotalSujetoIva'];
+                        $facturaVerdad->descuento_adicional     = $datos['factura'][0]['cabecera']['descuentoAdicional'];
+                        $facturaVerdad->productos_xml           = file_get_contents('assets/docs/facturaxml.xml');
+                        $facturaVerdad->numero                  = $datos['factura'][0]['cabecera']['numeroFactura'];
+                        $facturaVerdad->codigo_descripcion      = $codigo_descripcion;
+                        $facturaVerdad->codigo_recepcion        = $for->resultado->RespuestaServicioFacturacion->codigoRecepcion;
+                        $facturaVerdad->codigo_trancaccion      = $for->resultado->RespuestaServicioFacturacion->transaccion;
+                        $facturaVerdad->descripcion             = NULL;
+                        $facturaVerdad->cuis                    = session('scuis');
+                        $facturaVerdad->cufd                    = $scufd;
+                        $facturaVerdad->fechaVigencia           = Carbon::parse($sfechaVigenciaCufd)->format('Y-m-d H:i:s');
+                        $facturaVerdad->tipo_factura            = $tipo_factura;
+                        $facturaVerdad->save();
+
+                        // AHORA AREMOS PARA LOS PAGOS
+                        Detalle::whereIn('id', $datosVehiculo['pagos'])
+                                ->update(['estado' => 'Finalizado']);
+
+                        if($datosVehiculo['realizo_pago'] === "true"){
+                            $pago                = new Pago();
+                            $pago->creador_id    = Auth::user()->id;
+                            $pago->factura_id    = $facturaVerdad->id;
+                            $pago->caja_id       = $datosVehiculo['caja'];
+                            $pago->monto         = (int)$request->input('monto_pagado')-(int)$request->input('cambio');
+                            $pago->descripcion   = "VENTA";
+                            $pago->apertura_caja = "No";
+                            $pago->fecha         = date('Y-m-d H:i:s');
+                            $pago->tipo_pago     = $request->input('tipo_pago');
+                            $pago->estado        = ($pago->tipo_pago === 'efectivo' )? 'Ingreso' : 'Salida';
+                            $pago->save();
+                        }else{
+
+                        }
+
+                        $data['estado'] = $codigo_descripcion;
+
+                        // // ***************** ENVIAMOS EL CORREO DE LA FACTURA *****************
+                        // $nombre = $cliente->nombres." ".$cliente->ap_paterno." ".$cliente->ap_materno;
+                        // $this->enviaCorreo(
+                        //     $cliente->correo,
+                        //     $nombre,
+                        //     $factura->numero,
+                        //     $factura->fecha,
+                        //     $factura->id
+                        // );
+
+                    }else{
+                        $data['estado'] = "RECHAZADA";
+                        $data['msg'] = $for->resultado->RespuestaServicioFacturacion->mensajesList->descripcion;
+                    }
+                }else{
+                    $data['estado'] = "RECHAZADA";
+                    $data['msg'] = $for->msg;
                 }
-                $data['estado'] = $codigo_descripcion;
+                // dd($for);
+                // if($for->estado === "error"){
+                //     $codigo_descripcion = null;
+                //     $codigo_trancaccion = null;
+                //     $descripcion        = null;
+                //     $codigo_recepcion   = null;
+                // }else{
+                //     if($for->resultado->RespuestaServicioFacturacion->transaccion){
+                //         $codigo_recepcion = $for->resultado->RespuestaServicioFacturacion->codigoRecepcion;
+                //         $descripcion      = NULL;
+                //     }else{
+                //         $codigo_recepcion = NULL;
+                //         $descripcion      = $for->resultado->RespuestaServicioFacturacion->mensajesList->descripcion;
+                //     }
+                //     $codigo_descripcion = $for->resultado->RespuestaServicioFacturacion->codigoDescripcion;
+                //     $codigo_trancaccion = $for->resultado->RespuestaServicioFacturacion->transaccion;
+                // }
+                // $data['estado'] = $codigo_descripcion;
             }else{
-                $codigo_descripcion = null;
-                $codigo_recepcion   = null;
-                $codigo_trancaccion = null;
-                $descripcion        = null;
+
+
+                // ESTO ES PARA LA FACTURA LA CREACION
+                $facturaVerdad                          = new Factura();
+                $facturaVerdad->creador_id              = Auth::user()->id;
+                $facturaVerdad->vehiculo_id             = $datosVehiculo['vehiculo_id'];
+                $facturaVerdad->cliente_id              = $vehiculo->cliente_id;
+                $facturaVerdad->razon_social            = $datos['factura'][0]['cabecera']['nombreRazonSocial'];
+                $facturaVerdad->carnet                  = $vehiculo->cliente->cedula;
+                $facturaVerdad->nit                     = $datos['factura'][0]['cabecera']['numeroDocumento'];;
+                $facturaVerdad->fecha                   = $datos['factura'][0]['cabecera']['fechaEmision'];
+                $facturaVerdad->total                   = $datos['factura'][0]['cabecera']['montoTotal'];
+                $facturaVerdad->facturado               = "Si";
+                $facturaVerdad->tipo_pago               = $request->input('tipo_pago');
+                $facturaVerdad->monto_pagado            = $request->input('monto_pagado');
+                $facturaVerdad->cambio_devuelto         = $request->input('cambio');
+                $facturaVerdad->estado_pago             = (((int)$facturaVerdad->monto_pagado - (int)$facturaVerdad->cambio_devuelto) == $facturaVerdad->total)? "Pagado" : "Deuda";
+                $facturaVerdad->cuf                     = $datos['factura'][0]['cabecera']['cuf'];
+                $facturaVerdad->codigo_metodo_pago_siat = $datos['factura'][0]['cabecera']['codigoMetodoPago'];
+                $facturaVerdad->monto_total_subjeto_iva = $datos['factura'][0]['cabecera']['montoTotalSujetoIva'];
+                $facturaVerdad->descuento_adicional     = $datos['factura'][0]['cabecera']['descuentoAdicional'];
+                $facturaVerdad->productos_xml           = file_get_contents('assets/docs/facturaxml.xml');
+                // $facturaVerdad->numero                  = $datos['factura'][0]['cabecera']['numeroFactura'];
+                $facturaVerdad->codigo_descripcion      = NULL;
+                $facturaVerdad->codigo_recepcion        = NULL;
+                $facturaVerdad->codigo_trancaccion      = NULL;
+                $facturaVerdad->descripcion             = NULL;
+
+                if($datosRecepcion['uso_cafc'] === "Si"){
+                    $facturaVerdad->numero_cafc = $datos['factura'][0]['cabecera']['numeroFactura'];
+                    $facturaVerdad->uso_cafc    = "si";
+                }else{
+                    $facturaVerdad->numero = $datos['factura'][0]['cabecera']['numeroFactura'];
+                }
+
+                $facturaVerdad->cuis                    = session('scuis');
+                $facturaVerdad->cufd                    = $scufd;
+                $facturaVerdad->fechaVigencia           = Carbon::parse($sfechaVigenciaCufd)->format('Y-m-d H:i:s');
+                $facturaVerdad->tipo_factura            = $tipo_factura;
+                $facturaVerdad->save();
+
+                // AHORA AREMOS PARA LOS PAGOS
+                Detalle::whereIn('id', $datosVehiculo['pagos'])
+                        ->update(['estado' => 'Finalizado']);
+
+                if($datosVehiculo['realizo_pago'] === "true"){
+                    $pago                = new Pago();
+                    $pago->creador_id    = Auth::user()->id;
+                    $pago->factura_id    = $facturaVerdad->id;
+                    $pago->caja_id       = $datosVehiculo['caja'];
+                    $pago->monto         = (int)$request->input('monto_pagado')-(int)$request->input('cambio');
+                    $pago->descripcion   = "VENTA";
+                    $pago->apertura_caja = "No";
+                    $pago->fecha         = date('Y-m-d H:i:s');
+                    $pago->tipo_pago     = $request->input('tipo_pago');
+                    $pago->estado        = ($pago->tipo_pago === 'efectivo' )? 'Ingreso' : 'Salida';
+                    $pago->save();
+                }else{
+
+                }
+
+                // // ***************** ENVIAMOS EL CORREO DE LA FACTURA *****************
+                // $nombre = $cliente->nombres." ".$cliente->ap_paterno." ".$cliente->ap_materno;
+                // $this->enviaCorreo(
+                //     $cliente->correo,
+                //     $nombre,
+                //     $factura->numero,
+                //     $factura->fecha,
+                //     $factura->id
+                // );
+
                 $data['estado']     = 'OFFLINE';
             }
 
-            $facturaNew                     = Factura::find($factura->id);
-            $facturaNew->codigo_descripcion = $codigo_descripcion;
-            $facturaNew->codigo_recepcion   = $codigo_recepcion;
-            $facturaNew->codigo_trancaccion = $codigo_trancaccion;
-            $facturaNew->descripcion        = $descripcion;
-            $facturaNew->cuis               = session('scuis');
-            $facturaNew->cufd               = $scufd;
-            $facturaNew->fechaVigencia      = Carbon::parse($sfechaVigenciaCufd)->format('Y-m-d H:i:s');
-            $facturaNew->save();
+            // $facturaNew                     = Factura::find($factura->id);
+            // $facturaNew->codigo_descripcion = $codigo_descripcion;
+            // $facturaNew->codigo_recepcion   = $codigo_recepcion;
+            // $facturaNew->codigo_trancaccion = $codigo_trancaccion;
+            // $facturaNew->descripcion        = $descripcion;
+            // $facturaNew->cuis               = session('scuis');
+            // $facturaNew->cufd               = $scufd;
+            // $facturaNew->fechaVigencia      = Carbon::parse($sfechaVigenciaCufd)->format('Y-m-d H:i:s');
+            // $facturaNew->save();
             // ********************************* ESTO ES PARA GENERAR LA FACTURA *********************************
 
-            // dd($datosVehiculo['realizo_pago'],(boolean) $datosVehiculo['realizo_pago']);
+            // Detalle::whereIn('id', $datosVehiculo['pagos'])
+            //         ->update(['estado' => 'Finalizado']);
 
-            Detalle::whereIn('id', $datosVehiculo['pagos'])
-                    ->update(['estado' => 'Finalizado']);
+            // if($datosVehiculo['realizo_pago'] === "true"){
+            //     $pago                = new Pago();
+            //     $pago->creador_id    = Auth::user()->id;
+            //     $pago->factura_id    = $facturaNew->id;
+            //     $pago->caja_id       = $datosVehiculo['caja'];
+            //     $pago->monto         = (int)$request->input('monto_pagado')-(int)$request->input('cambio');
+            //     $pago->descripcion   = "VENTA";
+            //     $pago->apertura_caja = "No";
+            //     $pago->fecha         = date('Y-m-d H:i:s');
+            //     $pago->tipo_pago     = $request->input('tipo_pago');
+            //     $pago->estado        = ($pago->tipo_pago === 'efectivo' )? 'Ingreso' : 'Salida';
+            //     $pago->save();
+            // }else{
 
-            if($datosVehiculo['realizo_pago'] === "true"){
-                $pago                = new Pago();
-                $pago->creador_id    = Auth::user()->id;
-                $pago->factura_id    = $facturaNew->id;
-                $pago->caja_id       = $datosVehiculo['caja'];
-                $pago->monto         = (int)$request->input('monto_pagado')-(int)$request->input('cambio');
-                $pago->descripcion   = "VENTA";
-                $pago->apertura_caja = "No";
-                $pago->fecha         = date('Y-m-d H:i:s');
-                $pago->tipo_pago     = $request->input('tipo_pago');
-                $pago->estado        = ($pago->tipo_pago === 'efectivo' )? 'Ingreso' : 'Salida';
-                $pago->save();
-            }else{
-
-            }
-
-            // foreach ($datosVehiculo['pagos'] as $key => $pago_id) {
-            //     $detalle             = Detalle::find($pago_id);
-            //     $detalle->estado     = "Finalizado";
-            //     $detalle->factura_id = $facturaNew->id;
-            //     $detalle->save();
             // }
 
-            // ENVIAMOS EL CORREO DE LA FACTURA
-            // $nombre = $cliente->nombres." ".$cliente->ap_paterno." ".$cliente->ap_materno;
-            // $this->enviaCorreo(
-            //     $cliente->correo,
-            //     $nombre,
-            //     $factura->numero,
-            //     $factura->fecha,
-            //     $factura->id
-            // );
+            // // ENVIAMOS EL CORREO DE LA FACTURA
+            // // $nombre = $cliente->nombres." ".$cliente->ap_paterno." ".$cliente->ap_materno;
+            // // $this->enviaCorreo(
+            // //     $cliente->correo,
+            // //     $nombre,
+            // //     $factura->numero,
+            // //     $factura->fecha,
+            // //     $factura->id
+            // // );
 
             // PARA VALIDAR EL XML
             // $this->validar();

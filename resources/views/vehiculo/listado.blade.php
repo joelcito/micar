@@ -1012,7 +1012,7 @@
                         }else{
                             Swal.fire({
                                 icon : 'error',
-                                title: 'Error!',
+                                title: data.msg,
                                 text : 'LA FACTURA FUE RECHAZADA',
                             })
                         }
