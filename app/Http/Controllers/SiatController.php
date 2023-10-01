@@ -1096,7 +1096,7 @@ class SiatController extends Controller
         }
         return json_encode($data, JSON_UNESCAPED_UNICODE);
     }
-    
+
     public function recepcionFactura($arch, $fecEnv, $hasArch){
         $this->verificarConeccion();
         $wsdl                   = "https://pilotosiatservicios.impuestos.gob.bo/v2/ServicioFacturacionCompraVenta?wsdl";

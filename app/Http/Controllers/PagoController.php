@@ -155,7 +155,7 @@ class PagoController extends Controller
         if($request->ajax()){
 
             $factura_id = $request->input('factura_id');
-            
+
             $ultimaCajaAperturada = Caja::where('estado', 'Abierto')
             ->latest()
             ->first();
@@ -547,19 +547,33 @@ class PagoController extends Controller
             $total_servicios_lavador = $request->input('total_servicios_lavador');
             $liquido_pagable         = $request->input('total_liquido_pagable');
 
+            //PARA AGREGAR EL PAGOS SALIENTE DEL VENDEDOR
+            $ultimaCajaAperturada = Caja::where('estado', 'Abierto')
+                                        ->latest()
+                                        ->first();
+
+            $pago                = new Pago();
+            $pago->creador_id    = Auth::user()->id;
+            $pago->caja_id       = $ultimaCajaAperturada->id;
+            $pago->apertura_caja = "No";
+            $pago->monto         = $request->input('total_servicios_lavador');
+            $pago->fecha         = date('Y-m-d H:i:s');
+            $pago->tipo_pago     = 'efectivo';
+            $pago->descripcion   = "PAGO LIQUIDACION LAVADOR";
+            $pago->estado        = "Salida";
+            $pago->save();
+
+            //PARA PAGAR CUENTAS POR COBRAR SI ES QUE TIENE
             if((int)$cuenta_por_pagar > 0){
 
                 $conu                 = 0;
                 $facturasDeudroas     = Factura::facturasDeudoras($vehiculo->id, $vehiculo->cliente_id);
-                $ultimaCajaAperturada = Caja::where('estado', 'Abierto')
-                                        ->latest()
-                                        ->first();
 
                 while($cuenta_por_pagar > 0){
                     $pagado           = Pago::where('factura_id', $facturasDeudroas[$conu]->id)->sum('monto');
                     $deudaFactura     = ((float)$facturasDeudroas[$conu]->total - (float)$pagado);
 
-                    if($cuenta_por_pagar > $deudaFactura){
+                    if($cuenta_por_pagar >= $deudaFactura){
                         $pagarFactura                           = $deudaFactura;
                         $facturasDeudroas[$conu]->estado_pago   = 'Pagado';
                         $facturasDeudroas[$conu]->save();
@@ -587,10 +601,11 @@ class PagoController extends Controller
             $detalles_ids = Detalle::select('id')
                                 ->where('lavador_id', $lavador_usuario)
                                 ->where('fecha', $fecha_pago)
-                                ->pluck('id');    
+                                ->where('estado_liquidacion', "Debe")
+                                ->pluck('id');
 
             Detalle::whereIn('id', $detalles_ids)
-                    ->update(['estado_liquidacion'  => 'Pagado']);            
+                    ->update(['estado_liquidacion'  => 'Pagado']);
 
             $LiquidacionLavadorPago                     = new  LiquidacionLavadorPago();
             $LiquidacionLavadorPago->creador_id         = Auth::user()->id;
@@ -601,13 +616,39 @@ class PagoController extends Controller
             $LiquidacionLavadorPago->cuenta_por_pagar   = $cuenta_por_pagarLol;
             $LiquidacionLavadorPago->liquido_pagable    = $liquido_pagable;
             $LiquidacionLavadorPago->detalles_id        = $detalles_ids;
-            $LiquidacionLavadorPago->save();           
+            $LiquidacionLavadorPago->save();
 
             $data['estado'] = 'success';
+            $data['LiquidacionLavadorPago'] = $LiquidacionLavadorPago;
         }else{
             $data['estado'] = 'error';
         }
         return $data;
+    }
+
+    public function imprimeLiquidacionVendedor(Request $request, $liquidacion_vendedor_pago_id){
+
+        $liquidacion_vendedor_pago = LiquidacionLavadorPago::find($liquidacion_vendedor_pago_id);
+
+        $detalles = Detalle::select(
+                                'detalles.servicio_id',
+                                DB::raw('SUM(detalles.cantidad) as cantidad'),
+                                'servicios.precio',
+                                'servicios.descripcion',
+                                'servicios.liquidacion as liquidacionServicio',
+                                'servicios.tipo_liquidacion as tipoLiquidacionServicio',
+                                'liquidacion_lavadores.tipo_liquidacion as tipoLiquidacionLl',
+                                'liquidacion_lavadores.liquidacion as liquidacionLl'
+                                )
+                        ->join('servicios', 'detalles.servicio_id', '=', 'servicios.id')
+                        ->leftJoin('liquidacion_lavadores', 'detalles.servicio_id', '=', 'liquidacion_lavadores.servicio_id')
+                        ->whereIn('detalles.id', json_decode($liquidacion_vendedor_pago->detalles_id))
+                        ->groupBy('detalles.servicio_id', 'liquidacion_lavadores.tipo_liquidacion', 'liquidacion_lavadores.liquidacion')
+                        ->get();
+
+        // dd($pagos);
+
+        return view('pago.imprimeLiquidacionVendedor')->with(compact('liquidacion_vendedor_pago', 'detalles'));
     }
 
 

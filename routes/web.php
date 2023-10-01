@@ -49,9 +49,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/home', [HomeController::class, 'index']);
 
-    Route::get('/venta', [VentaController::class, 'listado']);
-    Route::post('/venta/guarda', [VentaController::class, 'guarda']);
-    Route::post('/venta/pagar', [VentaController::class, 'pagar']);
+    // Route::get('/venta', [VentaController::class, 'listado']);
+    // Route::post('/venta/guarda', [VentaController::class, 'guarda']);
+    // Route::post('/venta/pagar', [VentaController::class, 'pagar']);
 
     // USUARIOS
     Route::get('/user', [UserController::class, 'listado']);
@@ -119,6 +119,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/infomearqueo', [PagoController::class, 'infomearqueo']);
         Route::get('/liquidacionNew', [PagoController::class, 'liquidacionNew']);
         Route::get('/liquidacionList', [PagoController::class, 'liquidacionList']);
+        Route::get('/imprimeLiquidacionVendedor/{liquidacion_vendedor_pago_id}', [PagoController::class, 'imprimeLiquidacionVendedor']);
+
 
         Route::post('/ajaxListado', [PagoController::class, 'ajaxListado']);
         Route::post('/eliminarPago', [PagoController::class, 'eliminarPago']);

@@ -27,4 +27,8 @@ class LiquidacionLavadorPago extends Model
         'estado',
         'deleted_at',
     ];
+
+    public function lavador(){
+        return $this->belongsTo('App\Models\User', 'lavador_id_user');
+    }
 }

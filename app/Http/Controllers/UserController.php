@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\LiquidacionLavadorPago;
 use App\Models\Rol;
 use App\Models\Servicio;
 use App\Models\User;
@@ -61,11 +62,12 @@ class UserController extends Controller
     }
 
     public function detalle(Request $request, $usuario_id){
-        // dd($usuario_id);
 
         $servicios = Servicio::where('tipo_liquidacion', 'depende')->get();
-
         $usuario = User::find($usuario_id);
-        return view('user.detalle')->with(compact('usuario', 'servicios'));
+
+        $liquidaciones = LiquidacionLavadorPago::where('lavador_id_user',$usuario_id)->get();
+
+        return view('user.detalle')->with(compact('usuario', 'servicios', 'liquidaciones'));
     }
 }

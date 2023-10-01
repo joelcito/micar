@@ -104,7 +104,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div id="facturas_pendientes" style="display: none">
-                        
+
                     </div>
                 </div>
             </div>
@@ -149,8 +149,9 @@
             dataType: 'json',
             success: function(data) {
                 if(data.estado === 'success'){
-                    $('#facturas_pendientes').html(data.listado)
-                    $('#facturas_pendientes').show('toogle')
+                    console.log(data)
+                    let url = "{{ asset('pago/imprimeLiquidacionVendedor') }}/"+data.LiquidacionLavadorPago.id;
+                    window.location.href = url;
                 }
             }
         });

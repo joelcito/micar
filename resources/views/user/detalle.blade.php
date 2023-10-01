@@ -225,29 +225,152 @@
     </div>
     <!--end::Card-->
 
+    <!--begin::Content-->
+    <div id="kt_app_content" class="app-content flex-column-fluid mt-5">
+        <!--begin::Content container-->
+        <div id="kt_app_content_container" class="app-container container-xxl">
+            <!--begin::Row-->
+            <div class="row g-5 g-xl-10 mb-5 mb-xl-10">
+                <!--begin::Col-->
+                <div class="col-xl-12">
+                    <!--begin::Table widget 8-->
+                    <div class="card h-xl-100">
+                        <!--begin::Header-->
+                        <div class="card-header position-relative py-0 border-bottom-2">
+                            <!--begin::Nav-->
+                            <ul class="nav nav-stretch nav-pills nav-pills-custom d-flex mt-3">
+                                <!--begin::Nav item-->
+                                <li class="nav-item p-0 ms-0 me-8">
+                                    <!--begin::Nav link-->
+                                    <a class="nav-link btn btn-color-muted px-0 show active" data-bs-toggle="tab" href="#kt_table_widget_7_tab_content_1">
+                                        <!--begin::Title-->
+                                        <span class="nav-text fw-semibold fs-4 mb-3">ASIGNACIONES</span>
+                                        <!--end::Title-->
+                                        <!--begin::Bullet-->
+                                        <span class="bullet-custom position-absolute z-index-2 w-100 h-2px top-100 bottom-n100 bg-primary rounded"></span>
+                                        <!--end::Bullet-->
+                                    </a>
+                                    <!--end::Nav link-->
+                                </li>
+                                <!--end::Nav item-->
+                                <!--begin::Nav item-->
+                                <li class="nav-item p-0 ms-0 me-8">
+                                    <!--begin::Nav link-->
+                                    <a class="nav-link btn btn-color-muted px-0" data-bs-toggle="tab" href="#kt_table_widget_7_tab_content_2">
+                                        <!--begin::Title-->
+                                        <span class="nav-text fw-semibold fs-4 mb-3">LIQUIDACION</span>
+                                        <!--end::Title-->
+                                        <!--begin::Bullet-->
+                                        <span class="bullet-custom position-absolute z-index-2 w-100 h-2px top-100 bottom-n100 bg-primary rounded"></span>
+                                        <!--end::Bullet-->
+                                    </a>
+                                    <!--end::Nav link-->
+                                </li>
+                                <!--end::Nav item-->
+                            </ul>
+                            <!--end::Nav-->
+                        </div>
+                        <!--end::Header-->
+                        <!--begin::Body-->
+                        <div class="card-body">
+                            <!--begin::Tab Content (ishlamayabdi)-->
+                            <div class="tab-content mb-2">
+                                <!--begin::Tap pane-->
+                                <div class="tab-pane fade show active" id="kt_table_widget_7_tab_content_1">
 
-    <!--begin::Card-->
-    <div class="card mt-4">
-        <div class="card-header border-0 pt-6">
-            <div class="card-title">
-                <h1>Listado de Asignacion de Servicios</h1>
-            </div>
-            <div class="card-toolbar">
-                <button class="btn btn-sm btn-primary" type="button" onclick="nuevoAsignacion()">Nuevo Asignacion <i class="fa fa-plus"></i></button>
-            </div>
-        </div>
-        <div class="card-body py-4">
-            <div class="row">
-                <div class="col-md-12">
-                    <div id="tabla_vehiuclos">
+                                    <!--begin::Card-->
+                                    <div class="card">
+                                        <div class="card-header border-0">
+                                            <div class="card-title">
+                                                <h1>Listado de Asignacion de Servicios</h1>
+                                            </div>
+                                            <div class="card-toolbar">
+                                                <button class="btn btn-sm btn-primary" type="button" onclick="nuevoAsignacion()">Nuevo Asignacion <i class="fa fa-plus"></i></button>
+                                            </div>
+                                        </div>
+                                        <div class="card-body py-4">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div id="tabla_vehiuclos">
 
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--end::Card body-->
+                                    </div>
+                                    <!--end::Card-->
+
+                                </div>
+                                <!--end::Tap pane-->
+                                <!--begin::Tap pane-->
+                                <div class="tab-pane fade" id="kt_table_widget_7_tab_content_2">
+
+                                    <!--begin::Card-->
+                                    <div class="card">
+                                        <div class="card-header border-0">
+                                            <div class="card-title">
+                                                <h1>Listado de Liquidaciones</h1>
+                                            </div>
+                                        </div>
+                                        <div class="card-body py-4">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="table-responsive">
+                                                        <!--begin::Table-->
+                                                            <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_table_users1">
+                                                                <thead>
+                                                                    <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
+                                                                        <th class="text-center">Fecha Pagado</th>
+                                                                        <th class="text-center">Total Servicio</th>
+                                                                        <th class="text-center">Cuenta por Cobrar</th>
+                                                                        <th class="text-center">Liquido Pagado</th>
+                                                                        <th class="text-center"></th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody class="text-gray-600 fw-semibold">
+                                                                    @forelse ( $liquidaciones as  $liq )
+                                                                        <tr>
+                                                                            <td class="text-center">{{ $liq->fecha_pagado }}</td>
+                                                                            <td class="text-center">{{ number_format($liq->total_servicios,2) }}</td>
+                                                                            <td class="text-center">{{ number_format($liq->cuenta_por_pagar,2) }}</td>
+                                                                            <td class="text-center">{{ number_format($liq->liquido_pagable,2) }}</td>
+                                                                            <td class="text-center">
+                                                                                <a href="{{ url('pago/imprimeLiquidacionVendedor', [$liq->id]) }}"class="btn btn-info btn-icon btn-sm"><i class="fa fa-eye"></i></a>
+                                                                            </td>
+                                                                        </tr>
+                                                                    @empty
+                                                                        <h4 class="text-danger text-center">Sin registros</h4>
+                                                                    @endforelse
+                                                                </tbody>
+                                                            </table>
+                                                        <!--end::Table-->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--end::Card body-->
+                                    </div>
+                                    <!--end::Card-->
+
+                                </div>
+                            </div>
+                            <!--end::Tab Content-->
+                        </div>
+                        <!--end: Card Body-->
                     </div>
+                    <!--end::Table widget 8-->
                 </div>
+                <!--end::Col-->
             </div>
+            <!--end::Row-->
         </div>
-        <!--end::Card body-->
+        <!--end::Content container-->
     </div>
-    <!--end::Card-->
+    <!--end::Content-->
+
+
+
 @stop()
 
 @section('js')
