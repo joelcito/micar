@@ -60,14 +60,14 @@
                             <span class="menu-title">Categorias</span>
                         </a>
                     </div>
-                    <div class="menu-item">
+                    {{-- <div class="menu-item">
                         <a class="menu-link" href="{{ url('/cliente') }}">
                             <span class="menu-bullet">
                                 <span class="bullet bullet-dot"></span>
                             </span>
                             <span class="menu-title">Cliente</span>
                         </a>
-                    </div>
+                    </div> --}}
                     <div class="menu-item">
                         <a class="menu-link" href="{{ url('puntoVenta/listado') }}">
                             <span class="menu-bullet">
@@ -207,7 +207,7 @@
                 </div>
             </div>
 
-            <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+            {{-- <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
                 <!--begin:Menu link-->
                 <span class="menu-link">
                     <span class="menu-icon">
@@ -234,20 +234,9 @@
                         </a>
                         <!--end:Menu link-->
                     </div>
-                    <!--end:Menu item-->
-                    <!--begin:Menu item-->
-                    {{-- <div class="menu-item">
-                        <a class="menu-link" href="{{ url('/cliente/nuevo') }}">
-                            <span class="menu-bullet">
-                                <span class="bullet bullet-dot"></span>
-                            </span>
-                            <span class="menu-title">Nuevo Cliente</span>
-                        </a>
-                    </div> --}}
-                    <!--end:Menu item-->
                 </div>
                 <!--end:Menu sub-->
-            </div>
+            </div> --}}
 
             <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
                 <!--begin:Menu link-->
@@ -279,6 +268,14 @@
                                 <span class="bullet bullet-dot"></span>
                             </span>
                             <span class="menu-title">Cuentas por cobrar</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a class="menu-link" href="{{ url('cliente') }}">
+                            <span class="menu-bullet">
+                                <span class="bullet bullet-dot"></span>
+                            </span>
+                            <span class="menu-title">Clientes</span>
                         </a>
                     </div>
                 </div>

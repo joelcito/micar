@@ -75,7 +75,7 @@
 </div>
 <div class="row">
     <div class="col-md-12">
-        <form action="">
+        <form id="formulario_pagar_vendedor">
             {{-- <div class="row">
                 <div class="col-md-10">
                     SUMATORIA TOTAL:
@@ -90,7 +90,7 @@
                 </div>
                 <div class="col-md-6">
                     <label class="required fw-semibold fs-6 mb-2">Lavador</label>
-                    <select name="cliente_lavador" id="cliente_lavador" class="form-control" onchange="buscarCuentasPorCobrar()">
+                    <select name="cliente_lavador" id="cliente_lavador" class="form-control" onchange="buscarCuentasPorCobrar()" required>
                         <option value="">Seleccione</option>
                         @foreach($clientesLavadores as $key => $lav)
                             <option value="{{ $lav->id }}">{{ $lav->nombres." ".$lav->ap_paterno." ".$lav->ap_materno }}</option>
@@ -111,15 +111,15 @@
             <div class="row">
                 <div class="col-md-3">
                     <label class="required fw-semibold fs-6 mb-2">Total Servicios</label>
-                    <input type="number" step="0.01" readonly class="form-control form-control-solid" required name="total_servicios_lavador" id="total_servicios_lavador" value="{{ $sumaTatalPagar }}">
+                    <input type="number" step="0.01" readonly class="form-control form-control-solid" name="total_servicios_lavador" id="total_servicios_lavador" value="{{ $sumaTatalPagar }}" required>
                 </div>
                 <div class="col-md-3">
                     <label class="required fw-semibold fs-6 mb-2">Cuentas por cobrar</label>
-                    <input type="number" class="form-control form-control-solid" required name="cuentas_por_cobrar_pagar" id="cuentas_por_cobrar_pagar" value="0" max="{{ $sumaTatalPagar }}"  oninput="realizarCalculo()">
+                    <input type="number" class="form-control form-control-solid" name="cuentas_por_cobrar_pagar" id="cuentas_por_cobrar_pagar" value="0"  oninput="realizarCalculo()" required>
                 </div>
                 <div class="col-md-3">
                     <label class="required fw-semibold fs-6 mb-2">Liquido Pagable</label>
-                    <input type="number" class="form-control form-control-solid" required name="total_liquido_pagable" id="total_liquido_pagable" value="{{ $sumaTatalPagar }}" readonly>
+                    <input type="number" class="form-control form-control-solid" name="total_liquido_pagable" id="total_liquido_pagable" value="{{ $sumaTatalPagar }}" readonly required>
                 </div>
                 <div class="col-md-3">
                     <button class="btn btn-success w-100 btn-sm mt-9" type="button" onclick="cancelarVendedor()">Pagar</button>
@@ -128,6 +128,12 @@
         </form>
     </div>
 </div>
+@section('js')
+
+<script>
+    console.log("hola che")
+</script>
+@endsection
 <script>
     $('#tabla_user').DataTable({
         ordering: false
@@ -135,25 +141,53 @@
 
     function cancelarVendedor(){
 
-        $.ajax({
-            url: "{{ url('pago/cancelarVendedor') }}",
-            type: 'POST',
-            data:{
-                total_servicios_lavador : $('#total_servicios_lavador').val(),
-                cuentas_por_cobrar_pagar: $('#cuentas_por_cobrar_pagar').val(),
-                total_liquido_pagable   : $('#total_liquido_pagable').val(),
-                lavador_cliente         : $('#cliente_lavador').val(),
-                fecha                   : "{{ $fecha }}",
-                lavador_usuario         : "{{ $lavador->id }}"
-            },
-            dataType: 'json',
-            success: function(data) {
-                if(data.estado === 'success'){
-                    console.log(data)
-                    let url = "{{ asset('pago/imprimeLiquidacionVendedor') }}/"+data.LiquidacionLavadorPago.id;
-                    window.location.href = url;
+
+        // // Obtén una referencia al elemento de formulario que deseas validar
+        // var formulario = document.getElementById("formulario_pagar_vendedor");
+
+        // console.log(formulario)
+
+        // // Verifica si el formulario es nulo o indefinido antes de acceder a checkValidity
+        // if (formulario && formulario.checkValidity) {
+        //     // Realiza operaciones de validación aquí
+        //     if (formulario.checkValidity()) {
+        //         // El formulario es válido, realiza las acciones de cancelación
+        //         // ...
+        //         console.log("tas")
+        //     } else {
+        //         // El formulario no es válido, muestra un mensaje de error o realiza otra acción
+        //         // ...
+        //         console.log("aber")
+        //     }
+        // }else{
+        //     console.log("no")
+        //     // $("#formulario_pagar_vendedor")[0].reportValidity()
+        // }
+
+
+        if($("#formulario_pagar_vendedor")[0].checkValidity()){
+            $.ajax({
+                url: "{{ url('pago/cancelarVendedor') }}",
+                type: 'POST',
+                data:{
+                    total_servicios_lavador : $('#total_servicios_lavador').val(),
+                    cuentas_por_cobrar_pagar: $('#cuentas_por_cobrar_pagar').val(),
+                    total_liquido_pagable   : $('#total_liquido_pagable').val(),
+                    lavador_cliente         : $('#cliente_lavador').val(),
+                    fecha                   : "{{ $fecha }}",
+                    lavador_usuario         : "{{ $lavador->id }}"
+                },
+                dataType: 'json',
+                success: function(data) {
+                    if(data.estado === 'success'){
+                        console.log(data)
+                        let url = "{{ asset('pago/imprimeLiquidacionVendedor') }}/"+data.LiquidacionLavadorPago.id;
+                        window.location.href = url;
+                    }
                 }
-            }
-        });
+            });
+        }else{
+            $("#formulario_pagar_vendedor")[0].reportValidity()
+        }
     }
 </script>

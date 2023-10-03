@@ -38,7 +38,7 @@ class Detalle extends Model
         return $this->belongsTo('App\Models\Servicio', 'servicio_id');
     }
 
-    public static function detallesLavadorFecha($lavador, $fecha){
+    public static function detallesLavadorFecha($lavador, $fecha_ini, $fecha_fin){
 
         $detalles = Detalle::select(
                     'detalles.servicio_id',
@@ -54,7 +54,7 @@ class Detalle extends Model
                 ->leftJoin('liquidacion_lavadores', 'detalles.servicio_id', '=', 'liquidacion_lavadores.servicio_id')
                 ->where('detalles.lavador_id', $lavador)
                 ->where('detalles.estado_liquidacion', 'Debe')
-                ->whereBetween('detalles.fecha', [$fecha, $fecha])
+                ->whereBetween('detalles.fecha', [$fecha_ini, $fecha_fin])
                 ->groupBy('detalles.servicio_id', 'liquidacion_lavadores.tipo_liquidacion', 'liquidacion_lavadores.liquidacion')
                 ->get();
 

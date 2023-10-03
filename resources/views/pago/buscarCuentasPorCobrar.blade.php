@@ -58,7 +58,10 @@
     <tfoot>
         <tr>
             <th colspan="9">TOTAL CUENTAS POR COBRAR</th>
-            <th><b>{{ number_format($totalMontoCuentasPorCobrar, 2) }}</b></th>
+            <th>
+                <b>{{ number_format($totalMontoCuentasPorCobrar, 2) }}</b>
+                <input type="hidden" value="{{ $totalMontoCuentasPorCobrar }}" id="cuenta_por_cobrar_total">
+            </th>
         </tr>
     </tfoot>
 </table>

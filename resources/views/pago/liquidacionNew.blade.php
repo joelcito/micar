@@ -209,8 +209,9 @@
                 url: "{{ url('pago/selecionarLavador') }}",
                 type: 'POST',
                 data:{
-                    lavador: lavador,
-                    fecha  : $('#fecha_lavador_'+lavador).val()
+                    lavador  : lavador,
+                    fecha_ini: $('#fecha_lavador_ini_'+lavador).val(),
+                    fecha_fin: $('#fecha_lavador_fin_'+lavador).val()
                 },
                 dataType: 'json',
                 success: function(data) {
@@ -235,6 +236,7 @@
                     if(data.estado === 'success'){
                         $('#facturas_pendientes').html(data.listado)
                         $('#facturas_pendientes').show('toogle')
+                        $("#cuentas_por_cobrar_pagar").attr("max", $('#cuenta_por_cobrar_total').val());
                     }
                 }
             });

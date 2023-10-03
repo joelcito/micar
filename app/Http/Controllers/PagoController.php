@@ -57,12 +57,12 @@ class PagoController extends Controller
         return view('pago.ajaxListado')->with(compact('pagos'))->render();
     }
 
-    public function detalle(Request $request, $pago_id){
+    // public function detalle(Request $request, $pago_id){
 
-        $ventas = Venta::where('pago_id', $pago_id)->get();
+    //     $ventas = Venta::where('pago_id', $pago_id)->get();
 
-        return view('pago.detalle')->with(compact('ventas'));
-    }
+    //     return view('pago.detalle')->with(compact('ventas'));
+    // }
 
     public function eliminarPago(Request $request) {
         if($request->ajax()){
@@ -467,7 +467,8 @@ class PagoController extends Controller
         if($request->ajax()){
 
             $lavador_id = $request->input('lavador');
-            $fecha      = $request->input('fecha');
+            $fecha_ini  = $request->input('fecha_ini');
+            $fecha_fin  = $request->input('fecha_fin');
 
             $lavador = User::find($lavador_id);
 
@@ -488,7 +489,7 @@ class PagoController extends Controller
             //                     ->groupBy('detalles.servicio_id', 'liquidacion_lavadores.tipo_liquidacion', 'liquidacion_lavadores.liquidacion')
             //                     ->get();
 
-            $detalles = Detalle::detallesLavadorFecha($lavador_id, $fecha);
+            $detalles = Detalle::detallesLavadorFecha($lavador_id, $fecha_ini, $fecha_fin);
 
             $clientesLavadores = Cliente::where('tipo_cliente','lavador')->get();
 

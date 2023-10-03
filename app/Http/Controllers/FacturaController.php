@@ -306,7 +306,10 @@ class FacturaController extends Controller
 
                         // AHORA AREMOS PARA LOS PAGOS
                         Detalle::whereIn('id', $datosVehiculo['pagos'])
-                                ->update(['estado' => 'Finalizado']);
+                                ->update([
+                                    'estado'     => 'Finalizado',
+                                    'factura_id' => $facturaVerdad->id
+                                ]);
 
                         if($datosVehiculo['realizo_pago'] === "true"){
                             $pago                = new Pago();
@@ -1464,7 +1467,6 @@ class FacturaController extends Controller
         $response = Mail::to($correo)->send($mail);
     }
 
-
     // ============================= PARA LA GENERACION DEL RECIBO ==================================================
     public function emitirRecibo(Request $request){
         if($request->ajax()){
@@ -1486,8 +1488,6 @@ class FacturaController extends Controller
                                 ->where('detalles.estado',"paraPagar")
                                 ->where('detalles.vehiculo_id',$vehiculo_d)
                                 ->get();
-
-            // dd($servicios);
 
             $factura                      = new Factura();
             $factura->creador_id          = Auth::user()->id;

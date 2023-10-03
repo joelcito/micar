@@ -7,7 +7,8 @@
             <th>Paterno</th>
             <th>Materno</th>
             <th>Nombres</th>
-            <th>Fecha</th>
+            <th>Fecha Ini</th>
+            <th>Fecha Fin</th>
             <th></th>
         </tr>
     </thead>
@@ -20,7 +21,10 @@
                 <td>{{ $l->ap_materno }}</td>
                 <td>{{ $l->nombres }}</td>
                 <td>
-                    <input type="date" class="form-control" id="fecha_lavador_{{ $l->id }}" value="{{ date('Y-m-d') }}">
+                    <input type="date" class="form-control" id="fecha_lavador_ini_{{ $l->id }}" value="{{ date('Y-m-d') }}">
+                </td>
+                <td>
+                    <input type="date" class="form-control" id="fecha_lavador_fin_{{ $l->id }}" value="{{ date('Y-m-d') }}">
                 </td>
                 <td>
                     <button class="btn btn-success btn-icon btn-sm" onclick="selecionarLavador('{{ $l->id }}')"><i class="fa fa-money-bill"></i></button>

@@ -26,7 +26,8 @@ return new class extends Migration
             $table->unsignedBigInteger('lavador_id_user')->nullable();
             $table->foreign('lavador_id_cliente')->references('id')->on('clientes');
             $table->unsignedBigInteger('lavador_id_cliente')->nullable();
-            $table->date('fecha_pagado')->nullable();
+            $table->date('fecha_pagado_ini')->nullable();
+            $table->date('fecha_pagado_fin')->nullable();
             $table->decimal('total_servicios', 15, 2)->nullable();
             $table->decimal('cuenta_por_pagar', 15, 2)->nullable();
             $table->decimal('liquido_pagable', 15, 2)->nullable();
