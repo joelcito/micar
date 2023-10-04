@@ -1,6 +1,7 @@
 <div class="row mt-5">
     <div class="col-md-6 text-center"><h3>Lavador: <span class="text-info">{{ $lavador->name }}</span></h3></div>
-    <div class="col-md-6 text-center"><h3>Fecha: <span class="text-info">{{ $fecha }}</span></h3></div>
+    <div class="col-md-3 text-center"><h3>Fecha Ini: <span class="text-info">{{ $fecha_ini }}</span></h3></div>
+    <div class="col-md-3 text-center"><h3>Fecha Fin: <span class="text-info">{{ $fecha_fin }}</span></h3></div>
 </div>
 <table class="table align-middle table-row-dashed fs-6 gy-5" id="tabla_user">
     <thead>
@@ -174,7 +175,9 @@
                     cuentas_por_cobrar_pagar: $('#cuentas_por_cobrar_pagar').val(),
                     total_liquido_pagable   : $('#total_liquido_pagable').val(),
                     lavador_cliente         : $('#cliente_lavador').val(),
-                    fecha                   : "{{ $fecha }}",
+                    // fecha                   : "{{ $fecha }}",
+                    fecha_ini               : "{{ $fecha_ini }}",
+                    fecha_fin               : "{{ $fecha_fin }}",
                     lavador_usuario         : "{{ $lavador->id }}"
                 },
                 dataType: 'json',

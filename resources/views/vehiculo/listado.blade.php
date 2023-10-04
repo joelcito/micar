@@ -50,7 +50,7 @@
                         <div class="col-md-8">
                             <div class="fv-row mb-7">
                                 <label class="required fw-semibold fs-6 mb-2">Descripcion</label>
-                                <input type="text" class="form-control" required name="descripcion_ape_caja" id="descripcion_ape_caja">
+                                <input type="text" class="form-control" required name="descripcion_ape_caja" id="descripcion_ape_caja" autocomplete="off">
                             </div>
                         </div>
                     </div>

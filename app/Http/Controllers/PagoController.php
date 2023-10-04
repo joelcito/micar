@@ -494,7 +494,7 @@ class PagoController extends Controller
             $clientesLavadores = Cliente::where('tipo_cliente','lavador')->get();
 
             $data['estado']  = 'success';
-            $data['listado']  = view('pago.selecionarLavador')->with(compact('detalles', 'lavador', 'fecha', 'clientesLavadores'))->render();
+            $data['listado']  = view('pago.selecionarLavador')->with(compact('detalles', 'lavador', 'fecha_ini', 'fecha_fin', 'clientesLavadores'))->render();
         }else{
             $data['estado']  = 'error';
         }
@@ -539,10 +539,12 @@ class PagoController extends Controller
     public function cancelarVendedor(Request $request){
         if($request->ajax()){
 
-            $lavador_usuario         = $request->input('lavador_usuario');
-            $lavador_cliente         = $request->input('lavador_cliente');
-            $vehiculo                = Vehiculo::where('cliente_id',$lavador_cliente)->first();
-            $fecha_pago              = $request->input('fecha');
+            $lavador_usuario        = $request->input('lavador_usuario');
+            $lavador_cliente        = $request->input('lavador_cliente');
+            $vehiculo               = Vehiculo::where('cliente_id',$lavador_cliente)->first();
+            // $fecha_pago              = $request->input('fecha');
+            $fecha_pago_ini          = $request->input('fecha_ini');
+            $fecha_pago_fin          = $request->input('fecha_fin');
             $cuenta_por_pagar        = $request->input('cuentas_por_cobrar_pagar');
             $cuenta_por_pagarLol     = $request->input('cuentas_por_cobrar_pagar');
             $total_servicios_lavador = $request->input('total_servicios_lavador');
@@ -601,6 +603,7 @@ class PagoController extends Controller
 
             $detalles_ids = Detalle::select('id')
                                 ->where('lavador_id', $lavador_usuario)
+                                // ->where('fecha', $fecha_pago)
                                 ->where('fecha', $fecha_pago)
                                 ->where('estado_liquidacion', "Debe")
                                 ->pluck('id');

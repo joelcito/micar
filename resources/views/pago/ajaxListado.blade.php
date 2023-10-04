@@ -92,7 +92,7 @@
                                 @else
                                     @if ($p->codigo_descripcion != 'VALIDADA' && $p->codigo_descripcion != 'PENDIENTE')
                                         <button class="btn btn-info btn-icon btn-sm" onclick="modalRecepcionFacuraContingenciaFueraLinea()"><i class="fa fa-upload" aria-hidden="true"></i></button>
-                                    @else
+                                    @else   
                                         <button  class="btn btn-danger btn-icon btn-sm" type="button" onclick="modalAnular('{{ $p->id }}')"><i class="fa fa-trash"></i></button>
                                     @endif
                                 @endif
