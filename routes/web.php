@@ -150,24 +150,26 @@ Route::middleware('auth')->group(function () {
 
     // FACTURA
     Route::prefix('/factura')->group(function(){
+        Route::get('/generaPdfFacturaNew/{factura_id}', [FacturaController::class, 'generaPdfFacturaNew']);
+        Route::get('/pruebas', [FacturaController::class, 'pruebas']);
+        Route::get('/emiteFacturaMasa', [FacturaController::class, 'emiteFacturaMasa']);
+        Route::get('/imprimeFactura/{factura_id}', [FacturaController::class, 'imprimeFactura']);
+        Route::get('/imprimeRecibo/{factura_id}', [FacturaController::class, 'imprimeRecibo']);
+        Route::get('/imprimeTicked/{vehiculo_id}', [FacturaController::class, 'imprimeTicked']);
+
         Route::post('/arrayCuotasPagar', [FacturaController::class, 'arrayCuotasPagar']);
         Route::post('/actualizaDescuento', [FacturaController::class, 'actualizaDescuento']);
         Route::post('/sumaTotalMonto', [FacturaController::class, 'sumaTotalMonto']);
         Route::post('/emitirFactura', [FacturaController::class, 'emitirFactura']);
         Route::post('/anularFacturaNew', [FacturaController::class, 'anularFacturaNew']);
-        Route::get('/generaPdfFacturaNew/{factura_id}', [FacturaController::class, 'generaPdfFacturaNew']);
         Route::post('/muestraTableFacturaPaquete', [FacturaController::class, 'muestraTableFacturaPaquete']);
         Route::post('/mandarFacturasPaquete', [FacturaController::class, 'mandarFacturasPaquete']);
         Route::post('/sacaNumeroCafcUltimo', [FacturaController::class, 'sacaNumeroCafcUltimo']);
         Route::post('/sacaNumeroFactura', [FacturaController::class, 'sacaNumeroFactura']);
-        Route::get('/pruebas', [FacturaController::class, 'pruebas']);
-        Route::get('/emiteFacturaMasa', [FacturaController::class, 'emiteFacturaMasa']);
-        Route::get('/imprimeFactura/{factura_id}', [FacturaController::class, 'imprimeFactura']);
         Route::post('/verificaNit', [FacturaController::class, 'verificaNit']);
         Route::post('/emitirRecibo', [FacturaController::class, 'emitirRecibo']);
-        Route::get('/imprimeRecibo/{factura_id}', [FacturaController::class, 'imprimeRecibo']);
         Route::post('/anularRecibo', [FacturaController::class, 'anularRecibo']);
-        Route::get('/imprimeTicked/{vehiculo_id}', [FacturaController::class, 'imprimeTicked']);
+        Route::post('/recuperaFactura', [FacturaController::class, 'recuperaFactura']);
     });
 
     Route::prefix('/puntoVenta')->group(function () {

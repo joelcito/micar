@@ -506,26 +506,14 @@ class FacturaController extends Controller
             $siat       = app(SiatController::class);
             $respuesta = json_decode($siat->anulacionFactura($moivo, $fatura->cuf));
 
-            // dd($respuesta);
-
             if($respuesta->resultado->RespuestaServicioFacturacion->transaccion){
                 $fatura->estado = 'Anulado';
-                $pagos = Pago::where('factura_id', $fatura->id)
-                                ->get();
-                foreach($pagos as $p){
-                    Pago::destroy($p->id);
-                    // if($p->servicio_id == 2){
-                    //     $ePago              = Pago::find($p->id);
-                    //     $ePago->factura_id  = null;
-                    //     $ePago->importe     = 0;
-                    //     $ePago->faltante    = 0;
-                    //     $ePago->fecha       = null;
-                    //     $ePago->estado      = null;
-                    //     $ePago->save();
-                    // }else{
-                    //     Pago::destroy($p->id);
-                    // }
-                }
+
+                // PARA ELIMINAR LOS PAGOS
+                Pago::where('factura_id', $fatura->id)->delete();
+
+                // PARA ELIMINAR LOS DETALLES
+                Detalle::where('factura_id', $fatura->id)->delete();
 
                 $cliente = Cliente::find($fatura->cliente_id);
 
@@ -536,7 +524,7 @@ class FacturaController extends Controller
 
                 //protected function enviaCorreoAnulacion($correo, $nombre, $numero, $fecha){
 
-                $this->enviaCorreoAnulacion($correo, $nombre, $numero, $fecha );
+                //$this->enviaCorreoAnulacion($correo, $nombre, $numero, $fecha );
 
             }else{
                 $fatura->descripcion = $respuesta->resultado->RespuestaServicioFacturacion->mensajesList->descripcion;
@@ -1587,5 +1575,25 @@ class FacturaController extends Controller
         return view('pago.imprimeTicked')->with(compact('pagos'));
     }
     // ============================= PARA LA GENERACION DEL RECIBO END ==================================================
+
+
+    // ============================= PARA LA GENERACION DE LA TRAMSFERECNAI DE LA FACTURA ==================================================
+    public function recuperaFactura(Request $request){
+        if($request->ajax()){
+
+            $factura_id = $request->input('factura');
+
+            $factura = Factura::find($factura_id);
+            $detalles = Detalle::where('factura_id', $factura_id)->get();
+
+            $data['estado'] = 'success';
+            $data['modal'] = view('pago.recuperaFactura')->with(compact('factura', 'detalles'))->render();
+        }else{
+            $data['estado'] = 'error';
+        }
+
+        return $data;
+    }
+    // ============================= END PARA LA GENERACION DE LA TRAMSFERECNAI DE LA FACTURA ==================================================
 
 }

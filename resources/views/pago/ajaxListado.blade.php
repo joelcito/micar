@@ -86,6 +86,7 @@
                                 @if ($p->tipo_factura === "online")
                                     @if ($p->productos_xml != null)
                                         <button  class="btn btn-danger btn-icon btn-sm" type="button" onclick="modalAnular('{{ $p->id }}')"><i class="fa fa-trash"></i></button>
+                                        <button class="btn btn-icon btn-sm btn-info" onclick="modalNuevaFacturaTramsferencia('{{ $p->id }}')"><i class="fa fa-up-down"></i></button>
                                     @else
 
                                     @endif
@@ -103,8 +104,6 @@
                                 <button  class="btn btn-danger btn-icon btn-sm" type="button" onclick="anularREcibo('{{ $p->id }}')"><i class="fa fa-trash"></i></button>
                             @endif
                         @endif
-                        <button class="btn btn-icon btn-sm btn-info"><i class="fa fa-up-down"></i></button>
-                        
                     </td>
                 </tr>
             @empty

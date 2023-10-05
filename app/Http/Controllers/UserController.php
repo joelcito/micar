@@ -69,10 +69,10 @@ class UserController extends Controller
 
         $liquidaciones = LiquidacionLavadorPago::where('lavador_id_user',$usuario_id)->get();
 
-        $servicios = Detalle::where('lavador_id', $usuario_id)
-                            ->orderBy('id', 'desc')
-                            ->get();
+        $serviciosRealizados = Detalle::where('lavador_id', $usuario_id)
+                                        ->orderBy('id', 'desc')
+                                        ->get();
 
-        return view('user.detalle')->with(compact('usuario', 'servicios', 'liquidaciones', 'servicios'));
+        return view('user.detalle')->with(compact('usuario', 'servicios', 'liquidaciones', 'serviciosRealizados'));
     }
 }

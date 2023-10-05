@@ -90,8 +90,27 @@
     </div>
     <!--end::Modal - Add task-->
 
+     <!--begin::Modal TRAMSERENCIA FACTURA- Add task-->
+     <div class="modal fade" id="modalTramsferenciaFactura" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header" id="kt_modal_add_user_header">
+                    <h2 class="fw-bold">FORMULARIO DE ANULACION Y TRAMSFERIR FACTURA</h2>
+                </div>
+                <div class="modal-body scroll-y">
 
+                    <div id="detalle_factura">
 
+                    </div>
+
+                </div>
+                <!--end::Modal body-->
+            </div>
+            <!--end::Modal content-->
+        </div>
+        <!--end::Modal dialog-->
+    </div>
+    <!--end::Modal - Add task-->
 
     <div class="card">
         <div class="card-header border-0 pt-6 bg-light-primary">
@@ -349,6 +368,35 @@
                     })
                 }
             })       
+        }
+
+        function modalNuevaFacturaTramsferencia(factura){
+
+            $.ajax({
+                url: "{{ url('factura/recuperaFactura') }}",
+                method: "POST",
+                data: {
+                    factura: factura
+                },
+                dataType:'json',
+                success: function (data) {
+                    if(data.estado === 'success'){
+                        $('#detalle_factura').html(data.modal)
+
+                        $('#modalTramsferenciaFactura').modal('show')
+                        // Swal.fire({
+                        //     icon:'success',
+                        //     title: 'Exito!',
+                        //     text:"Se anulo ewl recibo con exito!",
+                        //     timer:1500
+                        // })
+                        // ajaxListado();
+                    }
+                }
+            })
+
+
+
         }
     </script>
 @endsection

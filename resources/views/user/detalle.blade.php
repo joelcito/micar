@@ -331,7 +331,7 @@
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody class="text-gray-600 fw-semibold">
-                                                                    @forelse ( $servicios as  $ser )
+                                                                    @forelse ( $serviciosRealizados as  $ser )
                                                                         <tr>
                                                                             <td>{{ $ser->servicio->descripcion }}</td>
                                                                             <td>{{ $ser->precio }}</td>
