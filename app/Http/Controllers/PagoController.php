@@ -604,7 +604,7 @@ class PagoController extends Controller
             $detalles_ids = Detalle::select('id')
                                 ->where('lavador_id', $lavador_usuario)
                                 // ->where('fecha', $fecha_pago)
-                                ->where('fecha', $fecha_pago)
+                                ->whereBetween('fecha', [$fecha_pago_ini, $fecha_pago_fin])
                                 ->where('estado_liquidacion', "Debe")
                                 ->pluck('id');
 
@@ -615,11 +615,13 @@ class PagoController extends Controller
             $LiquidacionLavadorPago->creador_id         = Auth::user()->id;
             $LiquidacionLavadorPago->lavador_id_user    = $lavador_usuario;
             $LiquidacionLavadorPago->lavador_id_cliente = $lavador_cliente;
-            $LiquidacionLavadorPago->fecha_pagado       = $fecha_pago;
-            $LiquidacionLavadorPago->total_servicios    = $total_servicios_lavador;
-            $LiquidacionLavadorPago->cuenta_por_pagar   = $cuenta_por_pagarLol;
-            $LiquidacionLavadorPago->liquido_pagable    = $liquido_pagable;
-            $LiquidacionLavadorPago->detalles_id        = $detalles_ids;
+            // $LiquidacionLavadorPago->fecha_pagado       = $fecha_pago;
+            $LiquidacionLavadorPago->fecha_pagado_ini = $fecha_pago_ini;
+            $LiquidacionLavadorPago->fecha_pagado_fin = $fecha_pago_fin;
+            $LiquidacionLavadorPago->total_servicios  = $total_servicios_lavador;
+            $LiquidacionLavadorPago->cuenta_por_pagar = $cuenta_por_pagarLol;
+            $LiquidacionLavadorPago->liquido_pagable  = $liquido_pagable;
+            $LiquidacionLavadorPago->detalles_id      = $detalles_ids;
             $LiquidacionLavadorPago->save();
 
             $data['estado'] = 'success';

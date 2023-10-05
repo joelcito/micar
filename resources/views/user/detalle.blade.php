@@ -253,20 +253,19 @@
                                     <!--end::Nav link-->
                                 </li>
                                 <!--end::Nav item-->
-                                <!--begin::Nav item-->
+                                
                                 <li class="nav-item p-0 ms-0 me-8">
-                                    <!--begin::Nav link-->
-                                    <a class="nav-link btn btn-color-muted px-0" data-bs-toggle="tab" href="#kt_table_widget_7_tab_content_2">
-                                        <!--begin::Title-->
-                                        <span class="nav-text fw-semibold fs-4 mb-3">LIQUIDACION</span>
-                                        <!--end::Title-->
-                                        <!--begin::Bullet-->
+                                    <a class="nav-link btn btn-color-muted px-0" data-bs-toggle="tab" href="#kt_table_widget_7_tab_content_servicios">
+                                        <span class="nav-text fw-semibold fs-4 mb-3">SERVICIOS</span>
                                         <span class="bullet-custom position-absolute z-index-2 w-100 h-2px top-100 bottom-n100 bg-primary rounded"></span>
-                                        <!--end::Bullet-->
                                     </a>
-                                    <!--end::Nav link-->
                                 </li>
-                                <!--end::Nav item-->
+                                <li class="nav-item p-0 ms-0 me-8">
+                                    <a class="nav-link btn btn-color-muted px-0" data-bs-toggle="tab" href="#kt_table_widget_7_tab_content_2">
+                                        <span class="nav-text fw-semibold fs-4 mb-3">LIQUIDACION</span>
+                                        <span class="bullet-custom position-absolute z-index-2 w-100 h-2px top-100 bottom-n100 bg-primary rounded"></span>
+                                    </a>
+                                </li>
                             </ul>
                             <!--end::Nav-->
                         </div>
@@ -303,6 +302,65 @@
 
                                 </div>
                                 <!--end::Tap pane-->
+                                
+
+                                <div class="tab-pane fade" id="kt_table_widget_7_tab_content_servicios">
+
+                                    <!--begin::Card-->
+                                    <div class="card">
+                                        <div class="card-header border-0">
+                                            <div class="card-title">
+                                                <h1>Servicios Realizados</h1>
+                                            </div>
+                                        </div>
+                                        <div class="card-body py-4">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="table-responsive">
+                                                        <!--begin::Table-->
+                                                            <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_table_users1">
+                                                                <thead>
+                                                                    <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
+                                                                        <th>Servicio</th>
+                                                                        <th>Precio</th>
+                                                                        <th>Cantidad</th>
+                                                                        <th>Descuento</th>
+                                                                        <th>Total</th>
+                                                                        <th>Fecha</th>
+                                                                        <th>Estado</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody class="text-gray-600 fw-semibold">
+                                                                    @forelse ( $servicios as  $ser )
+                                                                        <tr>
+                                                                            <td>{{ $ser->servicio->descripcion }}</td>
+                                                                            <td>{{ $ser->precio }}</td>
+                                                                            <td>{{ $ser->cantidad }}</td>
+                                                                            <td>{{ $ser->descuento }}</td>
+                                                                            <td>{{ $ser->total }}</td>
+                                                                            <td>{{ $ser->fecha }}</td>
+                                                                            <td>
+                                                                                @if($ser->estado_liquidacion === 'Debe')
+                                                                                    <small class="badge badge-danger">Debe</small>
+                                                                                @else
+                                                                                   <small class="badge badge-success">Pagado</small>
+                                                                                @endif
+                                                                        </tr>
+                                                                    @empty
+                                                                        <h4 class="text-danger text-center">Sin registros</h4>
+                                                                    @endforelse
+                                                                </tbody>
+                                                            </table>
+                                                        <!--end::Table-->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--end::Card body-->
+                                    </div>
+                                    <!--end::Card-->
+
+                                </div>
                                 <!--begin::Tap pane-->
                                 <div class="tab-pane fade" id="kt_table_widget_7_tab_content_2">
 
@@ -321,7 +379,8 @@
                                                             <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_table_users1">
                                                                 <thead>
                                                                     <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
-                                                                        <th class="text-center">Fecha Pagado</th>
+                                                                        <th class="text-center">Fecha Pagado Ini</th>
+                                                                        <th class="text-center">Fecha Pagado Fin</th>
                                                                         <th class="text-center">Total Servicio</th>
                                                                         <th class="text-center">Cuenta por Cobrar</th>
                                                                         <th class="text-center">Liquido Pagado</th>
@@ -331,7 +390,8 @@
                                                                 <tbody class="text-gray-600 fw-semibold">
                                                                     @forelse ( $liquidaciones as  $liq )
                                                                         <tr>
-                                                                            <td class="text-center">{{ $liq->fecha_pagado }}</td>
+                                                                            <td class="text-center">{{ $liq->fecha_pagado_ini }}</td>
+                                                                            <td class="text-center">{{ $liq->fecha_pagado_fin }}</td>
                                                                             <td class="text-center">{{ number_format($liq->total_servicios,2) }}</td>
                                                                             <td class="text-center">{{ number_format($liq->cuenta_por_pagar,2) }}</td>
                                                                             <td class="text-center">{{ number_format($liq->liquido_pagable,2) }}</td>
