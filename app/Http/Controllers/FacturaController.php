@@ -10,6 +10,7 @@ use App\Models\Factura;
 use App\Models\Pago;
 use App\Models\Vehiculo;
 use App\Models\Detalle;
+use App\Models\TipoDocumento;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -1585,13 +1586,159 @@ class FacturaController extends Controller
 
             $factura = Factura::find($factura_id);
             $detalles = Detalle::where('factura_id', $factura_id)->get();
+            $tipoDocumento = TipoDocumento::all();
 
             $data['estado'] = 'success';
-            $data['modal'] = view('pago.recuperaFactura')->with(compact('factura', 'detalles'))->render();
+            $data['modal'] = view('pago.recuperaFactura')->with(compact('factura', 'detalles', 'tipoDocumento'))->render();
         }else{
             $data['estado'] = 'error';
         }
 
+        return $data;
+    }
+
+    public function enviarTrasferenciaFactura(Request $request){
+        if($request->ajax()){
+
+            dd($request->all());
+
+            $factura_id = $request->input('tramsfrencia_factura_id');
+            $factura    = Factura::find($factura_id);
+            $datelles   = Detalle::where('factura_id', $factura_id)->get();
+
+
+
+
+
+
+            // Crear las variables con los valores correspondientes
+            $nitEmisor                    = "5427648016";
+            $razonSocialEmisor            = "MICAELA QUIROZ ESCOBAR";
+            $municipio                    = "Santa Cruz";
+            $telefono                     = "73130500";
+            $numeroFactura                = $this->numeroFactura() + 1;
+            $cuf                          = "123456789";
+            $cufd                         = "BQTlCdy9xRkE=NzjQxOTQyMEZCMDY=QmVReUZKRElYVUJcyQ0IxQjVBNzQ5Q";
+            $codigoSucursal               = "0";
+            $direccion                    = "CALLE RIO ESPEJILLOS NRO.S/N ZONA VILLA FATIMA UV:0051 MZA:0049";
+            $codigoPuntoVenta             = "0";
+            $fechaEmision2                = now()->format('Y-m-d\TH:i:s.v');
+            $fechaEmision                 = $fechaEmision2;
+            $nombreRazonSocial            = $request->input('tramsfrencia_new_razon_social');
+            $codigoTipoDocumentoIdentidad = $request->input('tramsfrencia_new_tipo_documento');
+            $numeroDocumento              = $request->input('tramsfrencia_new_nit');
+            $complemento                  = null;  //AVERIGUAR
+            $codigoCliente                = $numeroDocumento;
+
+
+
+            $codigoMetodoPago             = "1";
+            $numeroTarjeta                = null;
+            $montoTotal                   = "200";
+            $montoTotalSujetoIva          = "200";
+            $codigoMoneda                 = "1";
+            $tipoCambio                   = "1";
+            $montoTotalMoneda             = "200";
+            $montoGiftCard                = null;
+            $descuentoAdicional           = "0";
+            $codigoExcepcion              = "0";
+            $cafc                         = null;
+            $leyenda                      = "Ley N° 453: El proveedor deberá suministrar el servicio en las modalidades y términos ofertados o convenidos.";
+            $usuario                      = "JOEL JONATHAN FLORES QUIPE";
+            $codigoDocumentoSector        = "1";
+            $actividadEconomica           = "452000";
+            $codigoProductoSin            = "87141";
+            $codigoProducto               = "17";
+            $descripcionItem              = "LAVADO EXTERIOR DE VAGONETA/CAMIONETA XL";
+            $cantidad                     = "5.00";
+            $unidadMedida                 = "58";
+            $precioUnitario               = "40.00";
+            $montoDescuento               = "0.00";
+            $subTotal                     = "200";
+            $numeroSerie                  = null;
+            $numeroImei                   = null;
+            $vehiculoId                   = "10081";
+            $pagos                        = ["4"];
+            $usoCafc                      = "Si";
+            $codigoCafcContingencia       = "10122205E166E";
+            $modalidad                    = "offline";
+
+            // Crear el array final con la estructura proporcionada
+            $array = [
+                "datos" => [
+                    "factura" => [
+                        0 => [
+                            "cabecera" => [
+                                "nitEmisor"                    => $nitEmisor,
+                                "razonSocialEmisor"            => $razonSocialEmisor,
+                                "municipio"                    => $municipio,
+                                "telefono"                     => $telefono,
+                                "numeroFactura"                => $numeroFactura,
+                                "cuf"                          => $cuf,
+                                "cufd"                         => $cufd,
+                                "codigoSucursal"               => $codigoSucursal,
+                                "direccion"                    => $direccion,
+                                "codigoPuntoVenta"             => $codigoPuntoVenta,
+                                "fechaEmision"                 => $fechaEmision,
+                                "nombreRazonSocial"            => $nombreRazonSocial,
+                                "codigoTipoDocumentoIdentidad" => $codigoTipoDocumentoIdentidad,
+                                "numeroDocumento"              => $numeroDocumento,
+                                "complemento"                  => $complemento,
+                                "codigoCliente"                => $codigoCliente,
+                                "codigoMetodoPago"             => $codigoMetodoPago,
+                                "numeroTarjeta"                => $numeroTarjeta,
+                                "montoTotal"                   => $montoTotal,
+                                "montoTotalSujetoIva"          => $montoTotalSujetoIva,
+                                "codigoMoneda"                 => $codigoMoneda,
+                                "tipoCambio"                   => $tipoCambio,
+                                "montoTotalMoneda"             => $montoTotalMoneda,
+                                "montoGiftCard"                => $montoGiftCard,
+                                "descuentoAdicional"           => $descuentoAdicional,
+                                "codigoExcepcion"              => $codigoExcepcion,
+                                "cafc"                         => $cafc,
+                                "leyenda"                      => $leyenda,
+                                "usuario"                      => $usuario,
+                                "codigoDocumentoSector"        => $codigoDocumentoSector,
+                            ]
+                        ],
+                        1 => [
+                            "detalle" => [
+                                "actividadEconomica"        => $actividadEconomica,
+                                "codigoProductoSin"         => $codigoProductoSin,
+                                "codigoProducto"            => $codigoProducto,
+                                "descripcion"               => $descripcionItem,
+                                "cantidad"                  => $cantidad,
+                                "unidadMedida"              => $unidadMedida,
+                                "precioUnitario"            => $precioUnitario,
+                                "montoDescuento"            => $montoDescuento,
+                                "subTotal"                  => $subTotal,
+                                "numeroSerie"               => $numeroSerie,
+                                "numeroImei"                => $numeroImei,
+                            ]
+                        ]
+                    ]
+                ],
+                "datosVehiculo" => [
+                    "vehiculo_id"   => $vehiculoId,
+                    "pagos"         => $pagos,
+                ],
+                "datosRecepcion" => [
+                    "uso_cafc"                  => $usoCafc,
+                    "codigo_cafc_contingencia"  => $codigoCafcContingencia,
+                ],
+                "modalidad" => $modalidad,
+            ];
+
+
+
+
+            dd($factura,
+            $datelles);
+
+            $data['estado'] = 'success';
+        }else{
+            $data['estado'] = 'error';
+        }
         return $data;
     }
     // ============================= END PARA LA GENERACION DE LA TRAMSFERECNAI DE LA FACTURA ==================================================

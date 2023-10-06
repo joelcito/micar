@@ -398,6 +398,66 @@
 
 
         }
+
+        function enviarTrasferenciaFactura(){
+
+
+            if($("#formularioTramsfereciaFactura")[0].checkValidity()){
+                let datos = $("#formularioTramsfereciaFactura").serializeArray();
+                var tzoffset                        = ((new Date()).getTimezoneOffset()*60000);
+                let fechaEmision                    = ((new Date(Date.now()-tzoffset)).toISOString()).slice(0,-1);
+                // Agrega un nuevo campo a la serialización
+                datos.push({ name: "fecha", value: fechaEmision });
+                $.ajax({
+                    url: "{{ url('factura/enviarTrasferenciaFactura') }}",
+                    method: "POST",
+                    data: datos,
+                    success: function (data) {
+                        if(data.estado === 'success'){
+
+                        }else{
+
+                        }
+                    }
+                })
+            }else{
+                $("#formularioTramsfereciaFactura")[0].reportValidity();
+            }
+        }
+
+        function verificaNit(){
+            let tipoDocumento = $('#tramsfrencia_new_tipo_documento').val();
+            if(tipoDocumento === "5"){
+                let nit = $('#tramsfrencia_new_nit').val();
+                $.ajax({
+                    url: "{{ url('factura/verificaNit') }}",
+                    method: "POST",
+                    data:{nit:nit},
+                    dataType: 'json',
+                    success: function (data) {
+                        if(data.estado === "success"){
+                            if(!data.verificacion){
+                                // Marcar el checkbox con jQuery
+                                $('#tramsfrencia_new_execpion').prop('checked', true);
+                                $('#nitnoexiste').show('toggle');
+                                $('#nitsiexiste').hide('toggle');
+                                $('#bloque_exepcion').show('toggle');
+                            }else{
+                                $('#tramsfrencia_new_execpion').prop('checked', false);
+                                $('#nitsiexiste').show('toggle');
+                                $('#nitnoexiste').hide('toggle');
+                                $('#bloque_exepcion').hide('toggle');
+                            }
+                        }else{
+
+                        }
+
+                    }
+                })
+            }else{
+                $('#bloque_exepcion').hide('toggle');
+            }
+        }
     </script>
 @endsection
 

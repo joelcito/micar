@@ -170,6 +170,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/emitirRecibo', [FacturaController::class, 'emitirRecibo']);
         Route::post('/anularRecibo', [FacturaController::class, 'anularRecibo']);
         Route::post('/recuperaFactura', [FacturaController::class, 'recuperaFactura']);
+        Route::post('/enviarTrasferenciaFactura', [FacturaController::class, 'enviarTrasferenciaFactura']);
     });
 
     Route::prefix('/puntoVenta')->group(function () {

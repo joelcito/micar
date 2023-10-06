@@ -274,20 +274,7 @@
                 <input type="text" class="form-control" placeholder="Buscar por nombres" id="buscar_nombre" autocomplete="off">
             </div>
         </div>
-        <div class="row" id="bloque_cliente" style="display: none;">
-            <div class="col-md-4">
-                <span class="text-primary"><b>CLIENTE:</b></span><span id="cliente_text"></span>
-            </div>
-            <div class="col-md-4">
-                <span class="text-primary"><b>VEHICULO:</b></span><span id="vehiculo_text"></span>
-                <input type="text" id="vehiculo_id">
-                <input type="text" id="caja_id" value="{{ $vender }}">
-                <input type="text" id="complemento">
-            </div>
-            <div class="col-md-4">
-                <span class="text-primary"><b>PLACA:</b></span><span id="placa_text"></span>
-            </div>
-        </div>
+        
         <hr>
         <div class="row">
             <div class="col-md-12 text-center">
@@ -306,6 +293,20 @@
                 @else
                     <span class="badge bg-danger text-white w-100">NO HAY CONECCION CON SIAT</span>
                 @endif
+            </div>
+        </div>
+        <div class="row" id="bloque_cliente" style="display: none;">
+            <div class="col-md-4">
+                <span class="text-primary"><b>CLIENTE:</b></span><span id="cliente_text"></span>
+            </div>
+            <div class="col-md-4">
+                <span class="text-primary"><b>VEHICULO:</b></span><span id="vehiculo_text"></span>
+                <input type="hidden" id="vehiculo_id">
+                <input type="hidden" id="caja_id" value="{{ $vender }}">
+                <input type="hidden" id="complemento">
+            </div>
+            <div class="col-md-4">
+                <span class="text-primary"><b>PLACA:</b></span><span id="placa_text"></span>
             </div>
         </div>
         <hr>
@@ -392,11 +393,11 @@
                 </div>
                 <div class="col-md-3">
                     <label for="monto_pagado">Monto</label>
-                    <input type="text" class="form-control" id="miInput" name="miInput" value="0">
+                    <input type="number" class="form-control" id="miInput" name="miInput" value="0" step="0.01" autocomplete="off">
                 </div>
                 <div class="col-md-3">
                     <label for="cambio_devuelto">Cambio</label>
-                    <input type="text" class="form-control" readonly value="0" id="cambio" min="0">
+                    <input type="number" class="form-control" readonly value="0" id="cambio" min="0" step="0.01">
                 </div>
                 <div class="col-md-3">
                     <div class="fv-row mb-7">
@@ -435,13 +436,13 @@
                     </div>
                     <div class="col-md-2">
                         <label for="">Nit/Cedula</label>
-                        <input type="number" class="form-control" id="nit_factura" name="nit_factura" onchange="verificaNit()">
+                        <input type="number" class="form-control" id="nit_factura" name="nit_factura" onchange="verificaNit()" autocomplete="off">
                         <small style="display: none;" class="text-danger" id="nitnoexiste">NIT INVALIDO</small>
                         <small style="display: none;" class="text-success" id="nitsiexiste">NIT VALIDO</small>
                     </div>
                     <div class="col-md-2">
                         <label for="">Razon Social</label>
-                        <input type="text" class="form-control" id="razon_factura" name="razon_factura">
+                        <input type="text" class="form-control" id="razon_factura" name="razon_factura" autocomplete="off">
                     </div>
                     <div class="col-md-2">
                         <label for="">Tipo Factura</label>
@@ -478,7 +479,7 @@
             </form>
             <div class="row mt-2">
                 <div class="col-md-12">
-                    <button class="btn btn-sm w-100 btn-success" onclick="emitirFactura()" style="display: none" id="boton_enviar_factura">Enviar F</button>
+                    <button class="btn btn-sm w-100 btn-success" onclick="emitirFactura()" style="display: none" id="boton_enviar_factura"> <i class="fa fa-spinner fa-spin" style="display:none;"></i>Enviar</button>
                 </div>
             </div>
         </div>
@@ -516,12 +517,15 @@
             $('#buscar_placa, #buscar_cedula, #buscar_paterno, #buscar_materno, #buscar_nombre').on('keyup input', function() {
                 buscarVehiculo();
                 $('#table_vehiculos').show('toggle');
+                $('#detalle_ventas').hide('toggle');
             });
 
             // Agregar un evento para el enfoque (cuando el usuario hace clic en el campo)
             $("#miInput").on("keyup", function() {
                 let dato = $(this).val() - $("#motoTotalFac").val()
+                $("#realizo_pago").prop("checked", ($(this).val() != "0")? true : false);
                 $('#cambio').val((dato < 0)? 0 : dato)
+                $("#tipo_pago").prop("required", ($(this).val() != "0")? true : false);
             });
 
             $("#serivicio_id, #lavador_id").select2();
@@ -640,6 +644,7 @@
                 success: function(data) {
                     if(data.estado === 'success'){
                         $('#detalle_ventas').html(data.listado_ventas);
+                        $('#detalle_ventas').show('toggle');
                         $('#bloqueDatosFactura').hide('toggle');
                         $('#table_vehiculos').hide('toggle');
                         $('#table_agrega_servicios').show('toggle');
@@ -720,7 +725,6 @@
                         if(data.estado === 'success'){
                             $('#pago_id').val(data.pago_id);
                             $('#detalle_ventas').html(data.listado_ventas);
-
                             $('#serivicio_id').val('')
                             $('#precio').val(0)
                             $('#cantidad').val(0)
@@ -732,6 +736,10 @@
                             select2Element.trigger('change');
 
                             $('#bloqueDatosFactura').hide('toggle');
+                            $('#detalle_ventas').show('toggle');
+                            $('#bloque_tipos_pagos').hide('toggle');
+
+                            $('#formulario_tipo_pagos')[0].reset();
 
                         }
                     }
@@ -856,7 +864,14 @@
 
         function emitirFactura(){
 
-            if($("#formularioGeneraFactura")[0].checkValidity()){
+            if($("#formularioGeneraFactura")[0].checkValidity() && $("#formulario_tipo_pagos")[0].checkValidity()){
+
+                // Obtén el botón y el icono de carga
+                var boton = $("#boton_enviar_factura");
+                var iconoCarga = boton.find("i");
+                // Deshabilita el botón y muestra el icono de carga
+                boton.attr("disabled", true);
+                iconoCarga.show();
 
                 //PONEMOS TODO AL MODELO DEL SIAT EL DETALLE
                 detalle = [];
@@ -1001,6 +1016,9 @@
                                 title: 'Error!',
                                 text : data.msg,
                             })
+                            // Habilita el botón y oculta el icono de carga después de completar
+                            boton.attr("disabled", false);
+                            iconoCarga.hide();
                         }else if(data.estado === "OFFLINE"){
                             Swal.fire({
                                 icon : 'warning',
@@ -1015,11 +1033,16 @@
                                 title: data.msg,
                                 text : 'LA FACTURA FUE RECHAZADA',
                             })
+                            // Habilita el botón y oculta el icono de carga después de completar
+                            boton.attr("disabled", false);
+                            iconoCarga.hide();
                         }
                     }
                 });
+
             }else{
                 $("#formularioGeneraFactura")[0].reportValidity();
+                $("#formulario_tipo_pagos")[0].reportValidity()
             }
         }
 
