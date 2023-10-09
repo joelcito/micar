@@ -331,14 +331,14 @@ class FacturaController extends Controller
                         $data['estado'] = $codigo_descripcion;
 
                         // // ***************** ENVIAMOS EL CORREO DE LA FACTURA *****************
-                        // $nombre = $cliente->nombres." ".$cliente->ap_paterno." ".$cliente->ap_materno;
-                        // $this->enviaCorreo(
-                        //     $cliente->correo,
-                        //     $nombre,
-                        //     $factura->numero,
-                        //     $factura->fecha,
-                        //     $factura->id
-                        // );
+                        $nombre = $cliente->nombres." ".$cliente->ap_paterno." ".$cliente->ap_materno;
+                        $this->enviaCorreo(
+                            $cliente->correo,
+                            $nombre,
+                            $facturaVerdad->numero,
+                            $facturaVerdad->fecha,
+                            $facturaVerdad->id
+                        );
 
                     }else{
                         $data['estado'] = "RECHAZADA";
