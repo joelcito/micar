@@ -118,7 +118,9 @@ class PagoController extends Controller
     public function ajaxBuscarPorCobrar(Request $request){
         if($request->ajax()){
 
-            $facturas = Factura::where('estado_pago', 'Deuda')->get();
+            $facturas = Factura::where('estado_pago', 'Deuda')
+                                ->whereNull('estado')
+                                ->get();
 
             // PARA VER SI HAY CAJA O NO
             $ultimaCajaAperturada = Caja::where('estado', 'Abierto')

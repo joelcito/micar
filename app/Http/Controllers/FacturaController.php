@@ -331,14 +331,14 @@ class FacturaController extends Controller
                         $data['estado'] = $codigo_descripcion;
 
                         // // ***************** ENVIAMOS EL CORREO DE LA FACTURA *****************
-                        $nombre = $cliente->nombres." ".$cliente->ap_paterno." ".$cliente->ap_materno;
-                        $this->enviaCorreo(
-                            $cliente->correo,
-                            $nombre,
-                            $facturaVerdad->numero,
-                            $facturaVerdad->fecha,
-                            $facturaVerdad->id
-                        );
+                        // $nombre = $cliente->nombres." ".$cliente->ap_paterno." ".$cliente->ap_materno;
+                        // $this->enviaCorreo(
+                        //     $cliente->correo,
+                        //     $nombre,
+                        //     $facturaVerdad->numero,
+                        //     $facturaVerdad->fecha,
+                        //     $facturaVerdad->id
+                        // );
 
                     }else{
                         $data['estado'] = "RECHAZADA";
@@ -1554,12 +1554,19 @@ class FacturaController extends Controller
 
     public function anularRecibo(Request $request){
         if($request->ajax()){
-            $factura_id = $request->input('factura');
-            $factura = Factura::find($factura_id);
+            
+            $factura_id      = $request->input('factura');
+            $factura         = Factura::find($factura_id);
             $factura->estado = "Anulado";
             $factura->save();
-            $ids = Pago::where('factura_id',$factura_id)->get()->pluck('id');
-            Pago::destroy($ids);
+            
+            Pago::where('factura_id',$factura_id)->delete();
+
+            Detalle::where('factura_id', $factura_id)->delete();
+
+            // $ids = Pago::where('factura_id',$factura_id)->get()->pluck('id');
+            // Pago::destroy($ids);
+
             $data['estado'] = 'success';
         }else{
             $data['estado'] = 'error';
@@ -1605,8 +1612,6 @@ class FacturaController extends Controller
             $factura_id = $request->input('tramsfrencia_factura_id');
             $factura    = Factura::find($factura_id);
             $datelles   = Detalle::where('factura_id', $factura_id)->get();
-
-
 
 
 

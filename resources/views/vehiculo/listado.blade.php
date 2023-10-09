@@ -334,7 +334,7 @@
 
                 <div class="col-md-2 serviPro" style="display: none">
                     <label class="required fw-semibold fs-6 mb-2">Cantidad Venta</label>
-                    <input type="number" class="form-control" id="cantidad" name="cantidad" min="1" required>
+                    <input type="number" class="form-control" id="cantidad" name="cantidad" min="1" required autocomplete="off">
                 </div>
                 <div class="col-md-2 serviPro" style="display: none">
                     <label class="required fw-semibold fs-6 mb-2">Total</label>
@@ -1047,27 +1047,33 @@
         }
 
         function emitirRecibo(){
-            $.ajax({
-                url: "{{ url('factura/emitirRecibo') }}",
-                type: 'POST',
-                data:{
-                    vehiculo           : $('#vehiculo_id').val(),
-                    monto              : $('#motoTotalFac').val(),
-                    descuento_adicional: $('#descuento_adicional').val(),
-                    tipo_pago          : $('#tipo_pago').val(),
-                    monto_pagado       : $('#miInput').val(),
-                    cambio             : $('#cambio').val(),
-                    realizo_pago       : $("#realizo_pago").prop("checked"),
-                    caja               : $('#caja_id').val()
-                },
-                dataType: 'json',
-                success: function(data) {
-                    if(data.estado === 'success'){
-                        let url = "{{ asset('factura/imprimeRecibo') }}/"+data.factura;
-                        window.location.href = url;
+
+            if($('#formulario_tipo_pagos')[0].checkValidity()){
+                $.ajax({
+                    url: "{{ url('factura/emitirRecibo') }}",
+                    type: 'POST',
+                    data:{
+                        vehiculo           : $('#vehiculo_id').val(),
+                        monto              : $('#motoTotalFac').val(),
+                        descuento_adicional: $('#descuento_adicional').val(),
+                        tipo_pago          : $('#tipo_pago').val(),
+                        monto_pagado       : $('#miInput').val(),
+                        cambio             : $('#cambio').val(),
+                        realizo_pago       : $("#realizo_pago").prop("checked"),
+                        caja               : $('#caja_id').val()
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        if(data.estado === 'success'){
+                            let url = "{{ asset('factura/imprimeRecibo') }}/"+data.factura;
+                            window.location.href = url;
+                        }
                     }
-                }
-            });
+                });
+            }else{
+                console.log("no")
+                $("#formulario_tipo_pagos")[0].reportValidity()
+            }
         }
 
         function funcionNueva(input, pago, total){
@@ -1239,6 +1245,12 @@
 
         function relizarPago(){
             let valor = $('#tipo_pago').val();
+
+            if(valor == 0)
+                $('#miInput').removeAttr('min');
+            else
+                $('#miInput').attr('min', 1);
+
             $("#realizo_pago").prop("checked", (valor != "")? true : false);
         }
 
