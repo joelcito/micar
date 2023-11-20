@@ -336,7 +336,7 @@
             })
         }
 
-        function anularREcibo(factura){    
+        function anularREcibo(factura){
             Swal.fire({
                 title: 'Esta seguro de Anular el Recibo?',
                 text: "No podras revertir eso!",
@@ -367,7 +367,7 @@
                         }
                     })
                 }
-            })       
+            })
         }
 
         function modalNuevaFacturaTramsferencia(factura){
@@ -456,6 +456,7 @@
                 })
             }else{
                 $('#bloque_exepcion').hide('toggle');
+                $('#tramsfrencia_new_execpion').prop('checked', false);
             }
         }
     </script>
