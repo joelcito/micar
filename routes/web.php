@@ -199,6 +199,8 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('/reporte')->group(function () {
         Route::get('/pagos', [ReporteController::class, 'pagos']);
+        Route::get('/listado', [ReporteController::class, 'listado']);
+        Route::post('/reporteCuentaPorCobrar', [ReporteController::class, 'reporteCuentaPorCobrar']);
     });
 
 });

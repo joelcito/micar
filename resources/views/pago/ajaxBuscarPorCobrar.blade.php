@@ -20,7 +20,6 @@
         @foreach ( $facturas as $f)
             @php
                 $pagado = App\Models\Pago::where('factura_id', $f->id)->sum('monto');
-                // dd($pagado);
             @endphp
             <tr>
                 <td>{{ $f->id }}</td>

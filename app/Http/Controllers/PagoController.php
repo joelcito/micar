@@ -144,7 +144,7 @@ class PagoController extends Controller
             }
 
             $data['estado'] = 'success';
-            $data['listado'] = view('pago.ajaxBuscarPorCobrar')->with(compact('facturas', 'vender'))->render();
+            $data['listado'] = view('pago.ajaxBuscarPorCobrar')->with(compact('facturas', 'vender', 'ultimaCajaAperturada'))->render();
 
         }else{
             $data['estado'] = 'error';

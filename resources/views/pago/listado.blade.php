@@ -401,7 +401,6 @@
 
         function enviarTrasferenciaFactura(){
 
-
             if($("#formularioTramsfereciaFactura")[0].checkValidity()){
                 let datos = $("#formularioTramsfereciaFactura").serializeArray();
                 var tzoffset                        = ((new Date()).getTimezoneOffset()*60000);
@@ -414,9 +413,21 @@
                     data: datos,
                     success: function (data) {
                         if(data.estado === 'success'){
-
+                            console.log(data)
+                            Swal.fire({
+                                icon:'success',
+                                title: "SE REALIZO CON EXITO",
+                                text:  "LA MIGRACION FUE UN EXITO",
+                            })
+                            location.reload();
                         }else{
-
+                            console.log(data, data.detalle.mensajesList)
+                            Swal.fire({
+                                icon:'error',
+                                title: data.detalle.codigoDescripcion,
+                                text:  JSON.stringify(data.detalle.mensajesList),
+                                // timer:1500
+                            })
                         }
                     }
                 })
