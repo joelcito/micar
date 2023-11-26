@@ -188,6 +188,7 @@
                                 </thead>
                             </table>
                         </td>
+                        
                        {{-- <td>{{ $f->id }}</td>
                        <td>{{ $f->id }}</td>
                        <td>{{ $f->id }}</td>
