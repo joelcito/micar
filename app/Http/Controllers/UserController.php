@@ -64,8 +64,8 @@ class UserController extends Controller
 
     public function detalle(Request $request, $usuario_id){
 
-        $servicios = Servicio::where('tipo_liquidacion', 'depende')->get();
-        $usuario = User::find($usuario_id);
+        $servicios  = Servicio::where('tipo_liquidacion', 'depende')->get();
+        $usuario    = User::find($usuario_id);
 
         $liquidaciones = LiquidacionLavadorPago::where('lavador_id_user',$usuario_id)->get();
 

@@ -26,31 +26,30 @@
                     <span class="menu-title">Administracion</span>
                     <span class="menu-arrow"></span>
                 </span>
-                <!--end:Menu link-->
-                <!--begin:Menu sub-->
                 <div class="menu-sub menu-sub-accordion">
-                    <!--begin:Menu item-->
                     <div class="menu-item">
-                        <!--begin:Menu link-->
                         <a class="menu-link" href="{{ url('/user') }}">
                             <span class="menu-bullet">
                                 <span class="bullet bullet-dot"></span>
                             </span>
                             <span class="menu-title">Usuarios</span>
                         </a>
-                        <!--end:Menu link-->
                     </div>
-                    <!--end:Menu item-->
-                    <!--begin:Menu item-->
                     <div class="menu-item">
-                        <!--begin:Menu link-->
                         <a class="menu-link" href="{{ url('/rol') }}">
                             <span class="menu-bullet">
                                 <span class="bullet bullet-dot"></span>
                             </span>
                             <span class="menu-title">Roles</span>
                         </a>
-                        <!--end:Menu link-->
+                    </div>
+                    <div class="menu-item">
+                        <a class="menu-link" href="{{ url('/servicio') }}">
+                            <span class="menu-bullet">
+                                <span class="bullet bullet-dot"></span>
+                            </span>
+                            <span class="menu-title">Servicios</span>
+                        </a>
                     </div>
                     <div class="menu-item">
                         <a class="menu-link" href="{{ url('/categoria') }}">
@@ -60,14 +59,6 @@
                             <span class="menu-title">Categorias</span>
                         </a>
                     </div>
-                    {{-- <div class="menu-item">
-                        <a class="menu-link" href="{{ url('/cliente') }}">
-                            <span class="menu-bullet">
-                                <span class="bullet bullet-dot"></span>
-                            </span>
-                            <span class="menu-title">Cliente</span>
-                        </a>
-                    </div> --}}
                     <div class="menu-item">
                         <a class="menu-link" href="{{ url('puntoVenta/listado') }}">
                             <span class="menu-bullet">
@@ -92,55 +83,6 @@
                             <span class="menu-title">Sincronizacion de catalogos</span>
                         </a>
                     </div>
-                    <!--end:Menu item-->
-                    {{--  <!--begin:Menu item-->
-                    <div class="menu-item">
-                        <!--begin:Menu link-->
-                        <a class="menu-link" href="../../demo1/dist/pages/user-profile/campaigns.html">
-                            <span class="menu-bullet">
-                                <span class="bullet bullet-dot"></span>
-                            </span>
-                            <span class="menu-title">Campaigns</span>
-                        </a>
-                        <!--end:Menu link-->
-                    </div>
-                    <!--end:Menu item-->
-                    <!--begin:Menu item-->
-                    <div class="menu-item">
-                        <!--begin:Menu link-->
-                        <a class="menu-link" href="../../demo1/dist/pages/user-profile/documents.html">
-                            <span class="menu-bullet">
-                                <span class="bullet bullet-dot"></span>
-                            </span>
-                            <span class="menu-title">Documents</span>
-                        </a>
-                        <!--end:Menu link-->
-                    </div>
-                    <!--end:Menu item-->
-                    <!--begin:Menu item-->
-                    <div class="menu-item">
-                        <!--begin:Menu link-->
-                        <a class="menu-link" href="../../demo1/dist/pages/user-profile/followers.html">
-                            <span class="menu-bullet">
-                                <span class="bullet bullet-dot"></span>
-                            </span>
-                            <span class="menu-title">Followers</span>
-                        </a>
-                        <!--end:Menu link-->
-                    </div>
-                    <!--end:Menu item-->
-                    <!--begin:Menu item-->
-                    <div class="menu-item">
-                        <!--begin:Menu link-->
-                        <a class="menu-link" href="../../demo1/dist/pages/user-profile/activity.html">
-                            <span class="menu-bullet">
-                                <span class="bullet bullet-dot"></span>
-                            </span>
-                            <span class="menu-title">Activity</span>
-                        </a>
-                        <!--end:Menu link-->
-                    </div>
-                    <!--end:Menu item-->  --}}
                 </div>
                 <!--end:Menu sub-->
             </div>
@@ -177,9 +119,8 @@
                 </div>
                 <!--end:Menu sub-->
             </div>
-            <!--end:Menu item-->
-            <!--begin:Menu item-->
-            <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+
+            {{-- <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
                 <!--begin:Menu link-->
                 <span class="menu-link">
                     <span class="menu-icon">
@@ -205,7 +146,7 @@
                     </div>
 
                 </div>
-            </div>
+            </div> --}}
 
             {{-- <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
                 <!--begin:Menu link-->
@@ -365,7 +306,7 @@
                         </a>
                     </div>
                 </div>
-            </div>          
+            </div>
 
             {{--  <!--begin:Menu item-->
             <div class="menu-item pt-5">

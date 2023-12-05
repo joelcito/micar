@@ -45,10 +45,20 @@
 <!--end::Table-->
     <script>
         $('#tabla_user').DataTable({
-            {{--  responsive: true,
+            dom: 'lfrtip',
+            lengthMenu: [10, 25, 50, 100], // Opciones de longitud de página
             language: {
-                url: '{{ asset('datatableEs.json') }}',
-            },
-            order: [[ 0, "desc" ]]  --}}
+                // Personalizar textos y mensajes
+                paginate: {
+                    first: 'Primero',
+                    last: 'Último',
+                    next: 'Siguiente',
+                    previous: 'Anterior'
+                },
+                search: 'Buscar:',
+                lengthMenu: 'Mostrar _MENU_ registros por página',
+                info: 'Mostrando _START_ a _END_ de _TOTAL_ registros',
+                emptyTable: 'No hay datos disponibles'
+            }
         });
     </script>

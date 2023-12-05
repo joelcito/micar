@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cliente;
+use App\Models\Factura;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -12,7 +14,19 @@ class HomeController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(){
-        return view('home.inicio');
+
+        $clientes  = Cliente::where('tipo_cliente', 'cliente')->count();
+        $lavadores = Cliente::where('tipo_cliente', 'lavador')->count();
+
+        $total     = $clientes + $lavadores;
+        $porCenLav = number_format(($lavadores * 100) / $total, 2 );
+        $porCenCli = number_format(($clientes * 100) / $total, 2 );
+
+        $fechaHoy = date('Y-m-d');
+
+        $cantidadVentas = Factura::whereBetween('fecha', [$fechaHoy." 00:00:00", $fechaHoy." 23:59:59"])->count();
+
+        return view('home.inicio')->with(compact('clientes', 'lavadores', 'porCenLav', 'porCenCli', 'cantidadVentas'));
     }
 
     /**
