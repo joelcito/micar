@@ -92,20 +92,16 @@
     <hr>
 </form>
 <div class="row">
-    <div class="col-md-4">
-        <button class="btn btn-info w-100 btn-sm" onclick="emitirTicket()">IMPRIME TICKET</button>
-    </div>
-    {{-- <div class="col-md-3">
-        <button class="btn btn-primary w-100 btn-sm" onclick="emitirPorCobrar()">POR COBRAR</button>
-    </div> --}}
-    <div class="col-md-4">
-        {{-- <button class="btn btn-success w-100 btn-sm" onclick="emitirRecibo()">RECIBO</button> --}}
-        <button class="btn btn-success w-100 btn-sm" onclick="muestraDatosTipoPago()">RECIBO</button>
-    </div>
-    <div class="col-md-4">
-        <button class="btn btn-dark w-100 btn-sm" id="boton_facturar" {{ ($cantidadProductos == 0)? '' : 'disabled' }} onclick="muestraDatosFactura()">FACTURA</button>
-    </div>
-    {{--  <div class="col-md-12">
-        <button class="btn btn-dark w-100 btn-sm" onclick="muestraDatosFactura()">FACTURA</button>
-    </div>  --}}
+    @if(Auth::user()->isSupervisor())
+        <div class="col-md">
+            <button class="btn btn-info w-100 btn-sm" onclick="emitirTicket()">IMPRIME TICKET</button>
+        </div>
+    @else
+        <div class="col-md">
+            <button class="btn btn-success w-100 btn-sm" onclick="muestraDatosTipoPago()">RECIBO</button>
+        </div>
+        <div class="col-md">
+            <button class="btn btn-dark w-100 btn-sm" id="boton_facturar" {{ ($cantidadProductos == 0)? '' : 'disabled' }} onclick="muestraDatosFactura()">FACTURA</button>
+        </div>
+    @endif
 </div>

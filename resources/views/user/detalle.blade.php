@@ -42,6 +42,7 @@
                                             <option value="{{ $s->id }}">{{ $s->descripcion }}</option>
                                         @endforeach
                                     </select>
+                                    <input type="hidden" value="0" id="asignacion_id" name="asignacion_id">
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -378,7 +379,8 @@
                     data:{
                         servicio  : $('#servicio_id').val(),
                         porcentaje: $('#porcentaje').val(),
-                        usuario   : $('#usuario_id').val()
+                        usuario   : $('#usuario_id').val(),
+                        asignacion: $('#asignacion_id').val()
                     },
                     type: 'POST',
                     dataType: 'json',
@@ -408,6 +410,18 @@
         }
 
         function nuevoAsignacion(){
+            $('#asignacion_id').val('0')
+            $('#servicio_id').val('')
+            $('#porcentaje').val('')
+            $('#servicio_id').prop('disabled', false);
+            $('#modalAsignacion').modal('show')
+        }
+
+        function modificaAsiganacion(asignacion, servicio, liquidacion){
+            $('#asignacion_id').val(asignacion)
+            $('#servicio_id').val(servicio)
+            $('#porcentaje').val(liquidacion)
+            $('#servicio_id').prop('disabled', true);
             $('#modalAsignacion').modal('show')
         }
     </script>

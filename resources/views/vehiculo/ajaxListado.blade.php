@@ -23,22 +23,19 @@
                   <td>{{ $v->marca }}</td>
                   <td>
                     <button class="btn btn-success btn-icon btn-sm" {{ (!$vender)? 'disabled' : '' }} onclick="agregarServicio('{{ $v->placa }}', '{{ $v->marca }}', '{{ $v->ap_paterno }}', '{{ $v->ap_materno }}', '{{ $v->nombres }}', '{{ $v->idvehiculo }}', '{{ $v->idcliente }}', '{{ $v->complemento }}')"><i class="fa fa-donate"></i></button>
-                    <button class="btn btn-danger btn-icon btn-sm" onclick="eliminrCategoria('{{ $v->idvehiculo }}')"><i class="fa fa-trash"></i></button>
-                  </td>  
+                    @if(Auth::user()->aperturaCaja())
+                        <button class="btn btn-danger btn-icon btn-sm" onclick="eliminrCategoria('{{ $v->idvehiculo }}')"><i class="fa fa-trash"></i></button>
+                    @endif
+                  </td>
                 </tr>
             @empty
                 <button class="btn btn-info btn-sm w-100" onclick="registraNuevoVehiculo()">Registrar nuevo vehiculo</button>
-                {{--  <h4 class="text-danger text-center">Sin registros</h4>  --}}
             @endforelse
         </tbody>
     </table>
 <!--end::Table-->
     <script>
         $('#tabla_user').DataTable({
-            // responsive: true,
-            // language: {
-            //     url: '{{ asset('datatableEs.json') }}',
-            // },
-            // order: [[ 0, "desc" ]]
+
         });
     </script>

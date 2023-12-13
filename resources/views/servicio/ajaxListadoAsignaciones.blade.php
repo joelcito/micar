@@ -5,6 +5,7 @@
             <th >ID</th>
             <th >Descripcion</th>
             <th >Porcentaje</th>
+            <th ></th>
         </tr>
     </thead>
     <tbody class="text-gray-600 fw-semibold">
@@ -13,6 +14,9 @@
                 <td>{{ $a->id }}</td>
                 <td>{{ $a->servicio->descripcion }}</td>
                 <td>{{ $a->liquidacion }} %</td>
+                <td>
+                    <button class="btn btn-warning btn-icon btn-sm" onclick="modificaAsiganacion('{{ $a->id }}','{{ $a->servicio_id }}','{{ $a->liquidacion }}')"><i class="fa fa-edit"></i></button>
+                </td>
             </tr>
         @empty
             <h4 class="text-danger text-center">Sin registros</h4>

@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -54,5 +55,23 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function aperturaCaja(){
+        $usuaraio = Auth::user();
+        return ($usuaraio->rol_id == 1 || $usuaraio->rol_id == 4)? true : false;
+    }
 
+    public function isSupervisor(){
+        $usuaraio = Auth::user();
+        return ($usuaraio->rol_id == 2)? true : false;
+    }
+
+    public function isCajero(){
+        $usuaraio = Auth::user();
+        return ($usuaraio->rol_id == 4)? true : false;
+    }
+
+    public function isAdmin(){
+        $usuaraio = Auth::user();
+        return ($usuaraio->rol_id == 1)? true : false;
+    }
 }

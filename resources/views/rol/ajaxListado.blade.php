@@ -24,7 +24,10 @@
                     </td>
                     <td class="text-end">
                         <button class="btn btn-warning btn-icon btn-sm"><i class="fa fa-edit"></i></button>
-                        <button class="btn btn-danger btn-icon btn-sm" onclick="eliminar('{{ $r->id }}')"><i class="fa fa-trash"></i></button>
+                        {{-- @dd($r->roles->count()) --}}
+                        @if($r->roles->count() == 0)
+                            <button class="btn btn-danger btn-icon btn-sm" onclick="eliminar('{{ $r->id }}')"><i class="fa fa-trash"></i></button>
+                        @endif
                     </td>
                 </tr>
             @empty

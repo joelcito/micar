@@ -229,16 +229,36 @@
         }
 
         function eliminar(rol){
-            $.ajax({
-                url: "{{ url('rol/eliminar') }}",
-                type: 'POST',
-                data:{id:rol},
-                dataType: 'json',
-                success: function(data) {
-                    if(data.estado === 'success')
-                        $('#table_roles').html(data.listado);
+
+            Swal.fire({
+                title: 'Estas seguro de eliminar el Rol ?',
+                text: "No podrás revertir esto.!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si, eliminar!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ url('rol/eliminar') }}",
+                        type: 'POST',
+                        data:{id:rol},
+                        dataType: 'json',
+                        success: function(data) {
+                            if(data.estado === 'success'){
+                                $('#table_roles').html(data.listado);
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Eliminado!',
+                                    text: 'El rol se elimino!',
+                                    timer: 1000
+                                })
+                            }
+                        }
+                    });
                 }
-            });
+            })
         }
     </script>
 @endsection

@@ -48,7 +48,6 @@
     </div>
     <!--end::Modal - Add task-->
 
-
     <!--begin::Modal - Add task-->
     <div class="modal fade" id="modalCierreCaja" tabindex="-1" aria-hidden="true">
         <!--begin::Modal dialog-->
@@ -125,7 +124,7 @@
             </div> --}}
             <div class="card-actions">
                 <button class="btn btn-danger btn-icon btn-sm" onclick="modalCierreCaja()" title="Cierre de caja"><i class="fa-solid fa-solar-panel"></i></button>
-                @if ($vender != 0)
+                @if ($vender != 0 )
                     <button class="btn btn-success btn-icon btn-sm" onclick="modalIngreso()"><i class="fas fa-money-bill"></i> <i class="fas fa-arrow-down"></i></button>
                     <button class="btn btn-danger btn-icon btn-sm" onclick="modalSalida()"><i class="fas fa-money-bill"></i> <i class="fas fa-arrow-up"></i></button>
                 @endif

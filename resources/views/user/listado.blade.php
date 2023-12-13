@@ -44,13 +44,13 @@
                             <div class="col-md-4">
                                 <div class="fv-row mb-7">
                                     <label class="required fw-semibold fs-6 mb-2">Ap. Paterno</label>
-                                    <input type="text" class="form-control form-control-solid" required name="ap_paterno" id="ap_paterno" placeholder="Flores">
+                                    <input type="text" class="form-control form-control-solid" name="ap_paterno" id="ap_paterno" placeholder="Flores">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="fv-row mb-7">
                                     <label class="required fw-semibold fs-6 mb-2">Ap. Materno</label>
-                                    <input type="text" class="form-control form-control-solid" required name="ap_materno" id="ap_materno" placeholder="Quispe">
+                                    <input type="text" class="form-control form-control-solid" name="ap_materno" id="ap_materno" placeholder="Quispe">
                                 </div>
                             </div>
                         </div>
@@ -83,13 +83,13 @@
                             <div class="col-md-6">
                                 <div class="fv-row mb-7">
                                     <label class="required fw-semibold fs-6 mb-2">Direccion</label>
-                                    <input type="text" name="direccion" id="direccion" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="AV. Pabom" required/>
+                                    <input type="text" name="direccion" id="direccion" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="AV. Pabom"/>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="fv-row mb-7">
                                     <label class="required fw-semibold fs-6 mb-2">Contraseña</label>
-                                    <input type="password" name="password" id="password" class="form-control form-control-solid mb-3 mb-lg-0" required/>
+                                    <input type="password" name="password" id="password" class="form-control form-control-solid mb-3 mb-lg-0" required value="123456789"/>
                                 </div>
                             </div>
 
@@ -248,6 +248,17 @@
             });
         }
 
+        function vaciaFomulario(){
+            $('#nombres').val('');
+            $('#ap_paterno').val('');
+            $('#ap_materno').val('');
+            $('#cedula').val('');
+            $('#email').val('');
+            $('#rol_id').val('');
+            $('#direccion').val('');
+            $('#password').val('123456789');
+        }
+
        function guardarUsuario(){
             if($("#formularioUsuario")[0].checkValidity()){
                 datos = $("#formularioUsuario").serializeArray()
@@ -266,6 +277,7 @@
                             })
                             $('#kt_modal_add_user').modal('hide');
                             $('#table_users').html(data.listado);
+                            vaciaFomulario();
                         }else{
                             Swal.fire({
                                 icon:'error',

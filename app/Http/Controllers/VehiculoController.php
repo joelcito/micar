@@ -178,8 +178,6 @@ class VehiculoController extends Controller
     public function buscarVehiculo(Request $request){
         if($request->ajax()){
 
-            // dd($request->all());
-
             $query = Vehiculo::select('vehiculos.id  as idvehiculo','vehiculos.marca' ,'vehiculos.color','vehiculos.placa','clientes.ap_paterno','clientes.ap_materno','clientes.nombres','clientes.id as idcliente')
                                 ->join('clientes','vehiculos.cliente_id', '=', 'clientes.id');
 

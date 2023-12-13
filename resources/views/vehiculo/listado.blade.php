@@ -225,7 +225,66 @@
 
                 <div class="row">
                     <div class="col-md-12">
-                        <button class="btn btn-success w-100" onclick="guardarCategoria()">Guardar</button>
+                        <button class="btn btn-success w-100" onclick="agregarVehiculo()">Guardar</button>
+                    </div>
+                </div>
+            </div>
+            <!--end::Modal body-->
+        </div>
+        <!--end::Modal content-->
+    </div>
+    <!--end::Modal dialog-->
+</div>
+<!--end::Modal - Add task-->
+
+<!--begin::Modal - Add task-->
+<div class="modal fade" id="modalCierreCaja" tabindex="-1" aria-hidden="true">
+    <!--begin::Modal dialog-->
+    <div class="modal-dialog modal-dialog-centered">
+        <!--begin::Modal content-->
+        <div class="modal-content">
+            <!--begin::Modal header-->
+            <div class="modal-header" id="kt_modal_add_user_header">
+                <!--begin::Modal title-->
+                <h2 class="fw-bold">Formulario de cierre de caja</h2>
+                <!--end::Modal title-->
+                <!--begin::Close-->
+                <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-users-modal-action="close">
+                    <i class="ki-duotone ki-cross fs-1">
+                        <span class="path1"></span>
+                        <span class="path2"></span>
+                    </i>
+                </div>
+            </div>
+            <div class="modal-body scroll-y">
+                <form id="formularioCierreCaja">
+                    @csrf
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label class="required fw-semibold fs-6 mb-2">Usuario Cargo</label>
+                            <input type="text" class="form-control" value="{{ Auth::user()->name }}" readonly>
+                            <input type="hidden" value="{{ $vender }}" name="caja_abierto_cierre" id="caja_abierto_cierre" >
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-md-4">
+                            <div class="fv-row mb-7">
+                                <label class="required fw-semibold fs-6 mb-2">Monto</label>
+                                <input type="text" class="form-control" required name="monto_cie_caja" id="monto_cie_caja">
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="fv-row mb-7">
+                                <label class="required fw-semibold fs-6 mb-2">Descripcion</label>
+                                <input type="text" class="form-control" required name="descripcion_cie_caja" id="descripcion_cie_caja">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="row">
+                    <div class="col-md-12">
+                        <button class="btn btn-success w-100 btn-sm" onclick="registrarCajaCierre()">Gurdar</button>
                     </div>
                 </div>
             </div>
@@ -245,8 +304,13 @@
             <h1>Formulario de Facturacion</h1>
         </div>
         <div class="card-actions">
-            <button class="btn btn-success btn-icon btn-sm" onclick="modalAperturaCaja()" title="Apertura de caja"><i class="fa-solid fa-solar-panel"></i></button>
-            {{-- <button class="btn btn-danger btn-icon btn-sm" onclick="modalSalida()"><i class="fas fa-money-bill"></i> <i class="fas fa-arrow-up"></i></button> --}}
+            @if(Auth::user()->aperturaCaja())
+                @if($vender == 0 )
+                    <button class="btn btn-success btn-icon btn-sm" onclick="modalAperturaCaja()" title="Apertura de caja"><i class="fa-solid fa-solar-panel"></i></button>
+                @else
+                    <button class="btn btn-danger btn-icon btn-sm" onclick="modalCierreCaja()" title="Cerrar caja"><i class="fa-solid fa-solar-panel"></i></button>
+                @endif
+            @endif
         </div>
     </div>
     <!--end::Card header-->
@@ -274,7 +338,7 @@
                 <input type="text" class="form-control" placeholder="Buscar por nombres" id="buscar_nombre" autocomplete="off">
             </div>
         </div>
-        
+
         <hr>
         <div class="row">
             <div class="col-md-12 text-center">
@@ -864,216 +928,252 @@
 
         function emitirFactura(){
 
-            if($("#formularioGeneraFactura")[0].checkValidity() && $("#formulario_tipo_pagos")[0].checkValidity()){
-
-                // Obtén el botón y el icono de carga
-                var boton = $("#boton_enviar_factura");
-                var iconoCarga = boton.find("i");
-                // Deshabilita el botón y muestra el icono de carga
-                boton.attr("disabled", true);
-                iconoCarga.show();
-
-                //PONEMOS TODO AL MODELO DEL SIAT EL DETALLE
-                detalle = [];
-                arrayProductos.forEach(function (prod){
-                    detalle.push({
-                        actividadEconomica  :   prod.codigoActividad,
-                        codigoProductoSin   :   prod.codigoProducto,
-                        codigoProducto      :   prod.servicio_id,
-                        descripcion         :   prod.descripcion,
-                        cantidad            :   prod.cantidad,
-                        unidadMedida        :   prod.unidadMedida,
-                        precioUnitario      :   prod.precio,
-                        montoDescuento      :   prod.descuento,
-                        subTotal            :   ((prod.cantidad*prod.precio)-prod.descuento),
-                        numeroSerie         :   null,
-                        numeroImei          :   null
-                    })
-                })
-
-                let numero_factura                  = $('#numero_factura').val();
-                let cuf                             = "123456789";//cambiar
-                let cufd                            = "{{ session('scufd') }}";  //solo despues de que aga
-                let direccion                       = "{{ session('sdireccion') }}";//solo despues de que aga
-                var tzoffset                        = ((new Date()).getTimezoneOffset()*60000);
-                let fechaEmision                    = ((new Date(Date.now()-tzoffset)).toISOString()).slice(0,-1);
-                let nombreRazonSocial               = $('#razon_factura').val();
-                let codigoTipoDocumentoIdentidad    = $('#tipo_documento').val()
-                let numeroDocumento                 = $('#nit_factura').val();
-
-                let complemento;
-                var complementoValue = $("#complemento").val();
-                if (complementoValue === null || complementoValue.trim() === ""){
-                    complemento                     = null;
-                }else{
-                    if($('#tipo_documento').val()==5){
-                        complemento                     = null;
-                    }else{
-                        complemento                     = $('#complemento').val();
-                    }
-                }
-
-                let montoTotal                      = $('#motoTotalFac').val();
-                let descuentoAdicional              = $('#descuento_adicional').val();
-                let leyenda                         = "Ley N° 453: El proveedor deberá suministrar el servicio en las modalidades y términos ofertados o convenidos.";
-                let usuario                         = "{{ Auth::user()->name }}";
-                let nombreEstudiante                = $('#nombreCompletoEstudiante').val();
-                let periodoFacturado                = detalle[(detalle.length)-1].descripcion+" / "+$('#anio_vigente_cuota_pago').val();
-
-                let codigoExcepcion;
-                if ($('#execpcion').is(':checked'))
-                    codigoExcepcion                 = 1;
-                else
-                    codigoExcepcion                 = 0;
-
-
-                var factura = [];
-                factura.push({
-                    cabecera: {
-                        nitEmisor                       :"5427648016",
-                        razonSocialEmisor               :'MICAELA QUIROZ ESCOBAR',
-                        municipio                       :"Santa Cruz",
-                        telefono                        :"73130500",
-                        numeroFactura                   :numero_factura,
-                        cuf                             :cuf,
-                        cufd                            :cufd,
-                        codigoSucursal                  :0,
-                        direccion                       :direccion ,
-                        codigoPuntoVenta                :0,
-                        fechaEmision                    :fechaEmision,
-                        nombreRazonSocial               :nombreRazonSocial,
-                        codigoTipoDocumentoIdentidad    :codigoTipoDocumentoIdentidad,
-                        numeroDocumento                 :numeroDocumento,
-                        // complemento                     :null,
-                        complemento                     :complemento,
-                        codigoCliente                   :numeroDocumento,
-                        codigoMetodoPago                :1,
-                        numeroTarjeta                   :null,
-                        montoTotal                      :montoTotal,
-                        montoTotalSujetoIva             :montoTotal,
-
-                        codigoMoneda                    :1,
-                        tipoCambio                      :1,
-                        montoTotalMoneda                :montoTotal,
-
-                        montoGiftCard                   :null,
-                        descuentoAdicional              :descuentoAdicional,//ver llenado
-                        codigoExcepcion                 :codigoExcepcion,
-                        cafc                            :null,
-                        leyenda                         :leyenda,
-                        usuario                         :usuario,
-                        codigoDocumentoSector           :1
-                    }
-                })
-
-                detalle.forEach(function (prod1){
-                    factura.push({
-                        detalle:prod1
-                    })
-                })
-
-                var datos = {factura};
-
-                var datosVehiculo = {
-                    'vehiculo_id' : $('#vehiculo_id').val(),
-                    'pagos'       : arrayPagos,
-                    'realizo_pago': $("#realizo_pago").prop("checked"),
-                    'caja'        : $('#caja_id').val()
-                };
-
-                var datosRecepcion = {
-                    'uso_cafc'                : $('input[name="uso_cafc"]:checked').val(),
-                    'codigo_cafc_contingencia': $('#codigo_cafc_contingencia').val()
-                };
-
-
-                $.ajax({
-                    url : "{{ url('factura/emitirFactura') }}",
-                    data: {
-                        datos         : datos,
-                        datosVehiculo : datosVehiculo,
-                        datosRecepcion: datosRecepcion,
-                        modalidad     : $('#tipo_facturacion').val(),
-                        tipo_pago     : $('#tipo_pago').val(),
-                        monto_pagado  : $('#miInput').val(),
-                        cambio        : $('#cambio').val()
-                    },
-                    type: 'POST',
-                    dataType:'json',
-                    success: function(data) {
-
-                        if(data.estado === "VALIDADA"){
+            let vehiculo = $('#vehiculo_id').val()
+            $.ajax({
+                url: "{{ url('factura/verificaItemsGeneracion') }}",
+                data: {
+                    vehiculo: $('#vehiculo_id').val(),
+                },
+                type: 'POST',
+                dataType:'json',
+                success: function(data) {
+                    if(data.estado === "success"){
+                        if(data.cantidad == 0){
                             Swal.fire({
-                                icon : 'success',
-                                title: 'Excelente!',
-                                text : 'LA FACTURA FUE VALIDADA',
-                                timer: 3000
+                                icon:   'error',
+                                title:  'Error!',
+                                text:   "DEBE AL MENOS AGREGAR UN SERVICIO/PRODUCTO",
+                                timer: 5000
                             })
-                            window.location.href = "{{ url('pago/listado')}}"
-                        }else if(data.estado === "error_email"){
-                            Swal.fire({
-                                icon : 'error',
-                                title: 'Error!',
-                                text : data.msg,
-                            })
-                            // Habilita el botón y oculta el icono de carga después de completar
-                            boton.attr("disabled", false);
-                            iconoCarga.hide();
-                        }else if(data.estado === "OFFLINE"){
-                            Swal.fire({
-                                icon : 'warning',
-                                title: 'Exito!',
-                                text : 'LA FACTURA FUERA DE LINEA FUE REGISTRADA',
-                            })
-                            window.location.href = "{{ url('pago/listado')}}"
-                              // location.reload();
                         }else{
-                            Swal.fire({
-                                icon : 'error',
-                                title: data.msg,
-                                text : 'LA FACTURA FUE RECHAZADA',
-                            })
-                            // Habilita el botón y oculta el icono de carga después de completar
-                            boton.attr("disabled", false);
-                            iconoCarga.hide();
+                            if($("#formularioGeneraFactura")[0].checkValidity() && $("#formulario_tipo_pagos")[0].checkValidity()){
+                                // Obtén el botón y el icono de carga
+                                var boton = $("#boton_enviar_factura");
+                                var iconoCarga = boton.find("i");
+                                // Deshabilita el botón y muestra el icono de carga
+                                boton.attr("disabled", true);
+                                iconoCarga.show();
+
+                                //PONEMOS TODO AL MODELO DEL SIAT EL DETALLE
+                                detalle = [];
+                                arrayProductos.forEach(function (prod){
+                                    detalle.push({
+                                        actividadEconomica  :   prod.codigoActividad,
+                                        codigoProductoSin   :   prod.codigoProducto,
+                                        codigoProducto      :   prod.servicio_id,
+                                        descripcion         :   prod.descripcion,
+                                        cantidad            :   prod.cantidad,
+                                        unidadMedida        :   prod.unidadMedida,
+                                        precioUnitario      :   prod.precio,
+                                        montoDescuento      :   prod.descuento,
+                                        subTotal            :   ((prod.cantidad*prod.precio)-prod.descuento),
+                                        numeroSerie         :   null,
+                                        numeroImei          :   null
+                                    })
+                                })
+
+                                let numero_factura                  = $('#numero_factura').val();
+                                let cuf                             = "123456789";//cambiar
+                                let cufd                            = "{{ session('scufd') }}";  //solo despues de que aga
+                                let direccion                       = "{{ session('sdireccion') }}";//solo despues de que aga
+                                var tzoffset                        = ((new Date()).getTimezoneOffset()*60000);
+                                let fechaEmision                    = ((new Date(Date.now()-tzoffset)).toISOString()).slice(0,-1);
+                                let nombreRazonSocial               = $('#razon_factura').val();
+                                let codigoTipoDocumentoIdentidad    = $('#tipo_documento').val()
+                                let numeroDocumento                 = $('#nit_factura').val();
+
+                                let complemento;
+                                var complementoValue = $("#complemento").val();
+                                if (complementoValue === null || complementoValue.trim() === ""){
+                                    complemento                     = null;
+                                }else{
+                                    if($('#tipo_documento').val()==5){
+                                        complemento                     = null;
+                                    }else{
+                                        complemento                     = $('#complemento').val();
+                                    }
+                                }
+
+                                let montoTotal                      = $('#motoTotalFac').val();
+                                let descuentoAdicional              = $('#descuento_adicional').val();
+                                let leyenda                         = "Ley N° 453: El proveedor deberá suministrar el servicio en las modalidades y términos ofertados o convenidos.";
+                                let usuario                         = "{{ Auth::user()->name }}";
+                                let nombreEstudiante                = $('#nombreCompletoEstudiante').val();
+                                let periodoFacturado                = detalle[(detalle.length)-1].descripcion+" / "+$('#anio_vigente_cuota_pago').val();
+
+                                let codigoExcepcion;
+                                if ($('#execpcion').is(':checked'))
+                                    codigoExcepcion                 = 1;
+                                else
+                                    codigoExcepcion                 = 0;
+
+
+                                var factura = [];
+                                factura.push({
+                                    cabecera: {
+                                        nitEmisor                       :"5427648016",
+                                        razonSocialEmisor               :'MICAELA QUIROZ ESCOBAR',
+                                        municipio                       :"Santa Cruz",
+                                        telefono                        :"73130500",
+                                        numeroFactura                   :numero_factura,
+                                        cuf                             :cuf,
+                                        cufd                            :cufd,
+                                        codigoSucursal                  :0,
+                                        direccion                       :direccion ,
+                                        codigoPuntoVenta                :0,
+                                        fechaEmision                    :fechaEmision,
+                                        nombreRazonSocial               :nombreRazonSocial,
+                                        codigoTipoDocumentoIdentidad    :codigoTipoDocumentoIdentidad,
+                                        numeroDocumento                 :numeroDocumento,
+                                        // complemento                     :null,
+                                        complemento                     :complemento,
+                                        codigoCliente                   :numeroDocumento,
+                                        codigoMetodoPago                :1,
+                                        numeroTarjeta                   :null,
+                                        montoTotal                      :montoTotal,
+                                        montoTotalSujetoIva             :montoTotal,
+
+                                        codigoMoneda                    :1,
+                                        tipoCambio                      :1,
+                                        montoTotalMoneda                :montoTotal,
+
+                                        montoGiftCard                   :null,
+                                        descuentoAdicional              :descuentoAdicional,//ver llenado
+                                        codigoExcepcion                 :codigoExcepcion,
+                                        cafc                            :null,
+                                        leyenda                         :leyenda,
+                                        usuario                         :usuario,
+                                        codigoDocumentoSector           :1
+                                    }
+                                })
+
+                                detalle.forEach(function (prod1){
+                                    factura.push({
+                                        detalle:prod1
+                                    })
+                                })
+                                var datos = {factura};
+                                var datosVehiculo = {
+                                    'vehiculo_id' : $('#vehiculo_id').val(),
+                                    'pagos'       : arrayPagos,
+                                    'realizo_pago': $("#realizo_pago").prop("checked"),
+                                    'caja'        : $('#caja_id').val()
+                                };
+                                var datosRecepcion = {
+                                    'uso_cafc'                : $('input[name="uso_cafc"]:checked').val(),
+                                    'codigo_cafc_contingencia': $('#codigo_cafc_contingencia').val()
+                                };
+                                $.ajax({
+                                    url : "{{ url('factura/emitirFactura') }}",
+                                    data: {
+                                        datos         : datos,
+                                        datosVehiculo : datosVehiculo,
+                                        datosRecepcion: datosRecepcion,
+                                        modalidad     : $('#tipo_facturacion').val(),
+                                        tipo_pago     : $('#tipo_pago').val(),
+                                        monto_pagado  : $('#miInput').val(),
+                                        cambio        : $('#cambio').val()
+                                    },
+                                    type: 'POST',
+                                    dataType:'json',
+                                    success: function(data) {
+
+                                        if(data.estado === "VALIDADA"){
+                                            Swal.fire({
+                                                icon : 'success',
+                                                title: 'Excelente!',
+                                                text : 'LA FACTURA FUE VALIDADA',
+                                                timer: 3000
+                                            })
+                                            window.location.href = "{{ url('pago/listado')}}"
+                                        }else if(data.estado === "error_email"){
+                                            Swal.fire({
+                                                icon : 'error',
+                                                title: 'Error!',
+                                                text : data.msg,
+                                            })
+                                            // Habilita el botón y oculta el icono de carga después de completar
+                                            boton.attr("disabled", false);
+                                            iconoCarga.hide();
+                                        }else if(data.estado === "OFFLINE"){
+                                            Swal.fire({
+                                                icon : 'warning',
+                                                title: 'Exito!',
+                                                text : 'LA FACTURA FUERA DE LINEA FUE REGISTRADA',
+                                            })
+                                            window.location.href = "{{ url('pago/listado')}}"
+                                            // location.reload();
+                                        }else{
+                                            Swal.fire({
+                                                icon : 'error',
+                                                title: data.msg,
+                                                text : 'LA FACTURA FUE RECHAZADA',
+                                            })
+                                            // Habilita el botón y oculta el icono de carga después de completar
+                                            boton.attr("disabled", false);
+                                            iconoCarga.hide();
+                                        }
+                                    }
+                                });
+
+                            }else{
+                                $("#formularioGeneraFactura")[0].reportValidity();
+                                $("#formulario_tipo_pagos")[0].reportValidity()
+                            }
                         }
                     }
-                });
-
-            }else{
-                $("#formularioGeneraFactura")[0].reportValidity();
-                $("#formulario_tipo_pagos")[0].reportValidity()
-            }
+                }
+            });
         }
 
         function emitirRecibo(){
-
-            if($('#formulario_tipo_pagos')[0].checkValidity()){
-                $.ajax({
-                    url: "{{ url('factura/emitirRecibo') }}",
-                    type: 'POST',
-                    data:{
-                        vehiculo           : $('#vehiculo_id').val(),
-                        monto              : $('#motoTotalFac').val(),
-                        descuento_adicional: $('#descuento_adicional').val(),
-                        tipo_pago          : $('#tipo_pago').val(),
-                        monto_pagado       : $('#miInput').val(),
-                        cambio             : $('#cambio').val(),
-                        realizo_pago       : $("#realizo_pago").prop("checked"),
-                        caja               : $('#caja_id').val()
-                    },
-                    dataType: 'json',
-                    success: function(data) {
-                        if(data.estado === 'success'){
-                            let url = "{{ asset('factura/imprimeRecibo') }}/"+data.factura;
-                            window.location.href = url;
+            let vehiculo = $('#vehiculo_id').val()
+            $.ajax({
+                url: "{{ url('factura/verificaItemsGeneracion') }}",
+                data: {
+                    vehiculo: $('#vehiculo_id').val(),
+                },
+                type: 'POST',
+                dataType:'json',
+                success: function(data) {
+                    if(data.estado === "success"){
+                        if(data.cantidad == 0){
+                            Swal.fire({
+                                icon:   'error',
+                                title:  'Error!',
+                                text:   "DEBE AL MENOS AGREGAR UN SERVICIO/PRODUCTO",
+                                timer: 5000
+                            })
+                        }else{
+                            if($('#formulario_tipo_pagos')[0].checkValidity()){
+                                $.ajax({
+                                    url: "{{ url('factura/emitirRecibo') }}",
+                                    type: 'POST',
+                                    data:{
+                                        vehiculo           : $('#vehiculo_id').val(),
+                                        monto              : $('#motoTotalFac').val(),
+                                        descuento_adicional: $('#descuento_adicional').val(),
+                                        tipo_pago          : $('#tipo_pago').val(),
+                                        monto_pagado       : $('#miInput').val(),
+                                        cambio             : $('#cambio').val(),
+                                        realizo_pago       : $("#realizo_pago").prop("checked"),
+                                        caja               : $('#caja_id').val()
+                                    },
+                                    dataType: 'json',
+                                    success: function(data) {
+                                        if(data.estado === 'success'){
+                                            let url = "{{ asset('factura/imprimeRecibo') }}/"+data.factura;
+                                            window.location.href = url;
+                                        }
+                                    }
+                                });
+                            }else{
+                                $("#formulario_tipo_pagos")[0].reportValidity()
+                            }
                         }
                     }
-                });
-            }else{
-                console.log("no")
-                $("#formulario_tipo_pagos")[0].reportValidity()
-            }
+                }
+            });
         }
 
         function funcionNueva(input, pago, total){
@@ -1215,8 +1315,29 @@
 
         function emitirTicket(){
             let vehiculo = $('#vehiculo_id').val()
-            let url = "{{ asset('factura/imprimeTicked') }}/"+vehiculo;
-            window.location.href = url;
+            $.ajax({
+                url: "{{ url('factura/verificaItemsGeneracion') }}",
+                data: {
+                    vehiculo: $('#vehiculo_id').val(),
+                },
+                type: 'POST',
+                dataType:'json',
+                success: function(data) {
+                    if(data.estado === "success"){
+                        if(data.cantidad == 0){
+                            Swal.fire({
+                                icon:   'error',
+                                title:  'Error!',
+                                text:   "DEBE AL MENOS AGREGAR UN SERVICIO/PRODUCTO",
+                                timer: 5000
+                            })
+                        }else{
+                            let url = "{{ asset('factura/imprimeTicked') }}/"+vehiculo;
+                            window.location.href = url;
+                        }
+                    }
+                }
+            });
         }
 
         function emitirPorCobrar(){
@@ -1270,20 +1391,82 @@
                         if(data.estado === 'success'){
                             Swal.fire({
                                 icon: 'success',
-                                title: 'SE APERTURO CON EXTIO',
-                                showConfirmButton: false, // No mostrar botón de confirmación
-                                timer: 2000, // 5 segundos
-                                timerProgressBar: true
+                                title: 'SE APERTURO CON ÉXITO',
+                                showConfirmButton: true,
+                                allowOutsideClick: false, // Evitar que se cierre haciendo clic afuera
+                                allowEscapeKey: false, // Evitar que se cierre con la tecla "Escape"
+                                allowEnterKey: true, // Permitir cerrar con la tecla "Enter"
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    // Recargar la página
+                                    location.reload();
+                                }
                             });
-                            $('#caja_id').val(data.caja)
-                            $('#modalAperturaCaja').modal('hide')
-                            buscarVehiculo()
                         }
                     }
                 });
             }else{
                 $("#formularioAperturaCaja")[0].reportValidity();
             }
+        }
+
+        function modalCierreCaja(){
+            $('#modalCierreCaja').modal('show')
+        }
+
+        function registrarCajaCierre(){
+            if($("#formularioCierreCaja")[0].checkValidity()){
+                let datos = $("#formularioCierreCaja").serializeArray();
+                $.ajax({
+                    url: "{{ url('pago/cierreCaja') }}",
+                    data: datos,
+                    type: 'POST',
+                    dataType:'json',
+                    success: function(data) {
+                        if(data.estado === 'success'){
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'SE CERRO CON EXTIO',
+                                showConfirmButton: true,
+                                allowOutsideClick: false, // Evitar que se cierre haciendo clic afuera
+                                allowEscapeKey: false, // Evitar que se cierre con la tecla "Escape"
+                                allowEnterKey: true, // Permitir cerrar con la tecla "Enter"
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    // Recargar la página
+                                    location.reload();
+                                }
+                            });
+                        }
+                    }
+                });
+            }else{
+                $("#formularioCierreCaja")[0].reportValidity();
+            }
+        }
+
+        function agregarVehiculo(){
+            $.ajax({
+                url: "{{ url('pago/emitirPorCobrar') }}",
+                data: {
+                    vehiculo: $('#vehiculo_id').val(),
+                },
+                type: 'POST',
+                dataType:'json',
+                success: function(data) {
+                    if(data.estado === "success"){
+                        Swal.fire({
+                            icon:   'success',
+                            title:  'Exito!',
+                            text:   "Se agrego el registro POR COBRAR",
+                            timer: 2500
+                        })
+                        setTimeout(function() {
+                            location.reload();
+                        }, 3000); // 3000 milisegundos = 3 segundos
+                    }
+                }
+            });
         }
 
     </script>
