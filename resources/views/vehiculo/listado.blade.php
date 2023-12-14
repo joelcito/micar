@@ -8,6 +8,129 @@
 @section('content')
 
 <!--begin::Modal - Add task-->
+<div class="modal fade" id="modal_registro_usuario" tabindex="-1" aria-hidden="true">
+    <!--begin::Modal dialog-->
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <!--begin::Modal content-->
+        <div class="modal-content">
+            <!--begin::Modal header-->
+            <div class="modal-header" id="kt_modal_add_user_header">
+                <!--begin::Modal title-->
+                <h2 class="fw-bold">Formulario de Registro de Cliente</h2>
+                <!--end::Modal title-->
+                <!--begin::Close-->
+                <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-users-modal-action="close">
+                    <i class="ki-duotone ki-cross fs-1">
+                        <span class="path1"></span>
+                        <span class="path2"></span>
+                    </i>
+                </div>
+                <!--end::Close-->
+            </div>
+            <!--end::Modal header-->
+            <!--begin::Modal body-->
+            <div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
+                <form id="formularioCliente">
+                    @csrf
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="fv-row mb-7">
+                                <label class="required fw-semibold fs-6 mb-2">Nombres</label>
+                                <input type="text" class="form-control" required name="nombres" id="nombres">
+                                <input type="hidden" name="cliente_id" id="cliente_id" value="0">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="fv-row mb-7">
+                                <label class="required fw-semibold fs-6 mb-2">Ap Paterno</label>
+                                <input type="text" class="form-control" required name="ap_paterno" id="ap_paterno">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="fv-row mb-7">
+                                <label class="required fw-semibold fs-6 mb-2">Ap Materno</label>
+                                <input type="text" class="form-control" required name="ap_materno" id="ap_materno">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="fv-row mb-7">
+                                <label class="required fw-semibold fs-6 mb-2">Cedula</label>
+                                <input type="number" class="form-control" required name="cedula" id="cedula">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="fv-row mb-7">
+                                <label class="required fw-semibold fs-6 mb-2">Complemento</label>
+                                <input type="text" class="form-control" name="complemento" id="complemento">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="fv-row mb-7">
+                                <label class="required fw-semibold fs-6 mb-2">Nit</label>
+                                <input type="text" class="form-control" required name="nit" id="nit">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="fv-row mb-7">
+                                <label class="required fw-semibold fs-6 mb-2">Razon Social</label>
+                                <input type="text" class="form-control" required name="razon_social" id="razon_social">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="fv-row mb-7">
+                                <label class="required fw-semibold fs-6 mb-2">Correo</label>
+                                <input type="email" class="form-control" required name="correo" id="correo">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="fv-row mb-7">
+                                <label class="required fw-semibold fs-6 mb-2">Celular</label>
+                                <input type="number" class="form-control" required name="celular" id="celular">
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="fv-row mb-7">
+                                <div class="mb-10">
+                                    <label class="required fw-semibold mb-5">Tipo Cliente</label>
+                                    <div class="d-flex">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-check form-check-custom form-check-solid">
+                                                    <input class="form-check-input me-3" name="tipo_cliente" type="radio" value="cliente" id="cliente" checked='checked' />
+                                                    <label class="form-check-label" for="cliente">
+                                                        <div class="fw-bold text-gray-800">Cliente</div>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="row">
+                    <div class="col-md-6">
+                        <button class="btn btn-dark w-100 btn-sm" onclick="cancelarguardarCliente()">Cancelar</button>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-success w-100 btn-sm" onclick="guardarCliente()">Guardar</button>
+                    </div>
+                </div>
+            </div>
+            <!--end::Modal body-->
+        </div>
+        <!--end::Modal content-->
+    </div>
+    <!--end::Modal dialog-->
+</div>
+<!--end::Modal - Add task-->
+
+<!--begin::Modal - Add task-->
 <div class="modal fade" id="modalAperturaCaja" tabindex="-1" aria-hidden="true">
     <!--begin::Modal dialog-->
     <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -190,12 +313,14 @@
                     <div class="row">
                         <div class="col-md-11">
                             <label class="required fw-semibold fs-6 mb-2">Cliente</label>
-                            <select name="cliente_id" id="cliente_id" class="form-control" required data-control="select2" data-dropdown-parent="#modal_registro_vehiculo" data-placeholder="Select an option" data-allow-clear="true">
-                                <option value="">SELECCIONE AL CLIENTE</option>
-                                @foreach ($clientes as $c)
-                                    <option value="{{ $c->id }}">{{ $c->ap_paterno." ".$c->ap_materno." ".$c->nombres }}</option>
-                                @endforeach
-                            </select>
+                            <div id="nuevo">
+                                <select name="vehiculo_cliente_id" id="vehiculo_cliente_id" class="form-control" required data-control="select2" data-dropdown-parent="#modal_registro_vehiculo" data-placeholder="Select an option" data-allow-clear="true">
+                                    <option value="">SELECCIONE AL CLIENTE</option>
+                                    @foreach ($clientes as $c)
+                                        <option value="{{ $c->id }}">{{ $c->ap_paterno." ".$c->ap_materno." ".$c->nombres }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
                         <div class="col-md-1 mt-9">
                             <button class="btn btn-icon btn-sm btn-success" onclick="modalNuevoUsuario()"><i class="fas fa-user-plus"></i> </button>
@@ -1447,9 +1572,12 @@
 
         function agregarVehiculo(){
             $.ajax({
-                url: "{{ url('pago/emitirPorCobrar') }}",
+                url: "{{ url('vehiculo/guarda') }}",
                 data: {
-                    vehiculo: $('#vehiculo_id').val(),
+                    placa  : $('#placa').val(),
+                    color  : $('#color').val(),
+                    marca  : $('#marca').val(),
+                    cliente: $('#vehiculo_cliente_id').val()
                 },
                 type: 'POST',
                 dataType:'json',
@@ -1458,15 +1586,51 @@
                         Swal.fire({
                             icon:   'success',
                             title:  'Exito!',
-                            text:   "Se agrego el registro POR COBRAR",
-                            timer: 2500
+                            text:   "Se registro con exito el VEHICULO",
+                            timer: 2000
                         })
+
                         setTimeout(function() {
-                            location.reload();
-                        }, 3000); // 3000 milisegundos = 3 segundos
+                            buscarVehiculo()
+                        }, 1500);
+
+                        $('#modal_registro_vehiculo').modal('hide');
                     }
                 }
             });
+        }
+
+        function guardarCliente(){
+            if($("#formularioCliente")[0].checkValidity()){
+                datos = $("#formularioCliente").serializeArray()
+                $.ajax({
+                    url: "{{ url('cliente/guarda') }}",
+                    data:datos,
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function(data) {
+                        if(data.estado === 'success'){
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Correcto!',
+                                text: 'Se registro con exito!',
+                                timer: 1500
+                            })
+                            $('#vehiculo_cliente_id').append('<option value="'+data.new.id+'">'+data.new.ap_paterno+' '+data.new.ap_materno+' '+data.new.nombres+'</option>');
+                            $('#vehiculo_cliente_id').val(data.new.id).trigger('change');
+                            $('#modal_registro_usuario').modal('hide');
+                            $('#modal_registro_vehiculo').modal('show');
+                        }
+                    }
+                });
+            }else{
+    			$("#formularioCliente")[0].reportValidity()
+            }
+        }
+
+        function cancelarguardarCliente(){
+            $('#modal_registro_usuario').modal('hide');
+            $('#modal_registro_vehiculo').modal('show');
         }
 
     </script>
