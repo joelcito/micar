@@ -58,6 +58,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/user/ajaxListado', [UserController::class, 'ajaxListado']);
     Route::post('/user/guarda', [UserController::class, 'guarda']);
     Route::get('/user/detalle/{usuario_id}', [UserController::class, 'detalle']);
+    Route::post('/user/cambioPass', [UserController::class, 'cambioPass']);
 
 
     // ROLES

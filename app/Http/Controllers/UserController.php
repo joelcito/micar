@@ -75,4 +75,16 @@ class UserController extends Controller
 
         return view('user.detalle')->with(compact('usuario', 'servicios', 'liquidaciones', 'serviciosRealizados'));
     }
+
+    public function cambioPass(Request $request){
+        if($request->ajax()){
+            $user           = User::find($request->input('user_id_new_pro'));
+            $user->password = Hash::make($request->input('pass1'));
+            $user->save();
+            $data['estado'] = 'success';
+        }else{
+            $data['estado'] = 'error';
+        }
+        return $data;
+    }
 }
