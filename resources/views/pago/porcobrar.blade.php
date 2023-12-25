@@ -20,7 +20,7 @@
                                 <div class="fv-row mb-7">
                                     <label class="fw-semibold fs-6 mb-2">Cliente</label>
                                     <input type="text" class="form-control" name="cliente" id="cliente" disabled>
-                                    <input type="text" name="factura_id" id="factura_id">
+                                    <input type="hidden" name="factura_id" id="factura_id">
                                 </div>
                             </div>
                             <div class="col-md-6">

@@ -16,6 +16,7 @@ class PuntoVentaCotroller extends Controller
 
             $cufdController             = app(CufdController::class);
             $datosCufdOffLine           = $cufdController->sacarCufdVigenteFueraLinea();
+
             if($datosCufdOffLine['estado'] === "success"){
                 // $scufd                  = $datosCufdOffLine['scufd'];
                 // $scodigoControl         = $datosCufdOffLine['scodigoControl'];

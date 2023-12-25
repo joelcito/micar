@@ -815,6 +815,23 @@ class FacturaController extends Controller
         return view('pago.imprimeFactura')->with(compact('factura', 'archivoXML', 'cabeza'));
     }
 
+    public function verificaItemsGeneracion(Request $request){
+
+        $vehiculo_id = $request->input('vehiculo');
+
+        $pagos = Detalle::where('vehiculo_id',$vehiculo_id)
+                        ->where('estado','Parapagar')
+                        ->count();
+
+        $data['estado']   = 'success';
+        $data['cantidad'] = $pagos;
+
+        return $data;
+
+        // dd($request->all(), $pagos);
+
+    }
+
     // ********************  PRUEBAS FACUTRAS SINCRONIZACION   *****************************
     public function pruebas(){
         $siat = app(SiatController::class);
@@ -1579,9 +1596,17 @@ class FacturaController extends Controller
 
     public function imprimeTicked(Request $request, $vehiculo_id){
 
-        $pagos = Pago::where('vehiculo_id',$vehiculo_id)
+        // dd($request->all(), $vehiculo_id);
+
+        // $pagos = Pago::where('vehiculo_id',$vehiculo_id)
+        //                 ->where('estado','Parapagar')
+        //                 ->get();
+
+        $pagos = Detalle::where('vehiculo_id',$vehiculo_id)
                         ->where('estado','Parapagar')
                         ->get();
+
+        // dd($pagos);
 
         return view('pago.imprimeTicked')->with(compact('pagos'));
     }
@@ -1623,7 +1648,7 @@ class FacturaController extends Controller
             if($respuesta->resultado->RespuestaServicioFacturacion->transaccion){
                 $factura->estado = 'Anulado';
                 $factura->save();
-                
+
                 // EMPEZAMOS CON LA NUEVA FACUTRACION Y TRASLADOS DE LA MISMA
                 $datelles   = Detalle::where('factura_id', $factura_id)->get();
                 $xml        = $factura->productos_xml;
@@ -1912,7 +1937,7 @@ class FacturaController extends Controller
 
                 return $data ;
             }
-            
+
             // dd(
             //     // $factura,
             //     // $datelles,

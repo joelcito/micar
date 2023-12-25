@@ -44,13 +44,13 @@
                             <div class="col-md-4">
                                 <div class="fv-row mb-7">
                                     <label class="required fw-semibold fs-6 mb-2">Ap. Paterno</label>
-                                    <input type="text" class="form-control form-control-solid" required name="ap_paterno" id="ap_paterno" placeholder="Flores">
+                                    <input type="text" class="form-control form-control-solid" name="ap_paterno" id="ap_paterno" placeholder="Flores">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="fv-row mb-7">
                                     <label class="required fw-semibold fs-6 mb-2">Ap. Materno</label>
-                                    <input type="text" class="form-control form-control-solid" required name="ap_materno" id="ap_materno" placeholder="Quispe">
+                                    <input type="text" class="form-control form-control-solid" name="ap_materno" id="ap_materno" placeholder="Quispe">
                                 </div>
                             </div>
                         </div>
@@ -83,13 +83,13 @@
                             <div class="col-md-6">
                                 <div class="fv-row mb-7">
                                     <label class="required fw-semibold fs-6 mb-2">Direccion</label>
-                                    <input type="text" name="direccion" id="direccion" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="AV. Pabom" required/>
+                                    <input type="text" name="direccion" id="direccion" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="AV. Pabom"/>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="fv-row mb-7">
                                     <label class="required fw-semibold fs-6 mb-2">Contraseña</label>
-                                    <input type="password" name="password" id="password" class="form-control form-control-solid mb-3 mb-lg-0" required/>
+                                    <input type="password" name="password" id="password" class="form-control form-control-solid mb-3 mb-lg-0" required value="123456789"/>
                                 </div>
                             </div>
 
@@ -115,84 +115,11 @@
     <div class="card">
         <!--begin::Card header-->
         <div class="card-header border-0 pt-6">
-            <!--begin::Card title-->
-            <div class="card-title">
-                <!--begin::Search-->
-                <div class="d-flex align-items-center position-relative my-1">
-                    <i class="ki-duotone ki-magnifier fs-3 position-absolute ms-5">
-                        <span class="path1"></span>
-                        <span class="path2"></span>
-                    </i>
-                    <input type="text" data-kt-user-table-filter="search" class="form-control form-control-solid w-250px ps-13" placeholder="Buscar Venta" />
-                </div>
-                <!--end::Search-->
-            </div>
-            <!--begin::Card title-->
-            <!--begin::Card toolbar-->
             <div class="card-toolbar">
                 <!--begin::Toolbar-->
                 <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">
-                    {{--  <!--begin::Filter-->
-                    <button type="button" class="btn btn-light-primary me-3" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-                    <i class="ki-duotone ki-filter fs-2">
-                        <span class="path1"></span>
-                        <span class="path2"></span>
-                    </i>Filter</button>
-                    <!--begin::Menu 1-->
-                    <div class="menu menu-sub menu-sub-dropdown w-300px w-md-325px" data-kt-menu="true">
-                        <!--begin::Header-->
-                        <div class="px-7 py-5">
-                            <div class="fs-5 text-dark fw-bold">Filter Options</div>
-                        </div>
-                        <!--end::Header-->
-                        <!--begin::Separator-->
-                        <div class="separator border-gray-200"></div>
-                        <!--end::Separator-->
-                        <!--begin::Content-->
-                        <div class="px-7 py-5" data-kt-user-table-filter="form">
-                            <!--begin::Input group-->
-                            <div class="mb-10">
-                                <label class="form-label fs-6 fw-semibold">Role:</label>
-                                <select class="form-select form-select-solid fw-bold" data-kt-select2="true" data-placeholder="Select option" data-allow-clear="true" data-kt-user-table-filter="role" data-hide-search="true">
-                                    <option></option>
-                                    <option value="Administrator">Administrator</option>
-                                    <option value="Analyst">Analyst</option>
-                                    <option value="Developer">Developer</option>
-                                    <option value="Support">Support</option>
-                                    <option value="Trial">Trial</option>
-                                </select>
-                            </div>
-                            <!--end::Input group-->
-                            <!--begin::Input group-->
-                            <div class="mb-10">
-                                <label class="form-label fs-6 fw-semibold">Two Step Verification:</label>
-                                <select class="form-select form-select-solid fw-bold" data-kt-select2="true" data-placeholder="Select option" data-allow-clear="true" data-kt-user-table-filter="two-step" data-hide-search="true">
-                                    <option></option>
-                                    <option value="Enabled">Enabled</option>
-                                </select>
-                            </div>
-                            <!--end::Input group-->
-                            <!--begin::Actions-->
-                            <div class="d-flex justify-content-end">
-                                <button type="reset" class="btn btn-light btn-active-light-primary fw-semibold me-2 px-6" data-kt-menu-dismiss="true" data-kt-user-table-filter="reset">Reset</button>
-                                <button type="submit" class="btn btn-primary fw-semibold px-6" data-kt-menu-dismiss="true" data-kt-user-table-filter="filter">Apply</button>
-                            </div>
-                            <!--end::Actions-->
-                        </div>
-                        <!--end::Content-->
-                    </div>
-                    <!--end::Menu 1-->
-                    <!--end::Filter-->  --}}
-                    {{--  <!--begin::Export-->
-                    <button type="button" class="btn btn-light-primary me-3" data-bs-toggle="modal" data-bs-target="#kt_modal_export_users">
-                    <i class="ki-duotone ki-exit-up fs-2">
-                        <span class="path1"></span>
-                        <span class="path2"></span>
-                    </i>Export</button>
-                    <!--end::Export-->
-                    <!--begin::Add user-->  --}}
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_user">
-                    <i class="ki-duotone ki-plus fs-2"></i>Nueva Usuario</button>
+                    <i class="ki-duotone ki-plus fs-2"></i>Nuevo Usuario</button>
                     <!--end::Add user-->
                 </div>
                 <!--end::Toolbar-->
@@ -297,17 +224,6 @@
 
 @section('js')
     <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
-
-    {{--  <script src="{{ asset('assets/js/custom/apps/user-management/users/list/table.js') }}"></script>
-    <script src="{{ asset('assets/js/custom/apps/user-management/users/list/export-users.js') }}"></script>
-    <script src="{{ asset('assets/js/custom/apps/user-management/users/list/add.js') }}"></script>
-    <script src="{{ asset('assets/js/widgets.bundle.js') }}"></script>
-    <script src="{{ asset('assets/js/custom/widgets.js') }}"></script>
-    <script src="{{ asset('assets/js/custom/apps/chat/chat.js') }}"></script>
-    <script src="{{ asset('assets/js/custom/utilities/modals/upgrade-plan.js') }}"></script>
-    <script src="{{ asset('assets/js/custom/utilities/modals/create-app.js') }}"></script>
-    <script src="{{ asset('assets/js/custom/utilities/modals/users-search.js') }}"></script>  --}}
-
     <script>
         $.ajaxSetup({
             // definimos cabecera donde estarra el token y poder hacer nuestras operaciones de put,post...
@@ -332,6 +248,17 @@
             });
         }
 
+        function vaciaFomulario(){
+            $('#nombres').val('');
+            $('#ap_paterno').val('');
+            $('#ap_materno').val('');
+            $('#cedula').val('');
+            $('#email').val('');
+            $('#rol_id').val('');
+            $('#direccion').val('');
+            $('#password').val('123456789');
+        }
+
        function guardarUsuario(){
             if($("#formularioUsuario")[0].checkValidity()){
                 datos = $("#formularioUsuario").serializeArray()
@@ -341,10 +268,24 @@
                     type: 'POST',
                     dataType: 'json',
                     success: function(data) {
-                        console.log(data)
-
-                        if(data.estado === 'success')
+                        if(data.estado === 'success'){
+                            Swal.fire({
+                                icon:'success',
+                                title: 'Exito!',
+                                text:"Se registro con exito!",
+                                timer:1500
+                            })
+                            $('#kt_modal_add_user').modal('hide');
                             $('#table_users').html(data.listado);
+                            vaciaFomulario();
+                        }else{
+                            Swal.fire({
+                                icon:'error',
+                                title: 'Error!',
+                                text:"Paso algo no se registro!",
+                                timer:1500
+                            })
+                        }
                     }
                 });
             }else{

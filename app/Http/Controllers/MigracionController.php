@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cliente;
+use App\Models\LiquidacionLavador;
 use App\Models\Servicio;
 use App\Models\Vehiculo;
 use App\Models\Movimiento;
+use App\Models\User;
 use Illuminate\Http\Request;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -147,4 +149,20 @@ class MigracionController extends Controller
 
     }
 
+    public function migracionServicioLavador(){
+        $lavadores             = User::where('rol_id',3)->get();
+        foreach ($lavadores as $key => $lavador) {
+            echo $lavador->name."<br>";
+            $servicios_depedientes = Servicio::where('tipo_liquidacion', 'depende')->get();
+            foreach ($servicios_depedientes as $key => $serviDep) {
+                $liquidacionVendedor                   = new LiquidacionLavador();
+                $liquidacionVendedor->creador_id       = 1;
+                $liquidacionVendedor->lavador_id       = $lavador->id;
+                $liquidacionVendedor->servicio_id      = $serviDep->id;
+                $liquidacionVendedor->liquidacion      = 15;
+                $liquidacionVendedor->tipo_liquidacion = 'porcentaje';
+                $liquidacionVendedor->save();
+            }
+        }
+    }
 }

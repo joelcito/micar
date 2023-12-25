@@ -65,8 +65,10 @@ class ClienteController extends Controller
             }
             $cliente->save();
 
-            $data['estado'] = 'success';
+            $data['estado']  = 'success';
             $data['listado'] = $this->listadoArray();
+            $data['new']     = $cliente;
+
         }else{
             $data['estado'] = 'error';
         }

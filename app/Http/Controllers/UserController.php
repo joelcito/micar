@@ -64,8 +64,8 @@ class UserController extends Controller
 
     public function detalle(Request $request, $usuario_id){
 
-        $servicios = Servicio::where('tipo_liquidacion', 'depende')->get();
-        $usuario = User::find($usuario_id);
+        $servicios  = Servicio::where('tipo_liquidacion', 'depende')->get();
+        $usuario    = User::find($usuario_id);
 
         $liquidaciones = LiquidacionLavadorPago::where('lavador_id_user',$usuario_id)->get();
 
@@ -74,5 +74,17 @@ class UserController extends Controller
                                         ->get();
 
         return view('user.detalle')->with(compact('usuario', 'servicios', 'liquidaciones', 'serviciosRealizados'));
+    }
+
+    public function cambioPass(Request $request){
+        if($request->ajax()){
+            $user           = User::find($request->input('user_id_new_pro'));
+            $user->password = Hash::make($request->input('pass1'));
+            $user->save();
+            $data['estado'] = 'success';
+        }else{
+            $data['estado'] = 'error';
+        }
+        return $data;
     }
 }

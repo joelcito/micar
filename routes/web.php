@@ -58,6 +58,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/user/ajaxListado', [UserController::class, 'ajaxListado']);
     Route::post('/user/guarda', [UserController::class, 'guarda']);
     Route::get('/user/detalle/{usuario_id}', [UserController::class, 'detalle']);
+    Route::post('/user/cambioPass', [UserController::class, 'cambioPass']);
 
 
     // ROLES
@@ -147,6 +148,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/migracion/migrarServicios', [MigracionController::class, 'migrarServicios']);
     Route::get('/migracion/migrarVehiculos', [MigracionController::class, 'migrarVehiculos']);
     Route::get('/migracion/migracionClienteVehiculo', [MigracionController::class, 'migracionClienteVehiculo']);
+    Route::get('/migracion/migracionServicioLavador', [MigracionController::class, 'migracionServicioLavador']);
 
     // FACTURA
     Route::prefix('/factura')->group(function(){
@@ -157,6 +159,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/imprimeRecibo/{factura_id}', [FacturaController::class, 'imprimeRecibo']);
         Route::get('/imprimeTicked/{vehiculo_id}', [FacturaController::class, 'imprimeTicked']);
 
+        Route::post('/verificaItemsGeneracion', [FacturaController::class, 'verificaItemsGeneracion']);
         Route::post('/arrayCuotasPagar', [FacturaController::class, 'arrayCuotasPagar']);
         Route::post('/actualizaDescuento', [FacturaController::class, 'actualizaDescuento']);
         Route::post('/sumaTotalMonto', [FacturaController::class, 'sumaTotalMonto']);

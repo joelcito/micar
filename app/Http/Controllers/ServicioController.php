@@ -154,25 +154,32 @@ class ServicioController extends Controller
     public function guardarAsignacion(Request $request){
         if($request->ajax()){
 
-            $usuario  = $request->input('usuario');
-            $servicio = $request->input('servicio');
+            $asignacion_id = $request->input('asignacion');
 
-            $datos = LiquidacionLavador::where('lavador_id',$usuario)
-                                        ->where('servicio_id', $servicio)
-                                        ->get();
-
-            if(count($datos) == 0){
-                $liquidacionlavador                   = new LiquidacionLavador();
-                $liquidacionlavador->creador_id       = Auth::user()->id;
-                $liquidacionlavador->lavador_id       = $usuario;
-                $liquidacionlavador->servicio_id      = $servicio;
-                $liquidacionlavador->liquidacion      = $request->input('porcentaje');
-                $liquidacionlavador->tipo_liquidacion = 'porcentaje';
-                $liquidacionlavador->save();
-                $data['estado']  = 'success';
+            if($asignacion_id == 0){
+                $usuario  = $request->input('usuario');
+                $servicio = $request->input('servicio');
+                $datos = LiquidacionLavador::where('lavador_id',$usuario)
+                                            ->where('servicio_id', $servicio)
+                                            ->get();
+                if(count($datos) == 0){
+                    $liquidacionlavador                   = new LiquidacionLavador();
+                    $liquidacionlavador->creador_id       = Auth::user()->id;
+                    $liquidacionlavador->lavador_id       = $usuario;
+                    $liquidacionlavador->servicio_id      = $servicio;
+                    $liquidacionlavador->liquidacion      = $request->input('porcentaje');
+                    $liquidacionlavador->tipo_liquidacion = 'porcentaje';
+                    $liquidacionlavador->save();
+                    $data['estado']  = 'success';
+                }else{
+                    $data['estado'] = 'error';
+                    $data['msg']    = 'Ya existe la Asignacion';
+                }
             }else{
-                $data['estado'] = 'error';
-                $data['msg']    = 'Ya existe la Asignacion';
+                $liquidacion              = LiquidacionLavador::find($asignacion_id);
+                $liquidacion->Liquidacion = $request->input('porcentaje');
+                $liquidacion->save();
+                $data['estado'] = 'success';
             }
         }else{
             $data['estado']  = 'error';

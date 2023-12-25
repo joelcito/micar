@@ -13,14 +13,14 @@ class Rol extends Model
     protected $table = 'roles';
 
     protected $fillable = [
-        // 'creador_id',
-        // 'modificador_id',
-        // 'eliminador_id',
-
         'nombre',
         'descripcion',
-
         'estado',
         'deleted_at',
     ];
+
+    public function roles()
+    {
+        return $this->hasMany(User::class);
+    }
 }

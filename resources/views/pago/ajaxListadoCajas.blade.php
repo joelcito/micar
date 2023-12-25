@@ -36,7 +36,22 @@
                 <td>{{ $c->total_salidas }}</td>
                 <td>{{ $c->saldo }}</td>
                 <td>{{ $c->monto_cierre }}</td>
-                <td>{{ number_format(($c->monto_cierre - $c->venta_contado), 2) }}</td>
+                <td>
+                    @php
+                        $monto = number_format(($c->monto_cierre - $c->venta_contado), 2);
+
+                        if($monto < 0)
+                            $texto = "danger";
+                        else if($monto > 0)
+                            $texto = "warning";
+                        else
+                            $texto = "success";
+
+                    @endphp
+                    <p class="text-{{ $texto }}">
+                        {{ $monto }}
+                    </p>
+                </td>
                 <td></td>
             </tr>
         @endforeach
