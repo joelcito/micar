@@ -6,65 +6,6 @@
     <meta name="csrf-token" content="{{ csrf_token() }}" />
 @endsection
 @section('content')
-
-    <!--end::Modal - New Card-->
-    <!--begin::Modal - Add task-->
-    {{-- <div class="modal fade" id="kt_modal_add_categoria" tabindex="-1" aria-hidden="true">
-        <!--begin::Modal dialog-->
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <!--begin::Modal content-->
-            <div class="modal-content">
-                <!--begin::Modal header-->
-                <div class="modal-header" id="kt_modal_add_user_header">
-                    <!--begin::Modal title-->
-                    <h2 class="fw-bold">Formulario de categoria</h2>
-                    <!--end::Modal title-->
-                    <!--begin::Close-->
-                    <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-users-modal-action="close">
-                        <i class="ki-duotone ki-cross fs-1">
-                            <span class="path1"></span>
-                            <span class="path2"></span>
-                        </i>
-                    </div>
-                    <!--end::Close-->
-                </div>
-                <!--end::Modal header-->
-                <!--begin::Modal body-->
-                <div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
-
-                    <form id="formularioCategoria">
-                        @csrf
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="fv-row mb-7">
-                                    <label class="required fw-semibold fs-6 mb-2">Nombre</label>
-                                    <input type="text" class="form-control form-control-solid" required name="nombre" id="nombre" placeholder="LAVADO">
-                                    <input type="hidden" name="categoria_id" id="categoria_id">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="fv-row mb-7">
-                                    <label class="required fw-semibold fs-6 mb-2">Descripcion</label>
-                                    <input type="text" class="form-control form-control-solid" required name="descripcion" id="descripcion" placeholder="LAVADO ESPECIFICO">
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-
-                    <div class="row">
-                        <div class="col-md-12">
-                            <button class="btn btn-success w-100" onclick="guardarCategoria()">Guardar</button>
-                        </div>
-                    </div>
-                </div>
-                <!--end::Modal body-->
-            </div>
-            <!--end::Modal content-->
-        </div>
-        <!--end::Modal dialog-->
-    </div> --}}
-    <!--end::Modal - Add task-->
-
     <div class="row">
         <div class="col-md-6">
             <div class="card">
@@ -97,39 +38,77 @@
                         </div>
                     </form>
                 </div>
-                <!--end::Card body-->
             </div>
         </div>
-        {{-- <div class="col-md-6">
+        <div class="col-md-6">
             <div class="card">
                 <div class="card-header border-0 pt-6">
                     <div class="card-title">
-                        <h3>REPORTE ESTADO DE CUENTAS POR COBRAR</h3>
+                        <h3>REPORTE DE INVENTARIO INGRESOS Y SALIDAS</h3>
                     </div>
                 </div>
                 <div class="card-body py-4">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="card-body py-4">
-                                <label class="required fw-semibold fs-6 mb-2">Fecha Ini</label>
-                                <input type="date" class="form-control" value="{{ date('Y-m-d') }}">
+                    <form action="{{ url('reporte/reporteInventario') }}" method="POST" target="_blank">
+                        @csrf
+                        <div class="row">
+                            {{-- <div class="col-md-4">
+                                <div class="card-body py-4">
+                                    <label class="required fw-semibold fs-6 mb-2">Fecha Ini</label>
+                                    <input type="date" name="fecha_ini" class="form-control" value="{{ date('Y-m-d') }}">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card-body py-4">
+                                    <label class="required fw-semibold fs-6 mb-2">Fecha Fin</label>
+                                    <input type="date" name="fecha_fin" class="form-control" value="{{ date('Y-m-d') }}">
+                                </div>
+                            </div> --}}
+                            <div class="col-md-12">
+                                <div class="card-body py-4 mt-9">
+                                    <button class="btn btn-block btn-success btn-sm w-100" type="submit">GENERAR</button>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="card-body py-4">
-                                <label class="required fw-semibold fs-6 mb-2">Fecha Fin</label>
-                                <input type="date" class="form-control" value="{{ date('Y-m-d') }}">
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card-body py-4 mt-9">
-                                <button class="btn btn-block btn-success btn-sm w-100">GENERAR</button>
-                            </div>
-                        </div>
-                    </div>
+                    </form>
                 </div>
             </div>
-        </div> --}}
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header border-0 pt-6">
+                    <div class="card-title">
+                        <h3>REPORTE INFORME DE VENTAS</h3>
+                    </div>
+                </div>
+                <div class="card-body py-4">
+                    <form action="{{ url('reporte/reporteInformeVenta') }}" method="POST" target="_blank">
+                        @csrf
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="card-body py-4">
+                                    <label class="required fw-semibold fs-6 mb-2">Fecha Ini</label>
+                                    <input type="date" name="fecha_ini" class="form-control" value="{{ date('Y-m-d') }}">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card-body py-4">
+                                    <label class="required fw-semibold fs-6 mb-2">Fecha Fin</label>
+                                    <input type="date" name="fecha_fin" class="form-control" value="{{ date('Y-m-d') }}">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card-body py-4 mt-9">
+                                    <button class="btn btn-block btn-success btn-sm w-100" type="submit">GENERAR</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 @stop()
 

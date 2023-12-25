@@ -96,7 +96,7 @@
             <tr>
                 <td colspan="2" style="text-align: center; border-top:#000000 solid 1px; border-bottom: #000000 solid 1px;">
                     <span style="font-size: 15pt;">
-                        ESTADO DE CUENTAS POR COBRAR
+                        REPORTE INFORME DE VENTAS
                     </span>
                 </td>
             </tr>
@@ -118,12 +118,17 @@
             <thead>
                 <tr>
                     <th>Nº</th>
-                    <th class="textCentrado" width="50px">FECHA</th>
-                    <th class="textCentrado" width="78px">CLIENTE</th>
-                    <th class="textCentrado" width="70px">NIT</th>
-                    <th class="textCentrado" width="60px">NOM/RAZON SOCIAL</th>
-                    <th class="textCentrado" width="160px">SERVICIOS</th>
-                    <th class="textCentrado" width="400px" colspan="5">DETALLES</th>
+                    <th class="textCentrado" width="20px">FECHA VENTA</th>
+                    <th class="textCentrado" width="20px">NUN FAC/REC</th>
+                    <th class="textCentrado" width="20px">FECHA FACT</th>
+                    <th class="textCentrado" width="20px">NOM CLIENTE</th>
+                    <th class="textCentrado" width="20px">NIT</th>
+                    <th class="textCentrado" width="20px">RAZON SOCIAL</th>
+                    <th class="textCentrado" width="20px">IMP TOTAL</th>
+                    <th class="textCentrado" width="20px">IMP PAGADO</th>
+                    <th class="textCentrado" width="20px">TOT SALDO</th>
+                    <th class="textCentrado" width="20px">RESPONSABLES</th>
+                    <th class="textCentrado" width="20px">USU REGISTRO</th>
                 </tr>
             </thead>
             <tbody>
@@ -132,7 +137,23 @@
                     $totalPagado  = 0;
                     $totalSaldo   = 0;
                 @endphp
-                @foreach($facturas as $key => $f)
+                @foreach ( $ventas as $v)
+                    <tr>
+                        <td>{{ $v->id }}</td>
+                        <td>{{ $v->id }}</td>
+                        <td>{{ $v->id }}</td>
+                        <td>{{ $v->id }}</td>
+                        <td>{{ $v->id }}</td>
+                        <td>{{ $v->id }}</td>
+                        <td>{{ $v->id }}</td>
+                        <td>{{ $v->id }}</td>
+                        <td>{{ $v->id }}</td>
+                        <td>{{ $v->id }}</td>
+                        <td>{{ $v->id }}</td>
+                        <td>{{ $v->id }}</td>
+                    </tr>
+                @endforeach
+                {{-- @foreach($facturas as $key => $f)
                     <tr>
                        <td>{{ $key + 1 }}</td>
                        <td>{{ $f->fecha }}</td>
@@ -151,7 +172,6 @@
                             <table class="notas">
                                 <thead>
                                     <tr>
-                                        {{-- <th width="50px">Doc. Venta</th> --}}
                                         <th width="60px">Nro Fac / Rec</th>
                                         <th width="60px">Imp Total</th>
                                         <th width="60px">Imp Pagado</th>
@@ -194,9 +214,9 @@
                         $totalPagado  += $sumMontos;
                         $totalSaldo   += (int)$f->total - (int)$pagado;
                     @endphp
-                @endforeach
+                @endforeach --}}
             </tbody>
-            <tfoot>
+            {{-- <tfoot>
                 <tr>
                     <th colspan="6">TOTAL</th>
                     <th colspan="5">
@@ -218,7 +238,7 @@
                         </table>
                     </th>
                 </tr>
-            </tfoot>
+            </tfoot> --}}
         </table>
     </main>
 </body>

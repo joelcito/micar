@@ -28,4 +28,8 @@ class Factura extends Model
 
         return $facturas;
     }
+
+    public function detalles(){
+        return $this->hasMany('App\Models\Detalle', 'factura_id');
+    }
 }
