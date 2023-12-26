@@ -74,4 +74,14 @@ class User extends Authenticatable
         $usuaraio = Auth::user();
         return ($usuaraio->rol_id == 1)? true : false;
     }
+
+    public function isEdit(){
+        $permisos = json_decode(Auth::user()->permisos);
+        return ($permisos[0]->estado)? true : false;
+    }
+
+    public function isDelete(){
+        $permisos = json_decode(Auth::user()->permisos);
+        return ($permisos[1]->estado)? true : false;
+    }
 }

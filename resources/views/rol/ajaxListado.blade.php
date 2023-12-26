@@ -23,7 +23,10 @@
                         <a class="text-gray-800 text-hover-primary mb-1">{{ $r->estado }}</a>
                     </td>
                     <td class="text-end">
-                        <button class="btn btn-warning btn-icon btn-sm"><i class="fa fa-edit"></i></button>
+                        <button class="btn btn-primary btn-icon btn-sm" onclick="permiusoRol('{{ $r->id }}')"><i class="fa fa-list"></i></button>
+                        @if (Auth::user()->isEdit())
+                            <button class="btn btn-warning btn-icon btn-sm"><i class="fa fa-edit"></i></button>
+                        @endif
                         {{-- @dd($r->roles->count()) --}}
                         @if($r->roles->count() == 0)
                             <button class="btn btn-danger btn-icon btn-sm" onclick="eliminar('{{ $r->id }}')"><i class="fa fa-trash"></i></button>

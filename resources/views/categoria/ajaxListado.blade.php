@@ -19,8 +19,12 @@
                         <a class="text-gray-800 text-hover-primary mb-1">{{ $c->descripcion }}</a>
                     </td>
                     <td class="text-end">
+                        @if (Auth::user()->isEdit())
                         <button class="btn btn-warning btn-icon btn-sm" onclick="editarCategoria('{{ $c->id }}', '{{ $c->nombre }}', '{{ $c->descripcion }}')"><i class="fa fa-edit"></i></button>
+                        @endif
+                        @if (Auth::user()->isDelete())
                         <button class="btn btn-danger btn-icon btn-sm" onclick="eliminrCategoria('{{ $c->id}}')"><i class="fa fa-trash"></i></button>
+                        @endif
                     </td>
                 </tr>
             @empty

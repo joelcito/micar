@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('nombre')->nullable();
             $table->string('descripcion')->nullable();
             $table->string('estado')->nullable();
+            $table->text('menus')->nullable();
+            $table->text('permisos')->nullable();
             $table->datetime('deleted_at')->nullable();
             $table->timestamps();
         });

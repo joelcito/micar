@@ -33,8 +33,12 @@
                         <a class="text-gray-800 text-hover-primary mb-1">{{ $s->precio }}</a>
                     </td>
                     <td class="text-end">
+                        @if (Auth::user()->isEdit())
                         <button class="btn btn-warning btn-icon btn-sm" onclick="editarServicio('{{ $s->id }}', '{{ $s->descripcion }}', '{{ $s->categoria_id }}', '{{ $s->unidad_venta }}', '{{ $s->precio }}')"><i class="fa fa-edit"></i></button>
+                        @endif
+                        @if (Auth::user()->isDelete())
                         <button class="btn btn-danger btn-icon btn-sm" onclick="eliminaServicio('{{ $s->id }}')"><i class="fa fa-trash"></i></button>
+                        @endif
                     </td>
                 </tr>
             @empty

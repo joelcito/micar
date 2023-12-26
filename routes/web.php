@@ -59,6 +59,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/user/guarda', [UserController::class, 'guarda']);
     Route::get('/user/detalle/{usuario_id}', [UserController::class, 'detalle']);
     Route::post('/user/cambioPass', [UserController::class, 'cambioPass']);
+    Route::post('/user/permisos', [UserController::class, 'permisos']);
+    Route::post('/user/guardarMenusPermisso', [UserController::class, 'guardarMenusPermisso']);
 
 
     // ROLES
@@ -66,6 +68,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/rol/guarda', [RolController::class, 'guarda']);
     Route::post('/rol/ajaxListado', [RolController::class, 'ajaxListado']);
     Route::post('/rol/eliminar', [RolController::class, 'eliminar']);
+    Route::post('/rol/permisos', [RolController::class, 'permisos']);
+    Route::post('/rol/guardarMenusPermisso', [RolController::class, 'guardarMenusPermisso']);
 
     // SERVICIOS
     Route::prefix('/servicio')->group(function(){

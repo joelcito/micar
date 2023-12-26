@@ -27,7 +27,9 @@
                     <td class="text-end">
                         {{-- <button class="btn btn-warning btn-icon btn-sm" onclick="editarCliente('{{ $c->id }}', '{{ $c->nombres }}', '{{ $c->ap_paterno }}', '{{ $c->ap_materno }}', '{{ $c->cedula }}', '{{ $c->complemento }}', '{{ $c->nit }}', '{{ $c->razon_social }}', '{{ $c->correo }}', '{{ $c->celular }}')"><i class="fa fa-edit"></i></button> --}}
                         <a href="{{ url('cliente/perfil',[$c->id]) }}" class="btn btn-info btn-icon btn-sm"><i class="fa fa-eye"></i></a>
-                        <button class="btn btn-danger btn-icon btn-sm" onclick="eliminrCategoria('{{ $c->id}}')"><i class="fa fa-trash"></i></button>
+                        @if(Auth::user()->isDelete())
+                            <button class="btn btn-danger btn-icon btn-sm" onclick="eliminrCategoria('{{ $c->id}}')"><i class="fa fa-trash"></i></button>
+                        @endif
                     </td>
                 </tr>
             @empty
