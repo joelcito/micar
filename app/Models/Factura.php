@@ -32,4 +32,13 @@ class Factura extends Model
     public function detalles(){
         return $this->hasMany('App\Models\Detalle', 'factura_id');
     }
+
+    public function pagos(){
+        return $this->hasMany(Pago::class);
+    }
+
+    public function creador(){
+        return $this->belongsTo('App\Models\User', 'creador_id');
+    }
+
 }

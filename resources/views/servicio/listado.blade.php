@@ -253,6 +253,8 @@
         function nuevoServicio(){
             $('#servicio_id').val(0)
             $('#descripcion').val('')
+            $('#precio').val(0)
+            $('#unidad_venta').val('UNIDAD')
             $('#categoria_id').val('')
             $('#kt_modal_add_servicio').modal('show');
         }

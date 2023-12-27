@@ -15,6 +15,76 @@ class UserController extends Controller
 
     public function listado(Request $request){
         $roles = Rol::all();
+
+        // $data = [
+        //     [
+        //         'id' => 1,
+        //         'name' => 'Administracion',
+        //         'estado'=> true,
+        //         'children' => [
+        //             ['id' => 11, 'name' => 'Usuarios', 'url' => 'user', 'estado'=> true ],
+        //             ['id' => 12, 'name' => 'Roles', 'url' => 'rol', 'estado'=> true],
+        //             ['id' => 13, 'name' => 'Servicios', 'url' => 'servicio', 'estado'=> true],
+        //             ['id' => 14, 'name' => 'Categorias', 'url' => 'categoria', 'estado'=> true],
+        //             ['id' => 15, 'name' => 'Punto Venta', 'url' => 'puntoVenta/listado', 'estado'=> true],
+        //             ['id' => 16, 'name' => 'Evento Significativo', 'url' => 'eventoSignificativo/listado', 'estado'=> true],
+        //             ['id' => 17, 'name' => 'Sincronizacion de Catalogos', 'url' => 'sincronizacionCatalogo/listado', 'estado'=> true],
+        //         ]
+        //     ],
+        //     [
+        //         'id' => 2,
+        //         'name' => 'Inventarios',
+        //         'estado'=> true,
+        //         'children' => [
+        //             ['id' => 21, 'name' => 'Productos', 'url' => 'servicio/producto', 'estado'=> true],
+        //         ]
+        //     ],
+        //     [
+        //         'id' => 3,
+        //         'name' => 'Venta y Facturacion',
+        //         'estado'=> true,
+        //         'children' => [
+        //             ['id' => 31, 'name' => 'Listado de Vehiculos', 'url' => 'vehiculo', 'estado'=> true],
+        //             ['id' => 32, 'name' => 'Cuentas por Cobrar', 'url' => 'pago/porcobrar', 'estado'=> true],
+        //             ['id' => 33, 'name' => 'Clientes', 'url' => 'cliente', 'estado'=> true],
+        //         ]
+        //     ],
+        //     [
+        //         'id' => 4,
+        //         'name' => 'Pagos',
+        //         'estado'=> true,
+        //         'children' => [
+        //             ['id' => 41, 'name' => 'Ventas', 'url' => 'pago/listado', 'estado'=> true],
+        //             ['id' => 42, 'name' => 'Finanzas', 'url' => 'pago/finanza', 'estado'=> true],
+        //             ['id' => 43, 'name' => 'Informe Arqueo', 'url' => 'pago/infomearqueo', 'estado'=> true],
+        //             ['id' => 44, 'name' => 'Nueva Liquidacion', 'url' => 'pago/liquidacionNew', 'estado'=> true],
+        //         ]
+        //     ],
+        //     [
+        //         'id' => 5,
+        //         'name' => 'Reportes',
+        //         'estado'=> true,
+        //         'children' => [
+        //             ['id' => 51, 'name' => 'Listado', 'url' => 'reporte/listado', 'estado'=> true],
+        //         ]
+        //     ],
+        // ];
+
+        // $dataPer = [
+        //     [
+        //         'id' => 1,
+        //         'name' => 'Editar',
+        //         'estado'=> true
+        //     ],
+        //     [
+        //         'id' => 2,
+        //         'name' => 'Eliminar',
+        //         'estado'=> true
+        //     ]
+        // ];
+
+        // dd(json_encode($data), json_encode($dataPer));
+
         return view("user.listado")->with(compact('roles'));
     }
 

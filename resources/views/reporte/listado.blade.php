@@ -18,20 +18,22 @@
                     <form action="{{ url('reporte/reporteCuentaPorCobrar') }}" method="POST" target="_blank">
                         @csrf
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="card-body py-4">
                                     <label class="required fw-semibold fs-6 mb-2">Fecha Ini</label>
                                     <input type="date" name="fecha_ini" class="form-control" value="{{ date('Y-m-d') }}">
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="card-body py-4">
                                     <label class="required fw-semibold fs-6 mb-2">Fecha Fin</label>
                                     <input type="date" name="fecha_fin" class="form-control" value="{{ date('Y-m-d') }}">
                                 </div>
                             </div>
-                            <div class="col-md-4">
-                                <div class="card-body py-4 mt-9">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card-body py-4">
                                     <button class="btn btn-block btn-success btn-sm w-100" type="submit">GENERAR</button>
                                 </div>
                             </div>
@@ -51,20 +53,22 @@
                     <form action="{{ url('reporte/reporteInventario') }}" method="POST" target="_blank">
                         @csrf
                         <div class="row">
-                            {{-- <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="card-body py-4">
                                     <label class="required fw-semibold fs-6 mb-2">Fecha Ini</label>
                                     <input type="date" name="fecha_ini" class="form-control" value="{{ date('Y-m-d') }}">
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="card-body py-4">
                                     <label class="required fw-semibold fs-6 mb-2">Fecha Fin</label>
                                     <input type="date" name="fecha_fin" class="form-control" value="{{ date('Y-m-d') }}">
                                 </div>
-                            </div> --}}
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-md-12">
-                                <div class="card-body py-4 mt-9">
+                                <div class="card-body py-4">
                                     <button class="btn btn-block btn-success btn-sm w-100" type="submit">GENERAR</button>
                                 </div>
                             </div>
@@ -87,19 +91,21 @@
                     <form action="{{ url('reporte/reporteInformeVenta') }}" method="POST" target="_blank">
                         @csrf
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="card-body py-4">
                                     <label class="required fw-semibold fs-6 mb-2">Fecha Ini</label>
                                     <input type="date" name="fecha_ini" class="form-control" value="{{ date('Y-m-d') }}">
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="card-body py-4">
                                     <label class="required fw-semibold fs-6 mb-2">Fecha Fin</label>
                                     <input type="date" name="fecha_fin" class="form-control" value="{{ date('Y-m-d') }}">
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
                                 <div class="card-body py-4 mt-9">
                                     <button class="btn btn-block btn-success btn-sm w-100" type="submit">GENERAR</button>
                                 </div>

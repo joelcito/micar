@@ -46,7 +46,11 @@
                         <span class="badge badge-{{ $color }} fw-bold">{{ $u->rol->nombre }}</span>
                     </td>
                     <td class="text-end">
-                        <button onclick="darPermisos('{{ $u->id }}')" class="btn btn-icon btn-primary btn-sm"><i class="fa fa-list"></i></button>
+
+                        @if($u->rol_id != 3)
+                            <button onclick="darPermisos('{{ $u->id }}')" class="btn btn-icon btn-primary btn-sm"><i class="fa fa-list"></i></button>
+                        @endif
+
                         <a href="{{ url('user/detalle',[$u->id]) }}" class="btn btn-icon btn-info btn-sm"><i class="fa fa-eye"></i></a>
                         @if (Auth::user()->isDelete())
                             <a href="#" class="btn btn-icon btn-danger btn-sm"><i class="fa fa-trash"></i></a>

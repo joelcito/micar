@@ -90,7 +90,9 @@ class ServicioController extends Controller
     }
 
     protected function listadoArrayProducto(){
-        $productos = Servicio::where('estado','producto')->get();
+        $productos = Servicio::where('estado','producto')
+                                ->orderBy('id', 'desc')
+                                ->get();
         return view('servicio.ajaxListadoProducto')->with(compact('productos'))->render();
     }
     public function  guardaProdcuto(Request $request){
@@ -101,7 +103,13 @@ class ServicioController extends Controller
             $movimiento              = new Movimiento();
             $movimiento->creador_id  = Auth::user()->id;
             $movimiento->servicio_id = $servicio_id;
-            $movimiento->ingreso     = $request->input('cantidad');
+
+            if($request->input('ingreso')){
+                $movimiento->ingreso     = $request->input('cantidad');
+            }else{
+                $movimiento->salida     = $request->input('cantidad');
+            }
+
             $movimiento->fecha       = date('Y-m-d H:i:s');
             $movimiento->descripcion = $request->input('descripcion');
             $movimiento->save();
@@ -184,6 +192,33 @@ class ServicioController extends Controller
         }else{
             $data['estado']  = 'error';
             $data['msg']    = 'Error en el Ajax!';
+        }
+        return $data;
+    }
+
+    public function agregarProdcuto(Request $request){
+        if($request->ajax()){
+            $producto_ud = $request->input('new_producto');
+            $servicio               = $producto_ud == 0 ?  new Servicio() : Servicio::find($producto_ud);
+            $servicio->descripcion  = $request->input('new_descripcion');
+            $servicio->unidad_venta = 'UNIDAD';
+            $servicio->precio       = $request->input('new_precio');
+            $servicio->estado       = 'producto';
+            $servicio->save();
+
+            $data['estado'] = 'success';
+        }else{
+            $data['estado'] = 'error';
+        }
+        return $data;
+    }
+
+    function eliminarProduto(Request $request){
+        if($request->ajax()){
+            Servicio::destroy($request->input('id'));
+            $data['estado'] = 'success';
+        }else{
+            $data['estado'] = 'error';
         }
         return $data;
     }

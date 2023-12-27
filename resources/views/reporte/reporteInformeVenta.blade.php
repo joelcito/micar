@@ -117,18 +117,18 @@
         <table class="notas">
             <thead>
                 <tr>
-                    <th>Nº</th>
-                    <th class="textCentrado" width="20px">FECHA VENTA</th>
-                    <th class="textCentrado" width="20px">NUN FAC/REC</th>
-                    <th class="textCentrado" width="20px">FECHA FACT</th>
-                    <th class="textCentrado" width="20px">NOM CLIENTE</th>
-                    <th class="textCentrado" width="20px">NIT</th>
-                    <th class="textCentrado" width="20px">RAZON SOCIAL</th>
-                    <th class="textCentrado" width="20px">IMP TOTAL</th>
-                    <th class="textCentrado" width="20px">IMP PAGADO</th>
-                    <th class="textCentrado" width="20px">TOT SALDO</th>
-                    <th class="textCentrado" width="20px">RESPONSABLES</th>
-                    <th class="textCentrado" width="20px">USU REGISTRO</th>
+                    <th width="25px">Nº</th>
+                    <th class="textCentrado" width="50px">FECHA VENTA</th>
+                    <th class="textCentrado" width="30px">NUN FAC/REC</th>
+                    <th class="textCentrado" width="50px">FECHA FACT</th>
+                    <th class="textCentrado" width="100px">NOM CLIENTE</th>
+                    <th class="textCentrado" width="60px">NIT</th>
+                    <th class="textCentrado" width="60px">RAZON SOCIAL</th>
+                    <th class="textCentrado" width="40px">IMP TOTAL</th>
+                    <th class="textCentrado" width="40px">IMP PAGADO</th>
+                    <th class="textCentrado" width="40px">TOT SALDO</th>
+                    <th class="textCentrado" width="60px">RESPONSABLES/LAVADOR</th>
+                    <th class="textCentrado" width="60px">USU REGISTRO</th>
                 </tr>
             </thead>
             <tbody>
@@ -138,109 +138,30 @@
                     $totalSaldo   = 0;
                 @endphp
                 @foreach ( $ventas as $v)
+                    @php
+                        $dif = $v->total - $v->pagos->sum('monto');
+                    @endphp
                     <tr>
                         <td>{{ $v->id }}</td>
-                        <td>{{ $v->id }}</td>
-                        <td>{{ $v->id }}</td>
-                        <td>{{ $v->id }}</td>
-                        <td>{{ $v->id }}</td>
-                        <td>{{ $v->id }}</td>
-                        <td>{{ $v->id }}</td>
-                        <td>{{ $v->id }}</td>
-                        <td>{{ $v->id }}</td>
-                        <td>{{ $v->id }}</td>
-                        <td>{{ $v->id }}</td>
-                        <td>{{ $v->id }}</td>
+                        <td>{{ $v->fecha }}</td>
+                        <td>{{ $v->facturado == 'Si' ? "Fac. ".$v->numero  : "Rec. ".$v->numero_recibo }}</td>
+                        <td>{{ $v->fecha }}</td>
+                        <td>{{ $v->cliente->nombres." ".$v->cliente->ap_paterno." ".$v->cliente->ap_materno }}</td>
+                        <td>{{ $v->nit }}</td>
+                        <td>{{ $v->razon_social }}</td>
+                        <td>{{ number_format($v->total, 2) }}</td>
+                        <td>{{ number_format($v->pagos->sum('monto'), 2) }}</td>
+                        <td>{{ number_format($dif,2) }}</td>
+                        <td>
+                            @foreach ($v->detalles  as $det)
+                                {{ "[ ".$det->lavador->nombres." ".$det->lavador->ap_paterno." ".$det->lavador->ap_materno." ]" }} <br>
+                            @endforeach
+                        </td>
+                        <td>{{ $v->creador->name }}</td>
                     </tr>
                 @endforeach
-                {{-- @foreach($facturas as $key => $f)
-                    <tr>
-                       <td>{{ $key + 1 }}</td>
-                       <td>{{ $f->fecha }}</td>
-                       <td>{{ $f->cliente->nombres." ".$f->cliente->ap_paterno }}</td>
-                       <td>{{ $f->nit }}</td>
-                       <td>{{ $f->razon_social }}</td>
-                       <td>
-                            @foreach ( $f->detalles as $det )
-                                @php
-                                    $servicio = App\Models\Servicio::find($det->servicio_id);
-                                    echo " [ ".$servicio->descripcion." ] ";
-                                @endphp
-                            @endforeach
-                       </td>
-                       <td colspan="5">
-                            <table class="notas">
-                                <thead>
-                                    <tr>
-                                        <th width="60px">Nro Fac / Rec</th>
-                                        <th width="60px">Imp Total</th>
-                                        <th width="60px">Imp Pagado</th>
-                                        <th width="60px">saldo</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @php
-                                        $pagos      = App\Models\Pago::where('factura_id', $f->id)->get();
-                                        $num        = ($f->facturado == "Si")? "Factura: ".$f->numero:"Recibo: ".$f->numero_recibo;
-                                        $pagado     = App\Models\Pago::where('factura_id', $f->id)->sum('monto');
-                                        $sumMontos  = 0;
-                                    @endphp
-                                    @foreach ($pagos as $p)
-                                        <tr>
-                                            <td>
-                                                {{ $num }}
-                                            </td>
-                                            <td>{{ number_format($f->total, 2) }}</td>
-                                            <td>{{ number_format($p->monto, 2) }}</td>
-                                            <td>{{ number_format(((int)$f->total - (int) ($p->monto + $sumMontos) ), 2) }}</td>
-                                        </tr>
-                                        @php
-                                            $sumMontos+=$p->monto;
-                                        @endphp
-                                    @endforeach
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <th colspan="2">TOTAL :{{ number_format($f->total, 2) }}</th>
-                                        <th>PAGADO {{ number_format($sumMontos, 2) }}</th>
-                                        <th>SALDO {{ number_format(((int)$f->total - (int)$pagado), 2) }}</th>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </td>
-                    </tr>
-                    @php
-                        $totalImporte += $f->total;
-                        $totalPagado  += $sumMontos;
-                        $totalSaldo   += (int)$f->total - (int)$pagado;
-                    @endphp
-                @endforeach --}}
             </tbody>
-            {{-- <tfoot>
-                <tr>
-                    <th colspan="6">TOTAL</th>
-                    <th colspan="5">
-                        <table class="notas">
-                            <thead>
-                                <tr>
-                                    <th width="80px">TOTAL IMPROTE</th>
-                                    <th width="80px">TOTAL PAGADO</th>
-                                    <th width="80px">TOTAL SALDO</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>{{ number_format($totalImporte , 2) }}</td>
-                                    <td>{{ number_format($totalPagado , 2) }}</td>
-                                    <td>{{ number_format($totalSaldo , 2) }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </th>
-                </tr>
-            </tfoot> --}}
         </table>
     </main>
 </body>
-
 </html>
