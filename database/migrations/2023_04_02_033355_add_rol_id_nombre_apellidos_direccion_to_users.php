@@ -27,7 +27,6 @@ return new class extends Migration
 
             $table->string('estado')->nullable()->after('password');
             $table->datetime('deleted_at')->nullable();
-            // $table->timestamps();
         });
     }
 
