@@ -18,6 +18,9 @@
                     @if (Auth::user()->isEdit())
                         <button class="btn btn-warning btn-icon btn-sm" onclick="modificaAsiganacion('{{ $a->id }}','{{ $a->servicio_id }}','{{ $a->liquidacion }}')"><i class="fa fa-edit"></i></button>
                     @endif
+                    @if (Auth::user()->isDelete())
+                        <button class="btn btn-danger btn-icon btn-sm" onclick="eliminaAsiganacion('{{ $a->id }}', '{{ $a->servicio->descripcion }}')"><i class="fa fa-trash"></i></button>
+                    @endif
                 </td>
             </tr>
         @empty

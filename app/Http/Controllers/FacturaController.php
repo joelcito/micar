@@ -131,11 +131,12 @@ class FacturaController extends Controller
             // dd($request->all());
 
             // ********************************* ESTO ES PARA GENERAR LA FACTURA *********************************
-            $datos              = $request->input('datos');
-            $datosVehiculo      = $request->input('datosVehiculo');
-            $valoresCabecera    = $datos['factura'][0]['cabecera'];
-            $puntoVenta         = Auth::user()->codigo_punto_venta;
-            $tipo_factura       = $request->input('modalidad');
+            $datos           = $request->input('datos');
+            $datosVehiculo   = $request->input('datosVehiculo');
+            $valoresCabecera = $datos['factura'][0]['cabecera'];
+            $puntoVenta      = Auth::user()->codigo_punto_venta;
+            $tipo_factura    = $request->input('modalidad');
+            $swFacturaEnvio  = true;
 
             $nitEmisor          = str_pad($valoresCabecera['nitEmisor'],13,"0",STR_PAD_LEFT);
             $fechaEmision       = str_replace(".","",str_replace(":","",str_replace("-","",str_replace("T", "",$valoresCabecera['fechaEmision']))));
@@ -164,9 +165,10 @@ class FacturaController extends Controller
             $vehiculo = Vehiculo::find($datosVehiculo['vehiculo_id']);
             $cliente = Cliente::find($vehiculo->cliente->id);
             if(!($cliente && $cliente->correo != null && $cliente->correo != '')){
-                $data['estado'] = "error_email";
-                $data['msg']    = "La persona no tiene correo";
-                return $data;
+                // $data['estado'] = "error_email";
+                // $data['msg']    = "La persona no tiene correo";
+                // return $data;
+                $swFacturaEnvio = false;
             }
             $cliente->nit              = $request->input('datos')['factura'][0]['cabecera']['numeroDocumento'];
             $cliente->razon_social     = $request->input('datos')['factura'][0]['cabecera']['nombreRazonSocial'];
@@ -330,15 +332,17 @@ class FacturaController extends Controller
 
                         $data['estado'] = $codigo_descripcion;
 
-                        // // ***************** ENVIAMOS EL CORREO DE LA FACTURA *****************
-                        // $nombre = $cliente->nombres." ".$cliente->ap_paterno." ".$cliente->ap_materno;
-                        // $this->enviaCorreo(
-                        //     $cliente->correo,
-                        //     $nombre,
-                        //     $facturaVerdad->numero,
-                        //     $facturaVerdad->fecha,
-                        //     $facturaVerdad->id
-                        // );
+                        // ***************** ENVIAMOS EL CORREO DE LA FACTURA *****************
+                        if($swFacturaEnvio){
+                            $nombre = $cliente->nombres." ".$cliente->ap_paterno." ".$cliente->ap_materno;
+                            $this->enviaCorreo(
+                                $cliente->correo,
+                                $nombre,
+                                $facturaVerdad->numero,
+                                $facturaVerdad->fecha,
+                                $facturaVerdad->id
+                            );
+                        }
 
                     }else{
                         $data['estado'] = "RECHAZADA";
@@ -431,15 +435,17 @@ class FacturaController extends Controller
 
                 }
 
-                // // ***************** ENVIAMOS EL CORREO DE LA FACTURA *****************
-                // $nombre = $cliente->nombres." ".$cliente->ap_paterno." ".$cliente->ap_materno;
-                // $this->enviaCorreo(
-                //     $cliente->correo,
-                //     $nombre,
-                //     $factura->numero,
-                //     $factura->fecha,
-                //     $factura->id
-                // );
+                // if($swFacturaEnvio){
+                //     // ***************** ENVIAMOS EL CORREO DE LA FACTURA *****************
+                //     $nombre = $cliente->nombres." ".$cliente->ap_paterno." ".$cliente->ap_materno;
+                //     $this->enviaCorreo(
+                //         $cliente->correo,
+                //         $nombre,
+                //         $facturaVerdad->numero,
+                //         $facturaVerdad->fecha,
+                //         $facturaVerdad->id
+                //     );
+                // }
 
                 $data['estado']     = 'OFFLINE';
             }
@@ -474,15 +480,15 @@ class FacturaController extends Controller
 
             // }
 
-            // // ENVIAMOS EL CORREO DE LA FACTURA
-            // // $nombre = $cliente->nombres." ".$cliente->ap_paterno." ".$cliente->ap_materno;
-            // // $this->enviaCorreo(
-            // //     $cliente->correo,
-            // //     $nombre,
-            // //     $factura->numero,
-            // //     $factura->fecha,
-            // //     $factura->id
-            // // );
+            //ENVIAMOS EL CORREO DE LA FACTURA
+            // $nombre = $cliente->nombres." ".$cliente->ap_paterno." ".$cliente->ap_materno;
+            // $this->enviaCorreo(
+            //     $cliente->correo,
+            //     $nombre,
+            //     $factura->numero,
+            //     $factura->fecha,
+            //     $factura->id
+            // );
 
             // PARA VALIDAR EL XML
             // $this->validar();

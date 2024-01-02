@@ -20,7 +20,7 @@
                     <h2 class="fw-bold">Formulario de cliente</h2>
                     <!--end::Modal title-->
                     <!--begin::Close-->
-                    <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-users-modal-action="close">
+                    <div class="btn btn-icon btn-sm btn-active-icon-primary" data-bs-dismiss="modal">
                         <i class="ki-duotone ki-cross fs-1">
                             <span class="path1"></span>
                             <span class="path2"></span>
@@ -69,36 +69,34 @@
                             </div>
                             <div class="col-md-3">
                                 <div class="fv-row mb-7">
-                                    <label class="required fw-semibold fs-6 mb-2">Nit</label>
-                                    <input type="text" class="form-control" required name="nit" id="nit">
+                                    <label class="fw-semibold fs-6 mb-2">Nit</label>
+                                    <input type="text" class="form-control" name="nit" id="nit">
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="fv-row mb-7">
-                                    <label class="required fw-semibold fs-6 mb-2">Razon Social</label>
-                                    <input type="text" class="form-control" required name="razon_social" id="razon_social">
+                                    <label class="fw-semibold fs-6 mb-2">Razon Social</label>
+                                    <input type="text" class="form-control" name="razon_social" id="razon_social">
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="fv-row mb-7">
-                                    <label class="required fw-semibold fs-6 mb-2">Correo</label>
-                                    <input type="email" class="form-control" required name="correo" id="correo">
+                                    <label class="fw-semibold fs-6 mb-2">Correo</label>
+                                    <input type="email" class="form-control" name="correo" id="correo">
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="fv-row mb-7">
-                                    <label class="required fw-semibold fs-6 mb-2">Celular</label>
-                                    <input type="number" class="form-control" required name="celular" id="celular">
+                                    <label class="fw-semibold fs-6 mb-2">Celular</label>
+                                    <input type="number" class="form-control" name="celular" id="celular">
                                 </div>
                             </div>
                             <div class="col-md-5">
                                 <div class="fv-row mb-7">
                                     <div class="mb-10">
                                         <label class="required fw-semibold mb-5">Tipo Cliente</label>
-                                        {{-- <label class="required fw-semibold fs-6 mb-5">Tipo Cliente</label> --}}
-                                        {{-- <div class="d-flex fv-row"> --}}
                                         <div class="d-flex">
                                             <div class="row">
                                                 <div class="col-md-6">
@@ -145,102 +143,13 @@
         <div class="card-header border-0 pt-6">
             <!--begin::Card title-->
             <div class="card-title">
-                <!--begin::Search-->
-                <div class="d-flex align-items-center position-relative my-1">
-                    <i class="ki-duotone ki-magnifier fs-3 position-absolute ms-5">
-                        <span class="path1"></span>
-                        <span class="path2"></span>
-                    </i>
-                    <input type="text" data-kt-user-table-filter="search" class="form-control form-control-solid w-250px ps-13" placeholder="Buscar Venta" />
-                </div>
-                <!--end::Search-->
+                <h3>Listado de Clientes</h3>
             </div>
-            <!--begin::Card title-->
-            <!--begin::Card toolbar-->
             <div class="card-toolbar">
-                <!--begin::Toolbar-->
                 <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">
                     <button type="button" class="btn btn-primary" onclick="nuevoCliente()">
-                        <i class="ki-duotone ki-plus fs-2"></i>Nueva Cliente
+                        <i class="ki-duotone ki-plus fs-2"></i>Nuevo Cliente
                     </button>
-                </div>
-                <!--end::Group actions-->
-                <!--begin::Modal - Adjust Balance-->
-                <div class="modal fade" id="kt_modal_export_users" tabindex="-1" aria-hidden="true">
-                    <!--begin::Modal dialog-->
-                    <div class="modal-dialog modal-dialog-centered mw-650px">
-                        <!--begin::Modal content-->
-                        <div class="modal-content">
-                            <!--begin::Modal header-->
-                            <div class="modal-header">
-                                <!--begin::Modal title-->
-                                <h2 class="fw-bold">Export Users</h2>
-                                <!--end::Modal title-->
-                                <!--begin::Close-->
-                                <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-users-modal-action="close">
-                                    <i class="ki-duotone ki-cross fs-1">
-                                        <span class="path1"></span>
-                                        <span class="path2"></span>
-                                    </i>
-                                </div>
-                                <!--end::Close-->
-                            </div>
-                            <!--end::Modal header-->
-                            <!--begin::Modal body-->
-                            <div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
-                                <!--begin::Form-->
-                                <form id="kt_modal_export_users_form" class="form" action="#">
-                                    <!--begin::Input group-->
-                                    <div class="fv-row mb-10">
-                                        <!--begin::Label-->
-                                        <label class="fs-6 fw-semibold form-label mb-2">Select Roles:</label>
-                                        <!--end::Label-->
-                                        <!--begin::Input-->
-                                        <select name="role" data-control="select2" data-placeholder="Select a role" data-hide-search="true" class="form-select form-select-solid fw-bold">
-                                            <option></option>
-                                            <option value="Administrator">Administrator</option>
-                                            <option value="Analyst">Analyst</option>
-                                            <option value="Developer">Developer</option>
-                                            <option value="Support">Support</option>
-                                            <option value="Trial">Trial</option>
-                                        </select>
-                                        <!--end::Input-->
-                                    </div>
-                                    <!--end::Input group-->
-                                    <!--begin::Input group-->
-                                    <div class="fv-row mb-10">
-                                        <!--begin::Label-->
-                                        <label class="required fs-6 fw-semibold form-label mb-2">Select Export Format:</label>
-                                        <!--end::Label-->
-                                        <!--begin::Input-->
-                                        <select name="format" data-control="select2" data-placeholder="Select a format" data-hide-search="true" class="form-select form-select-solid fw-bold">
-                                            <option></option>
-                                            <option value="excel">Excel</option>
-                                            <option value="pdf">PDF</option>
-                                            <option value="cvs">CVS</option>
-                                            <option value="zip">ZIP</option>
-                                        </select>
-                                        <!--end::Input-->
-                                    </div>
-                                    <!--end::Input group-->
-                                    <!--begin::Actions-->
-                                    <div class="text-center">
-                                        <button type="reset" class="btn btn-light me-3" data-kt-users-modal-action="cancel">Discard</button>
-                                        <button type="submit" class="btn btn-primary" data-kt-users-modal-action="submit">
-                                            <span class="indicator-label">Submit</span>
-                                            <span class="indicator-progress">Please wait...
-                                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-                                        </button>
-                                    </div>
-                                    <!--end::Actions-->
-                                </form>
-                                <!--end::Form-->
-                            </div>
-                            <!--end::Modal body-->
-                        </div>
-                        <!--end::Modal content-->
-                    </div>
-                    <!--end::Modal dialog-->
                 </div>
             </div>
             <!--end::Card toolbar-->

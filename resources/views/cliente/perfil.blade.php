@@ -20,7 +20,7 @@
                     <h2 class="fw-bold">Formulario de vehiculo</h2>
                     <!--end::Modal title-->
                     <!--begin::Close-->
-                    <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-users-modal-action="close">
+                    <div class="btn btn-icon btn-sm btn-active-icon-primary"data-bs-dismiss="modal">
                         <i class="ki-duotone ki-cross fs-1">
                             <span class="path1"></span>
                             <span class="path2"></span>
@@ -38,6 +38,7 @@
                                 <div class="fv-row mb-7">
                                     <label class="required fw-semibold fs-6 mb-2">PLACA</label>
                                     <input type="text" class="form-control" required name="placa" id="placa">
+                                    <input type="text" name="vehiculo_id" id="vehiculo_id">
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -48,7 +49,7 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="fv-row mb-7">
-                                    <label class=" fw-semibold fs-6 mb-2">MARCA</label>
+                                    <label class="fw-semibold fs-6 mb-2">MARCA</label>
                                     <input type="text" class="form-control"  name="marca" id="marca">
                                 </div>
                             </div>
@@ -71,167 +72,75 @@
 
     <!--begin::Card-->
     <div class="card">
-        <!--begin::Card header-->
         <div class="card-header border-0 pt-6">
-            <!--begin::Card title-->
             <div class="card-title">
                 <h1>Perfil de Cliente</h1>
-                <!--begin::Search-->
-                {{-- <div class="d-flex align-items-center position-relative my-1">
-                    <i class="ki-duotone ki-magnifier fs-3 position-absolute ms-5">
-                        <span class="path1"></span>
-                        <span class="path2"></span>
-                    </i>
-                    <input type="text" data-kt-user-table-filter="search" class="form-control form-control-solid w-250px ps-13" placeholder="Buscar Venta" />
-                </div> --}}
-                <!--end::Search-->
             </div>
-            <!--begin::Card title-->
-            <!--begin::Card toolbar-->
             <div class="card-toolbar">
-                <!--begin::Toolbar-->
-                {{-- <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">
-                    <button type="button" class="btn btn-primary" onclick="nuevoCliente()">
-                        <i class="ki-duotone ki-plus fs-2"></i>Nueva Cliente
-                    </button>
-                </div> --}}
-                <!--end::Group actions-->
-                <!--begin::Modal - Adjust Balance-->
-                {{-- <div class="modal fade" id="kt_modal_export_users" tabindex="-1" aria-hidden="true">
-                    <!--begin::Modal dialog-->
-                    <div class="modal-dialog modal-dialog-centered mw-650px">
-                        <!--begin::Modal content-->
-                        <div class="modal-content">
-                            <!--begin::Modal header-->
-                            <div class="modal-header">
-                                <!--begin::Modal title-->
-                                <h2 class="fw-bold">Export Users</h2>
-                                <!--end::Modal title-->
-                                <!--begin::Close-->
-                                <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-users-modal-action="close">
-                                    <i class="ki-duotone ki-cross fs-1">
-                                        <span class="path1"></span>
-                                        <span class="path2"></span>
-                                    </i>
-                                </div>
-                                <!--end::Close-->
-                            </div>
-                            <!--end::Modal header-->
-                            <!--begin::Modal body-->
-                            <div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
-                                <!--begin::Form-->
-                                <form id="kt_modal_export_users_form" class="form" action="#">
-                                    <!--begin::Input group-->
-                                    <div class="fv-row mb-10">
-                                        <!--begin::Label-->
-                                        <label class="fs-6 fw-semibold form-label mb-2">Select Roles:</label>
-                                        <!--end::Label-->
-                                        <!--begin::Input-->
-                                        <select name="role" data-control="select2" data-placeholder="Select a role" data-hide-search="true" class="form-select form-select-solid fw-bold">
-                                            <option></option>
-                                            <option value="Administrator">Administrator</option>
-                                            <option value="Analyst">Analyst</option>
-                                            <option value="Developer">Developer</option>
-                                            <option value="Support">Support</option>
-                                            <option value="Trial">Trial</option>
-                                        </select>
-                                        <!--end::Input-->
-                                    </div>
-                                    <!--end::Input group-->
-                                    <!--begin::Input group-->
-                                    <div class="fv-row mb-10">
-                                        <!--begin::Label-->
-                                        <label class="required fs-6 fw-semibold form-label mb-2">Select Export Format:</label>
-                                        <!--end::Label-->
-                                        <!--begin::Input-->
-                                        <select name="format" data-control="select2" data-placeholder="Select a format" data-hide-search="true" class="form-select form-select-solid fw-bold">
-                                            <option></option>
-                                            <option value="excel">Excel</option>
-                                            <option value="pdf">PDF</option>
-                                            <option value="cvs">CVS</option>
-                                            <option value="zip">ZIP</option>
-                                        </select>
-                                        <!--end::Input-->
-                                    </div>
-                                    <!--end::Input group-->
-                                    <!--begin::Actions-->
-                                    <div class="text-center">
-                                        <button type="reset" class="btn btn-light me-3" data-kt-users-modal-action="cancel">Discard</button>
-                                        <button type="submit" class="btn btn-primary" data-kt-users-modal-action="submit">
-                                            <span class="indicator-label">Submit</span>
-                                            <span class="indicator-progress">Please wait...
-                                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-                                        </button>
-                                    </div>
-                                    <!--end::Actions-->
-                                </form>
-                                <!--end::Form-->
-                            </div>
-                            <!--end::Modal body-->
-                        </div>
-                        <!--end::Modal content-->
-                    </div>
-                    <!--end::Modal dialog-->
-                </div> --}}
-            </div>
-            <!--end::Card toolbar-->
-        </div>
-        <!--end::Card header-->
-        <!--begin::Card body-->
-        <div class="card-body py-4">
-            {{-- <div id="table_categoria">
 
-            </div> --}}
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="fv-row mb-7">
-                        <label class="required fw-semibold fs-6 mb-2">Cedula</label>
-                        <input type="text" class="form-control" value="{{ $cliente->cedula }}">
-                        <input type="text" id="cliente_id" value="{{ $cliente->id  }}">
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="fv-row mb-7">
-                        <label class="required fw-semibold fs-6 mb-2">Ap Paterno</label>
-                        <input type="text" class="form-control" value="{{ $cliente->ap_paterno }}">
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="fv-row mb-7">
-                        <label class="required fw-semibold fs-6 mb-2">Ap Materno</label>
-                        <input type="text" class="form-control" value="{{ $cliente->ap_materno }}">
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="fv-row mb-7">
-                        <label class="required fw-semibold fs-6 mb-2">Nombres</label>
-                        <input type="text" class="form-control" value="{{ $cliente->nombres }}">
-                    </div>
-                </div>
             </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="fv-row mb-7">
-                        <label class="required fw-semibold fs-6 mb-2">Nit</label>
-                        <input type="text" class="form-control" value="{{ $cliente->nit }}">
+        </div>
+        <div class="card-body py-4">
+            <form id="formularioCliente">
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="fv-row mb-7">
+                            <label class="required fw-semibold fs-6 mb-2">Cedula</label>
+                            <input type="text" class="form-control" value="{{ $cliente->cedula }}" id="act_cedula" name="act_cedula">
+                            <input type="hidden" id="act_cliente_id" name="act_cliente_id" value="{{ $cliente->id  }}">
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="fv-row mb-7">
+                            <label class="required fw-semibold fs-6 mb-2">Complemento</label>
+                            <input type="text" class="form-control" value="{{ $cliente->complemento}}" id="act_complemento" name="act_complemento">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="fv-row mb-7">
+                            <label class="required fw-semibold fs-6 mb-2">Ap Paterno</label>
+                            <input type="text" class="form-control" value="{{ $cliente->ap_paterno }}" id="act_paterno" name="act_paterno">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="fv-row mb-7">
+                            <label class="required fw-semibold fs-6 mb-2">Ap Materno</label>
+                            <input type="text" class="form-control" value="{{ $cliente->ap_materno }}" id="act_materno" name="act_materno">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="fv-row mb-7">
+                            <label class="required fw-semibold fs-6 mb-2">Nombres</label>
+                            <input type="text" class="form-control" value="{{ $cliente->nombres }}" id="act_nombres" name="act_nombres">
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="fv-row mb-7">
-                        <label class="required fw-semibold fs-6 mb-2">Razon Social</label>
-                        <input type="text" class="form-control" value="{{ $cliente->razon_social }}">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="fv-row mb-7">
+                            <label class="required fw-semibold fs-6 mb-2">Nit</label>
+                            <input type="text" class="form-control" value="{{ $cliente->nit }}" id="act_nit" name="act_nit">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="fv-row mb-7">
+                            <label class="required fw-semibold fs-6 mb-2">Razon Social</label>
+                            <input type="text" class="form-control" value="{{ $cliente->razon_social }}" id="act_razon_social" name="act_razon_social">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="fv-row mb-7">
+                            <label class="required fw-semibold fs-6 mb-2">Correo</label>
+                            <input type="text" class="form-control" value="{{ $cliente->correo }}"  id="act_correo" name="act_correo">
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="fv-row mb-7">
-                        <label class="required fw-semibold fs-6 mb-2">Correo</label>
-                        <input type="text" class="form-control" value="{{ $cliente->correo }}">
-                    </div>
-                </div>
-            </div>
+            </form>
             <div class="row">
                 <div class="col-md-12">
-                    <button class="btn btn-success w-100 btn-sm">ACTUALIZAR</button>
+                    @if (Auth::user()->isEdit())
+                        <button class="btn btn-success w-100 btn-sm" type="button" onclick="actualizarCliente()">ACTUALIZAR</button>
+                    @endif
                 </div>
             </div>
         </div>
@@ -288,7 +197,7 @@
                 url: "{{ url('cliente/ajaxListadoVehiculo') }}",
                 type: 'POST',
                 data:{
-                    cliente:$('#cliente_id').val()
+                    cliente:$('#act_cliente_id').val()
                 },
                 dataType: 'json',
                 success: function(data) {
@@ -299,6 +208,10 @@
         }
 
         function nuevoVehiuclo(){
+            $('#vehiculo_id').val(0)
+            $('#placa').val('')
+            $('#color').val('')
+            $('#marca').val('')
             $('#modalVehiuclo').modal('show')
         }
 
@@ -307,10 +220,11 @@
                 $.ajax({
                     url: "{{ url('vehiculo/guarda') }}",
                     data:{
-                        placa   :$('#placa').val(),
-                        color   :$('#color').val(),
-                        marca   :$('#marca').val(),
-                        cliente :$('#cliente_id').val(),
+                        placa      : $('#placa').val(),
+                        color      : $('#color').val(),
+                        marca      : $('#marca').val(),
+                        cliente    : $('#act_cliente_id').val(),
+                        vehiculo_id: $('#vehiculo_id').val()
                     },
                     type: 'POST',
                     dataType: 'json',
@@ -333,94 +247,71 @@
             }
         }
 
-        // function guardarCliente(){
-        //     if($("#formularioCliente")[0].checkValidity()){
-        //         datos = $("#formularioCliente").serializeArray()
-        //         $.ajax({
-        //             url: "{{ url('cliente/guarda') }}",
-        //             data:datos,
-        //             type: 'POST',
-        //             dataType: 'json',
-        //             success: function(data) {
-        //                 if(data.estado === 'success'){
-        //                     $('#table_categoria').html(data.listado);
-        //                     Swal.fire({
-        //                         icon: 'success',
-        //                         title: 'Correcto!',
-        //                         text: 'Se registro con exito!',
-        //                         timer: 1500
-        //                     })
-        //                     $('#modalCliente').modal('hide');
-        //                 }
-        //             }
-        //         });
-        //     }else{
-    	// 		$("#formularioCliente")[0].reportValidity()
-        //     }
-        // }
+        function actualizarCliente(){
+            if($("#formularioCliente")[0].checkValidity()){
+                $.ajax({
+                    url: "{{ url('cliente/actualizarUsuario') }}",
+                    data: $('#formularioCliente').serializeArray(),
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function(data) {
+                        if(data.estado === 'success'){
+                            $('#table_categoria').html(data.listado);
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Correcto!',
+                                text: 'Se registro con exito!',
+                                timer: 1500
+                            })
+                            $('#tabla_vehiuclos').html(data.listado);
+                            $('#modalVehiuclo').modal('hide');
+                        }
+                    }
+                });
+            }else{
+    			$("#formularioCliente")[0].reportValidity()
+            }
+        }
 
-        // function editarCliente(cliente, nombre, ap_paterno, ap_materno, cedula, complemento, nit, razon_social, correo, celular){
-        //     $('#nombres').val(nombre);
-        //     $('#cliente_id').val(cliente);
-        //     $('#ap_paterno').val(ap_paterno);
-        //     $('#ap_materno').val(ap_materno);
-        //     $('#cedula').val(cedula);
-        //     $('#complemento').val(complemento);
-        //     $('#nit').val(nit);
-        //     $('#razon_social').val(razon_social);
-        //     $('#correo').val(correo);
-        //     $('#celular').val(celular);
+        function editarMovilidad(vehiculo, placa, color, marca){
+            $('#vehiculo_id').val(vehiculo)
+            $('#placa').val(placa)
+            $('#color').val(color)
+            $('#marca').val(marca)
+            $('#modalVehiuclo').modal('show')
+        }
 
-        //     $('#modalCliente').modal('show');
-
-        // }
-
-        // function nuevoCliente(){
-        //     $('#nombres').val('');
-        //     $('#ap_paterno').val('');
-        //     $('#ap_materno').val('');
-        //     $('#cedula').val('');
-        //     $('#complemento').val('');
-        //     $('#nit').val('');
-        //     $('#razon_social').val('');
-        //     $('#correo').val('');
-        //     $('#celular').val('');
-        //     $('#cliente_id').val(0)
-
-        //     $('#modalCliente').modal('show');
-        // }
-
-        // function eliminrCategoria(categoria){
-        //     Swal.fire({
-        //         title: 'Estas seguro de eliminar la categoria ?',
-        //         text: "No podrás revertir esto.!",
-        //         icon: 'warning',
-        //         showCancelButton: true,
-        //         confirmButtonColor: '#3085d6',
-        //         cancelButtonColor: '#d33',
-        //         confirmButtonText: 'Si, eliminar!'
-        //     }).then((result) => {
-        //         if (result.isConfirmed) {
-        //             $.ajax({
-        //                 url: "{{ url('categoria/eliminar') }}",
-        //                 type: 'POST',
-        //                 data:{id:categoria},
-        //                 dataType: 'json',
-        //                 success: function(data) {
-        //                     if(data.estado === 'success'){
-        //                         $('#table_categoria').html(data.listado);
-        //                         Swal.fire({
-        //                             icon: 'success',
-        //                             title: 'Eliminado!',
-        //                             text: 'La categoria se elimino!',
-        //                             timer: 1000
-        //                         })
-        //                     }
-        //                 }
-        //             });
-        //         }
-        //     })
-        // }
+        function eliminarMovilidad(movilidad, placa){
+            Swal.fire({
+                title: 'Estas seguro de eliminar el vehiculo con placa '+placa+' ?',
+                text: "No podrás revertir esto.!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si, eliminar!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ url('vehiculo/eliminarMovilidad') }}",
+                        type: 'POST',
+                        data:{id:movilidad},
+                        dataType: 'json',
+                        success: function(data) {
+                            if(data.estado === 'success'){
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Eliminado!',
+                                    text: 'El Vehiculo se elimino!',
+                                    timer: 1000
+                                })
+                                ajaxListado();
+                            }
+                        }
+                    });
+                }
+            })
+        }
     </script>
 @endsection
 

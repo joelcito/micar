@@ -36,6 +36,6 @@
 <!--end::Table-->
     <script>
         $('#tabla_user').DataTable({
-
+            order: []
         });
     </script>

@@ -14,10 +14,8 @@
         <tbody class="text-gray-600 fw-semibold">
             @forelse ( $usuarios as  $u )
                 <tr>
-                    <td class="d-flex align-items-center">
-                        <div class="d-flex flex-column">
-                            <a class="text-gray-800 text-hover-primary mb-1">{{ $u->nombres }}</a>
-                        </div>
+                    <td>
+                        <a class="text-gray-800 text-hover-primary mb-1">{{ $u->nombres }}</a>
                     </td>
                     <td>
                         <a class="text-gray-800 text-hover-primary mb-1">{{ $u->ap_paterno }}</a>
@@ -53,7 +51,7 @@
 
                         <a href="{{ url('user/detalle',[$u->id]) }}" class="btn btn-icon btn-info btn-sm"><i class="fa fa-eye"></i></a>
                         @if (Auth::user()->isDelete())
-                            <a href="#" class="btn btn-icon btn-danger btn-sm"><i class="fa fa-trash"></i></a>
+                            <button class="btn btn-icon btn-danger btn-sm" onclick="eliminarUsuario('{{ $u->id }}', '{{ $u->name }}')"><i class="fa fa-trash"></i></button>
                         @endif
                     </td>
                 </tr>
@@ -78,6 +76,7 @@
                 lengthMenu: 'Mostrar _MENU_ registros por página',
                 info: 'Mostrando _START_ a _END_ de _TOTAL_ registros',
                 emptyTable: 'No hay datos disponibles'
-            }
+            },
+            order: []
         });
     </script>

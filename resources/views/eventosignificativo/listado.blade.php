@@ -19,7 +19,7 @@
                     <h2 class="fw-bold">FORMULARIO DE EVENTO SIGNIFICATIVO</h2>
                     <!--end::Modal title-->
                     <!--begin::Close-->
-                    <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-users-modal-action="close">
+                    <div class="btn btn-icon btn-sm btn-active-icon-primary"data-bs-dismiss="modal">
                         <i class="ki-duotone ki-cross fs-1">
                             <span class="path1"></span>
                             <span class="path2"></span>
@@ -83,7 +83,7 @@
         <div class="card-header border-0 pt-6">
             <!--begin::Card title-->
             <div class="card-title">
-                <h3>Listado de Punto de ventas</h3>
+                <h3>Listado de Eventos Significaticos</h3>
             </div>
             <!--begin::Card title-->
             <!--begin::Card toolbar-->

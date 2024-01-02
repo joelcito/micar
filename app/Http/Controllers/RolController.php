@@ -18,7 +18,13 @@ class RolController extends Controller
 
         if($request->ajax()){
 
-            $rol = new Rol();
+            $rol_id = $request->input('rol_id');
+
+            if($rol_id == 0)
+                $rol = new Rol();
+            else
+                $rol = Rol::find($rol_id);
+
 
             $rol->nombre = $request->input('nombre');
             $rol->descripcion = $request->input('descripcion');
@@ -168,61 +174,5 @@ class RolController extends Controller
         }
 
         return $data;
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Rol  $rol
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Rol $rol)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Rol  $rol
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Rol $rol)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Rol  $rol
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Rol $rol)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Rol  $rol
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Rol $rol)
-    {
-        //
     }
 }

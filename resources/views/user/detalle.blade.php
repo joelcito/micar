@@ -20,7 +20,7 @@
                     <h2 class="fw-bold">Formulario de Asignacion</h2>
                     <!--end::Modal title-->
                     <!--begin::Close-->
-                    <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-users-modal-action="close">
+                    <div class="btn btn-icon btn-sm btn-active-icon-primary"data-bs-dismiss="modal">
                         <i class="ki-duotone ki-cross fs-1">
                             <span class="path1"></span>
                             <span class="path2"></span>
@@ -82,46 +82,64 @@
         <!--end::Card header-->
         <!--begin::Card body-->
         <div class="card-body py-4">
+            <form id="formularioPerfilUsuario">
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="fv-row mb-7">
+                            <label class="required fw-semibold fs-6 mb-2">Cedula</label>
+                            <input type="text" class="form-control" value="{{ $usuario->cedula }}" required name="cedula_act">
+                            <input type="hidden" id="usuario_id" value="{{ $usuario->id  }}" name="usuario_id_act">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="fv-row mb-7">
+                            <label class="fw-semibold fs-6 mb-2">Ap Paterno</label>
+                            <input type="text" class="form-control" value="{{ $usuario->ap_paterno }}" name="ap_paterno_act">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="fv-row mb-7">
+                            <label class="required fw-semibold fs-6 mb-2">Ap Materno</label>
+                            <input type="text" class="form-control" value="{{ $usuario->ap_materno }}" required name="ap_materno_act">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="fv-row mb-7">
+                            <label class="required fw-semibold fs-6 mb-2">Nombres</label>
+                            <input type="text" class="form-control" value="{{ $usuario->nombres }}" required name="nombres_act">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="fv-row mb-7">
+                            <label class="required fw-semibold fs-6 mb-2">Rol</label>
+                            <select name="rol_id_act" id="rol_id_act" class="form-control">
+                                @foreach ($roles as $r)
+                                    <option {{ ($r->id === $usuario->rol_id)? 'selected' : '' }} value="{{ $r->id }}">{{ $r->descripcion }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="fv-row mb-7">
+                            <label class="required fw-semibold fs-6 mb-2">Correo/Usuario</label>
+                            <input type="text" class="form-control" value="{{ $usuario->email }}" required name="usuario_act">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="fv-row mb-7">
+                            <label class="required fw-semibold fs-6 mb-2">Direccion</label>
+                            <input type="text" class="form-control" value="{{ $usuario->direccion }}" name="direccion_act">
+                        </div>
+                    </div>
+                </div>
+            </form>
 
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="fv-row mb-7">
-                        <label class="required fw-semibold fs-6 mb-2">Cedula</label>
-                        <input type="text" class="form-control" value="{{ $usuario->cedula }}">
-                        <input type="hidden" id="usuario_id" value="{{ $usuario->id  }}">
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="fv-row mb-7">
-                        <label class="required fw-semibold fs-6 mb-2">Ap Paterno</label>
-                        <input type="text" class="form-control" value="{{ $usuario->ap_paterno }}">
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="fv-row mb-7">
-                        <label class="required fw-semibold fs-6 mb-2">Ap Materno</label>
-                        <input type="text" class="form-control" value="{{ $usuario->ap_materno }}">
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="fv-row mb-7">
-                        <label class="required fw-semibold fs-6 mb-2">Nombres</label>
-                        <input type="text" class="form-control" value="{{ $usuario->nombres }}">
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="fv-row mb-7">
-                        <label class="required fw-semibold fs-6 mb-2">Correo</label>
-                        <input type="text" class="form-control" value="{{ $usuario->email }}">
-                    </div>
-                </div>
-            </div>
             <div class="row">
                 <div class="col-md-12">
                     @if (Auth::user()->isEdit())
-                        <button class="btn btn-success w-100 btn-sm">ACTUALIZAR</button>
+                        <button class="btn btn-success w-100 btn-sm" onclick="actualizarUsuario()" type="button">ACTUALIZAR</button>
                     @endif
                 </div>
             </div>
@@ -130,7 +148,7 @@
     </div>
     <!--end::Card-->
 
-    @if($usuario->rol_id != 1)
+    @if($usuario->rol_id == 3 )
         <!--begin::Content-->
         <div id="kt_app_content" class="app-content flex-column-fluid mt-5">
             <!--begin::Content container-->
@@ -425,6 +443,80 @@
             $('#porcentaje').val(liquidacion)
             $('#servicio_id').prop('disabled', true);
             $('#modalAsignacion').modal('show')
+        }
+
+        function eliminaAsiganacion(asignacion, nombre){
+            Swal.fire({
+                title: "Estas seguro de eliminar la asignacion "+nombre+"?",
+                text: "No podras revertir eso!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Si, eliminar!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ url('servicio/eliminarAsignacion') }}",
+                        data:{
+                            asignacion: asignacion
+                        },
+                        type: 'POST',
+                        dataType: 'json',
+                        success: function(data) {
+                            if(data.estado === 'success'){
+                                ajaxListado();
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Correcto!',
+                                    text: 'Se elimino con exito!',
+                                    timer: 1500
+                                })
+                            }else{
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error al crear!',
+                                    text: data.msg,
+                                    timer: 5000
+                                })
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+        function actualizarUsuario(){
+            if($("#formularioPerfilUsuario")[0].checkValidity()){
+                let datos = $('#formularioPerfilUsuario').serializeArray();
+                $.ajax({
+                    url: "{{ url('user/actualizarUsuario') }}",
+                    data:datos,
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function(data) {
+                        if(data.estado === 'success'){
+                            ajaxListado();
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Correcto!',
+                                text: 'Se registro con exito!',
+                                timer: 1500
+                            })
+                            $('#modalAsignacion').modal('hide');
+                        }else{
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error al crear!',
+                                text: data.msg,
+                                timer: 5000
+                            })
+                        }
+                    }
+                });
+            }else{
+    			$("#formularioPerfilUsuario")[0].reportValidity()
+            }
         }
     </script>
 @endsection

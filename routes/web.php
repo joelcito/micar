@@ -61,6 +61,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/user/cambioPass', [UserController::class, 'cambioPass']);
     Route::post('/user/permisos', [UserController::class, 'permisos']);
     Route::post('/user/guardarMenusPermisso', [UserController::class, 'guardarMenusPermisso']);
+    Route::post('/user/actualizarUsuario', [UserController::class, 'actualizarUsuario']);
+    Route::post('/user/eliminarUser', [UserController::class, 'eliminarUser']);
+
 
 
     // ROLES
@@ -85,6 +88,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/guardarAsignacion', [ServicioController::class, 'guardarAsignacion']);
         Route::post('/agregarProdcuto', [ServicioController::class, 'agregarProdcuto']);
         Route::post('/eliminarProduto', [ServicioController::class, 'eliminarProduto']);
+        Route::post('/eliminarAsignacion', [ServicioController::class, 'eliminarAsignacion']);
     });
 
 
@@ -101,6 +105,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/cliente/ajaxListado', [ClienteController::class, 'ajaxListado']);
     Route::post('/cliente/ajaxListadoVehiculo', [ClienteController::class, 'ajaxListadoVehiculo']);
     Route::get('/cliente/perfil/{cliente_id}', [ClienteController::class, 'perfil']);
+    Route::post('/cliente/actualizarUsuario', [ClienteController::class, 'actualizarUsuario']);
     // Route::post('/cliente/eliminar', [ClienteController::class, 'eliminar']);
 
     // VEHICULO
@@ -113,6 +118,7 @@ Route::middleware('auth')->group(function () {
     Route::post('vehiculo/obtenerNitRazonSocial', [VehiculoController::class, 'obtenerNitRazonSocial']);
     Route::post('vehiculo/consultaPagosPorCobrar', [VehiculoController::class, 'consultaPagosPorCobrar']);
     Route::post('vehiculo/guarda', [VehiculoController::class, 'guarda']);
+    Route::post('vehiculo/eliminarMovilidad', [VehiculoController::class, 'eliminarMovilidad']);
 
 
 
@@ -211,6 +217,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/reporteCuentaPorCobrar', [ReporteController::class, 'reporteCuentaPorCobrar']);
         Route::post('/reporteInventario', [ReporteController::class, 'reporteInventario']);
         Route::post('/reporteInformeVenta', [ReporteController::class, 'reporteInformeVenta']);
+        Route::post('/reporteLibroVenta', [ReporteController::class, 'reporteLibroVenta']);
     });
 
 });

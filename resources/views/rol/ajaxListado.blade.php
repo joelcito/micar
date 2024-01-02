@@ -4,7 +4,7 @@
             <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
                 <th class="min-w-125px">Nombre</th>
                 <th class="min-w-125px">Descripcion</th>
-                <th class="min-w-125px">Estado</th>
+                {{-- <th class="min-w-125px">Estado</th> --}}
                 <th class="text-end min-w-100px">Actions</th>
             </tr>
         </thead>
@@ -19,13 +19,13 @@
                     <td>
                         <a class="text-gray-800 text-hover-primary mb-1">{{ $r->descripcion }}</a>
                     </td>
-                    <td>
+                    {{-- <td>
                         <a class="text-gray-800 text-hover-primary mb-1">{{ $r->estado }}</a>
-                    </td>
+                    </td> --}}
                     <td class="text-end">
                         <button class="btn btn-primary btn-icon btn-sm" onclick="permiusoRol('{{ $r->id }}')"><i class="fa fa-list"></i></button>
                         @if (Auth::user()->isEdit())
-                            <button class="btn btn-warning btn-icon btn-sm"><i class="fa fa-edit"></i></button>
+                            <button class="btn btn-warning btn-icon btn-sm" onclick="editarRol('{{ $r->id }}', '{{ $r->nombre }}', '{{ $r->descripcion }}')"><i class="fa fa-edit"></i></button>
                         @endif
                         {{-- @dd($r->roles->count()) --}}
                         @if($r->roles->count() == 0)
@@ -54,6 +54,7 @@
                 lengthMenu: 'Mostrar _MENU_ registros por página',
                 info      : 'Mostrando _START_ a _END_ de _TOTAL_ registros',
                 emptyTable: 'No hay datos disponibles'
-            }
+            },
+            order:[]
         });
     </script>

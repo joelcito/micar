@@ -6,6 +6,9 @@
                 <th class="min-w-125px">Categoria</th>
                 <th class="min-w-125px">Unidad Venta</th>
                 <th class="min-w-125px">Precio</th>
+                <th class="min-w-125px">Cod. Actividad</th>
+                <th class="min-w-125px">Cod. Producto</th>
+                <th class="min-w-125px">Uni Medida</th>
                 <th class="text-end min-w-100px">Actions</th>
             </tr>
         </thead>
@@ -32,9 +35,18 @@
                     <td>
                         <a class="text-gray-800 text-hover-primary mb-1">{{ $s->precio }}</a>
                     </td>
+                    <td>
+                        <a class="text-gray-800 text-hover-primary mb-1">{{ $s->codigoActividad }}</a>
+                    </td>
+                    <td>
+                        <a class="text-gray-800 text-hover-primary mb-1">{{ $s->codigoProducto }}</a>
+                    </td>
+                    <td>
+                        <a class="text-gray-800 text-hover-primary mb-1">{{ $s->unidadMedida }}</a>
+                    </td>
                     <td class="text-end">
                         @if (Auth::user()->isEdit())
-                        <button class="btn btn-warning btn-icon btn-sm" onclick="editarServicio('{{ $s->id }}', '{{ $s->descripcion }}', '{{ $s->categoria_id }}', '{{ $s->unidad_venta }}', '{{ $s->precio }}')"><i class="fa fa-edit"></i></button>
+                        <button class="btn btn-warning btn-icon btn-sm" onclick="editarServicio('{{ $s->id }}', '{{ $s->descripcion }}', '{{ $s->categoria_id }}', '{{ $s->unidad_venta }}', '{{ $s->precio }}', '{{ $s->codigoActividad }}', '{{ $s->codigoProducto }}', '{{ $s->unidadMedida }}')"><i class="fa fa-edit"></i></button>
                         @endif
                         @if (Auth::user()->isDelete())
                         <button class="btn btn-danger btn-icon btn-sm" onclick="eliminaServicio('{{ $s->id }}')"><i class="fa fa-trash"></i></button>

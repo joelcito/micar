@@ -24,6 +24,10 @@ return new class extends Migration
             $table->text('menus')->nullable()->after('direccion');
             $table->text('permisos')->nullable()->after('menus');
             $table->string('codigo_punto_venta')->nullable()->after('permisos');
+
+            $table->string('estado')->nullable()->after('password');
+            $table->datetime('deleted_at')->nullable();
+            // $table->timestamps();
         });
     }
 
@@ -46,6 +50,9 @@ return new class extends Migration
             $table->dropColumn('menus');
             $table->dropColumn('permisos');
             $table->dropColumn('codigo_punto_venta');
+
+            $table->dropColumn('estado');
+            $table->dropColumn('deleted_at');
         });
     }
 };

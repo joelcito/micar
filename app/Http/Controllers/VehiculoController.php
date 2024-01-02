@@ -73,7 +73,7 @@ class VehiculoController extends Controller
     }
 
     protected function listadoArray(){
-        $vehiculos = Vehiculo::orderBy('id', 'desc')->limit(100)->get();
+        $vehiculos = Vehiculo::orderBy('id', 'desc')->limit(50)->get();
         return view('vehiculo.ajaxListado')->with(compact('vehiculos', 'vender'))->render();
     }
 
@@ -285,13 +285,21 @@ class VehiculoController extends Controller
 
     public function guarda(Request $request){
         if($request->ajax()){
-            $placa        = $request->input('placa');
-            $color        = $request->input('color');
-            $marca        = $request->input('marca');
-            $cliente_id   = $request->input('cliente');
 
-            $vehiculo               = new Vehiculo();
-            $vehiculo->creador_id   = Auth::user()->id;
+            $vehiculo_id = $request->input('vehiculo_id');
+            $placa       = $request->input('placa');
+            $color       = $request->input('color');
+            $marca       = $request->input('marca');
+            $cliente_id  = $request->input('cliente');
+
+            if($vehiculo_id == 0){
+                $vehiculo             = new Vehiculo();
+                $vehiculo->creador_id = Auth::user()->id;
+            }else{
+                $vehiculo                 = Vehiculo::find($vehiculo_id);
+                $vehiculo->modificador_id = Auth::user()->id;
+            }
+
             $vehiculo->cliente_id   = $cliente_id;
             $vehiculo->placa        = $placa;
             $vehiculo->color        = $color;
@@ -306,6 +314,16 @@ class VehiculoController extends Controller
             $data['estado'] = 'error';
         }
 
+        return $data;
+    }
+
+    public function  eliminarMovilidad(Request $request){
+        if($request->ajax()){
+            $data['estado'] = 'success';
+            Vehiculo::destroy($request->input('id'));
+        }else{
+            $data['estado'] = 'error';
+        }
         return $data;
     }
 

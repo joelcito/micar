@@ -22,8 +22,8 @@
                                 <div class="fv-row mb-7">
                                     <label class="required fw-semibold fs-6 mb-2">Monto</label>
                                     <input type="number" id="monto" name="monto" class="form-control form-control-solid mb-3 mb-lg-0">
-                                    <input type="text" id="tipo" name="tipo">
-                                    <input type="text" value="{{ $vender }}" id="caja_abierto_ingre_cerra" name="caja_abierto_ingre_cerra">
+                                    <input type="hidden" id="tipo" name="tipo">
+                                    <input type="hidden" value="{{ $vender }}" id="caja_abierto_ingre_cerra" name="caja_abierto_ingre_cerra">
                                 </div>
                             </div>
                             <div class="col-md-8">
@@ -60,7 +60,7 @@
                     <h2 class="fw-bold">Formulario de cierre de caja</h2>
                     <!--end::Modal title-->
                     <!--begin::Close-->
-                    <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-users-modal-action="close">
+                    <div class="btn btn-icon btn-sm btn-active-icon-primary"data-bs-dismiss="modal">
                         <i class="ki-duotone ki-cross fs-1">
                             <span class="path1"></span>
                             <span class="path2"></span>
@@ -77,7 +77,7 @@
                             <div class="col-md-12">
                                 <label class="required fw-semibold fs-6 mb-2">Usuario Cargo</label>
                                 <input type="text" class="form-control" value="{{ Auth::user()->name }}" readonly>
-                                <input type="text" value="{{ $vender }}" name="caja_abierto_cierre" id="caja_abierto_cierre" >
+                                <input type="hidden" value="{{ $vender }}" name="caja_abierto_cierre" id="caja_abierto_cierre" >
                             </div>
                         </div>
 
@@ -123,8 +123,8 @@
                 Informe financiero
             </div> --}}
             <div class="card-actions">
-                <button class="btn btn-danger btn-icon btn-sm" onclick="modalCierreCaja()" title="Cierre de caja"><i class="fa-solid fa-solar-panel"></i></button>
                 @if ($vender != 0 )
+                    <button class="btn btn-danger btn-icon btn-sm" onclick="modalCierreCaja()" title="Cierre de caja"><i class="fa-solid fa-solar-panel"></i></button>
                     <button class="btn btn-success btn-icon btn-sm" onclick="modalIngreso()"><i class="fas fa-money-bill"></i> <i class="fas fa-arrow-down"></i></button>
                     <button class="btn btn-danger btn-icon btn-sm" onclick="modalSalida()"><i class="fas fa-money-bill"></i> <i class="fas fa-arrow-up"></i></button>
                 @endif
@@ -316,8 +316,8 @@
                                 timerProgressBar: true
                             });
                             $('#modalCierreCaja').modal('hide')
-                            //buscarVehiculo()
 
+                            location.reload();
                         }
                     }
                 });

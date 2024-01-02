@@ -27,7 +27,7 @@ class UserController extends Controller
         //             ['id' => 13, 'name' => 'Servicios', 'url' => 'servicio', 'estado'=> true],
         //             ['id' => 14, 'name' => 'Categorias', 'url' => 'categoria', 'estado'=> true],
         //             ['id' => 15, 'name' => 'Punto Venta', 'url' => 'puntoVenta/listado', 'estado'=> true],
-        //             ['id' => 16, 'name' => 'Evento Significativo', 'url' => 'eventoSignificativo/listado', 'estado'=> true],
+        //             ['id' => 16, 'name' => 'Evedento Significativo', 'url' => 'eventoSignificativo/listado', 'estado'=> true],
         //             ['id' => 17, 'name' => 'Sincronizacion de Catalogos', 'url' => 'sincronizacionCatalogo/listado', 'estado'=> true],
         //         ]
         //     ],
@@ -101,7 +101,8 @@ class UserController extends Controller
     }
 
     protected function listadoArray(){
-        $usuarios = User::all();
+        // $usuarios = User::all();
+        $usuarios = User::orderBy('id', 'desc')->get();
         return view("user.ajaxListado")->with(compact('usuarios'))->render();
     }
 
@@ -111,15 +112,20 @@ class UserController extends Controller
 
             $user = new User();
 
-            $user->nombres      = $request->input('nombres');
-            $user->ap_paterno   = $request->input('ap_paterno');
-            $user->ap_materno   = $request->input('ap_materno');
-            $user->name         = $request->input('nombres')." ".$request->input('ap_paterno')." ".$request->input('ap_materno');
-            $user->cedula       = $request->input('cedula');
-            $user->email        = $request->input('email');
-            $user->rol_id       = $request->input('rol_id');
-            $user->direccion    = $request->input('direccion');
-            $user->password     = Hash::make($request->input('password'));
+            $user->nombres    = $request->input('nombres');
+            $user->ap_paterno = $request->input('ap_paterno');
+            $user->ap_materno = $request->input('ap_materno');
+            $user->name       = $request->input('nombres')." ".$request->input('ap_paterno')." ".$request->input('ap_materno');
+            $user->cedula     = $request->input('cedula');
+            $user->email      = $request->input('email');
+            $user->rol_id     = $request->input('rol_id');
+
+            $rol              = Rol::find($user->rol_id);
+
+            $user->menus      = $rol->menus;
+            $user->permisos   = $rol->permisos;
+            $user->direccion  = $request->input('direccion');
+            $user->password   = Hash::make($request->input('password'));
 
             $user->save();
 
@@ -143,7 +149,9 @@ class UserController extends Controller
                                         ->orderBy('id', 'desc')
                                         ->get();
 
-        return view('user.detalle')->with(compact('usuario', 'servicios', 'liquidaciones', 'serviciosRealizados'));
+        $roles = Rol::all();
+
+        return view('user.detalle')->with(compact('usuario', 'servicios', 'liquidaciones', 'serviciosRealizados', 'roles'));
     }
 
     public function cambioPass(Request $request){
@@ -260,6 +268,47 @@ class UserController extends Controller
             $data['estado'] = 'error';
         }
 
+        return $data;
+    }
+
+    public function  actualizarUsuario(Request $request) {
+
+        if($request->ajax()){
+
+            $usuario_id = $request->input('usuario_id_act');
+
+            $usuario             = User::find($usuario_id);
+            $usuario->nombres    = $request->input('nombres_act');
+            $usuario->ap_paterno = $request->input('ap_paterno_act');
+            $usuario->ap_materno = $request->input('ap_materno_act');
+            $usuario->cedula     = $request->input('cedula_act');
+            $usuario->direccion  = $request->input('direccion_act');
+            $usuario->email      = $request->input('usuario_act');
+
+            if($usuario->rol_id != $request->input('rol_id_act')){
+                $rol               = Rol::find($request->input('rol_id_act'));
+                $usuario->rol_id   = $request->input('rol_id_act');
+                $usuario->menus    = $rol->menus;
+                $usuario->permisos = $rol->permisos;
+            }
+
+            $usuario->save();
+
+            $data['estado'] = 'success';
+        }else{
+            $data['estado'] = 'error';
+        }
+
+        return $data;
+    }
+
+    public function eliminarUser(Request $request){
+        if($request->ajax()){
+            User::destroy($request->input('usuario'));
+            $data['estado'] = 'success';
+        }else{
+            $data['estado'] = 'error';
+        }
         return $data;
     }
 }

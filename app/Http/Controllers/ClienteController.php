@@ -105,6 +105,28 @@ class ClienteController extends Controller
         return view('cliente.ajaxListadoVehiculos')->with(compact('vehiculos'))->render();
     }
 
+    public function  actualizarUsuario(Request $request){
+        if($request->ajax()){
+
+            $cliente_id              = $request->input('act_cliente_id');
+
+            $cliente                 = Cliente::find($cliente_id);
+            $cliente->modificador_id = Auth::user()->id;
+            $cliente->nombres        = $request->input('act_nombres');
+            $cliente->cedula         = $request->input('act_cedula');
+            $cliente->complemento    = $request->input('act_complemento');
+            $cliente->nit            = $request->input('act_nit');
+            $cliente->razon_social   = $request->input('act_razon_social');
+            $cliente->correo         = $request->input('act_correo');
+            $cliente->save();
+
+            $data['estado'] = 'success';
+        }else{
+            $data['estado'] = 'error';
+        }
+        return $data;
+    }
+
     protected function listadoArray(){
         // $clientes = Cliente::all();
         $clientes = Cliente::orderBy('id', 'desc')->limit(100)->get();

@@ -4,7 +4,7 @@
             <div class="fv-row mb-7">
                 <label class="required fw-semibold fs-6 mb-2">Razon Social</label>
                 <input type="text" class="form-control" id="tramsfrencia_razon_social" name="tramsfrencia_razon_social" required value="{{ $factura->razon_social }}" readonly>
-                <input type="text" value="{{ $factura->id }}" name="tramsfrencia_factura_id">
+                <input type="hidden" value="{{ $factura->id }}" name="tramsfrencia_factura_id">
             </div>
         </div>
         <div class="col-md-3">

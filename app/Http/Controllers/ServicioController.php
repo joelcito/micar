@@ -28,10 +28,13 @@ class ServicioController extends Controller
                 $servicio->modificador_id = Auth::user()->id;
             }
 
-            $servicio->descripcion  = $request->input('descripcion');
-            $servicio->unidad_venta = $request->input('unidad_venta');
-            $servicio->precio       = $request->input('precio');
-            $servicio->categoria_id = $request->input('categoria_id');
+            $servicio->descripcion     = $request->input('descripcion');
+            $servicio->unidad_venta    = $request->input('unidad_venta');
+            $servicio->precio          = $request->input('precio');
+            $servicio->categoria_id    = $request->input('categoria_id');
+            $servicio->codigoActividad = $request->input('cod_actividad');
+            $servicio->codigoProducto  = $request->input('cod_producto');
+            $servicio->unidadMedida    = $request->input('uni_medida');
 
             $servicio->save();
 
@@ -216,6 +219,17 @@ class ServicioController extends Controller
     function eliminarProduto(Request $request){
         if($request->ajax()){
             Servicio::destroy($request->input('id'));
+            $data['estado'] = 'success';
+        }else{
+            $data['estado'] = 'error';
+        }
+        return $data;
+    }
+
+    public function eliminarAsignacion(Request $request) {
+        if($request->ajax()){
+            $asignacion_id = $request->input('asignacion');
+            LiquidacionLavador::destroy($asignacion_id);
             $data['estado'] = 'success';
         }else{
             $data['estado'] = 'error';

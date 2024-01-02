@@ -23,8 +23,13 @@
                     <a class="text-gray-800 text-hover-primary mb-1">{{ $v->marca }}</a>
                 </td>
                 <td class="text-end">
-                    <button class="btn btn-warning btn-icon btn-sm" type="button"><i class="fa fa-edit"></i></button>
-                    <button class="btn btn-danger btn-icon btn-sm" type="button"><i class="fa fa-trash"></i></button>
+                    @if (Auth::user()->isEdit())
+                        <button class="btn btn-warning btn-icon btn-sm" onclick="editarMovilidad('{{ $v->id }}','{{ $v->placa }}', '{{ $v->color }}','{{ $v->marca }}')" type="button"><i class="fa fa-edit"></i></button>
+                    @endif
+
+                    @if (Auth::user()->isDelete())
+                        <button class="btn btn-danger btn-icon btn-sm" onclick="eliminarMovilidad('{{ $v->id }}', '{{ $v->placa }}')" type="button"><i class="fa fa-trash"></i></button>
+                    @endif
                 </td>
             </tr>
         @empty
