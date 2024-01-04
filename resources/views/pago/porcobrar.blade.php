@@ -118,20 +118,33 @@
                 <div class="col-md-2">
                     <label for="">Apellido Paterno</label>
                     <input type="text" class="form-control" id="buscar_appaterno" name="buscar_appaterno">
-                </div>                <div class="col-md-2">
+                </div>
+                <div class="col-md-2">
                     <label for="">Apellido Materno</label>
                     <input type="text" class="form-control" id="buscar_apmaterno" name="buscar_apmaterno">
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-1">
                     <label for="">Cedula</label>
                     <input type="text" class="form-control" id="buscar_cedula" name="buscar_cedula">
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-1">
                     <label for="">Placa</label>
                     <input type="text" class="form-control" id="buscar_placa" name="buscar_placa">
                 </div>
-                <div class="col-md-2">
-                    <button class="btn btn-success w-100 btn-sm mt-7" onclick="ajaxListado()"><i class="fa fa-search"></i>Buscar</button>
+                <div class="col-md-3">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="">Fecha Inicio</label>
+                            <input type="date" class="form-control" id="buscar_fecha_ini" value="{{ date('Y-m-d') }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="">Fecha Fin</label>
+                            <input type="date" class="form-control" id="buscar_fecha_fin" value="{{ date('Y-m-d') }}">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <button class="btn btn-success btn-sm mt-7 w-100" onclick="ajaxListado()"><i class="fa fa-search"></i></button>
                 </div>
             </div>
             <hr>
@@ -171,11 +184,13 @@
                 url: "{{ url('pago/ajaxBuscarPorCobrar') }}",
                 type: 'POST',
                 data:{
-                    nombre      :   $('#buscar_nombre').val(),
-                    appaterno   :   $('#buscar_appaterno').val(),
-                    apmaterno   :   $('#buscar_apmaterno').val(),
-                    cedula      :   $('#buscar_cedula').val(),
-                    placa       :   $('#buscar_placa').val(),
+                    nombre   : $('#buscar_nombre').val(),
+                    appaterno: $('#buscar_appaterno').val(),
+                    apmaterno: $('#buscar_apmaterno').val(),
+                    cedula   : $('#buscar_cedula').val(),
+                    placa    : $('#buscar_placa').val(),
+                    fecha_ini: $('#buscar_fecha_ini').val(),
+                    fecha_fin: $('#buscar_fecha_fin').val(),
                 },
                 dataType: 'json',
                 success: function(data) {

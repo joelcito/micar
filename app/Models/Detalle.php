@@ -40,23 +40,48 @@ class Detalle extends Model
 
     public static function detallesLavadorFecha($lavador, $fecha_ini, $fecha_fin){
 
-        $detalles = Detalle::select(
-                    'detalles.servicio_id',
-                    DB::raw('SUM(detalles.cantidad) as cantidad'),
-                    'servicios.precio',
-                    'servicios.descripcion',
-                    'servicios.liquidacion as liquidacionServicio',
-                    'servicios.tipo_liquidacion as tipoLiquidacionServicio',
-                    'liquidacion_lavadores.tipo_liquidacion as tipoLiquidacionLl',
-                    'liquidacion_lavadores.liquidacion as liquidacionLl'
-                )
-                ->join('servicios', 'detalles.servicio_id', '=', 'servicios.id')
-                ->leftJoin('liquidacion_lavadores', 'detalles.servicio_id', '=', 'liquidacion_lavadores.servicio_id')
-                ->where('detalles.lavador_id', $lavador)
-                ->where('detalles.estado_liquidacion', 'Debe')
-                ->whereBetween('detalles.fecha', [$fecha_ini, $fecha_fin])
-                ->groupBy('detalles.servicio_id', 'liquidacion_lavadores.tipo_liquidacion', 'liquidacion_lavadores.liquidacion')
-                ->get();
+        // $detalles = Detalle::select(
+        //             'detalles.servicio_id',
+        //             DB::raw('SUM(detalles.cantidad) as cantidad'),
+        //             'servicios.precio',
+        //             'servicios.descripcion',
+        //             'servicios.liquidacion as liquidacionServicio',
+        //             'servicios.tipo_liquidacion as tipoLiquidacionServicio',
+        //             'liquidacion_lavadores.tipo_liquidacion as tipoLiquidacionLl',
+        //             'liquidacion_lavadores.liquidacion as liquidacionLl'
+        //         )
+        //         ->join('servicios', 'detalles.servicio_id', '=', 'servicios.id')
+        //         ->leftJoin('liquidacion_lavadores', 'detalles.servicio_id', '=', 'liquidacion_lavadores.servicio_id')
+        //         ->where('detalles.lavador_id', $lavador)
+        //         ->where('detalles.estado_liquidacion', 'Debe')
+        //         ->whereBetween('detalles.fecha', [$fecha_ini, $fecha_fin])
+        //         ->groupBy('detalles.servicio_id', 'liquidacion_lavadores.tipo_liquidacion', 'liquidacion_lavadores.liquidacion')
+        //         // ->get();
+        //         ->toSql();
+        //         dd($lavador, $fecha_ini, $fecha_fin, $detalles);
+
+
+       $detalles =  Detalle::select(
+                        'detalles.servicio_id',
+                        DB::raw('SUM(detalles.cantidad) as cantidad'),
+                        'servicios.precio',
+                        'servicios.descripcion',
+                        'servicios.liquidacion as liquidacionServicio',
+                        'servicios.tipo_liquidacion as tipoLiquidacionServicio',
+                        'liquidacion_lavadores.tipo_liquidacion as tipoLiquidacionLl',
+                        'liquidacion_lavadores.liquidacion as liquidacionLl'
+                    )
+                    ->join('servicios', 'detalles.servicio_id', '=', 'servicios.id')
+                    ->leftJoin('liquidacion_lavadores', function($join) {
+                        $join->on('detalles.servicio_id', '=', 'liquidacion_lavadores.servicio_id')
+                            ->on('detalles.lavador_id', '=', 'liquidacion_lavadores.lavador_id');
+                    })
+                    ->where('detalles.lavador_id', $lavador)
+                    ->where('detalles.estado_liquidacion', 'Debe')
+                    ->whereBetween('detalles.fecha', [$fecha_ini, $fecha_fin])
+                    ->whereNull('detalles.deleted_at')
+                    ->groupBy('detalles.servicio_id', 'liquidacion_lavadores.tipo_liquidacion', 'liquidacion_lavadores.liquidacion')
+                    ->get();
 
         return $detalles;
                 

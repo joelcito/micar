@@ -36,20 +36,20 @@
                         <div class="col-md-4">
                             <div class="fv-row mb-7">
                                 <label class="required fw-semibold fs-6 mb-2">Nombres</label>
-                                <input type="text" class="form-control" required name="nombres" id="nombres">
+                                <input type="text" class="form-control" required name="nombres" id="nombres" required>
                                 <input type="hidden" name="cliente_id" id="cliente_id" value="0">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="fv-row mb-7">
-                                <label class="required fw-semibold fs-6 mb-2">Ap Paterno</label>
-                                <input type="text" class="form-control" required name="ap_paterno" id="ap_paterno">
+                                <label class="fw-semibold fs-6 mb-2">Ap Paterno</label>
+                                <input type="text" class="form-control" name="ap_paterno" id="ap_paterno">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="fv-row mb-7">
                                 <label class="required fw-semibold fs-6 mb-2">Ap Materno</label>
-                                <input type="text" class="form-control" required name="ap_materno" id="ap_materno">
+                                <input type="text" class="form-control"  name="ap_materno" id="ap_materno" required>
                             </div>
                         </div>
                     </div>
@@ -57,39 +57,39 @@
                         <div class="col-md-4">
                             <div class="fv-row mb-7">
                                 <label class="required fw-semibold fs-6 mb-2">Cedula</label>
-                                <input type="number" class="form-control" required name="cedula" id="cedula">
+                                <input type="number" class="form-control"  name="cedula" id="cedula" required>
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="fv-row mb-7">
-                                <label class="required fw-semibold fs-6 mb-2">Complemento</label>
+                                <label class="fw-semibold fs-6 mb-2">Complemento</label>
                                 <input type="text" class="form-control" name="complemento" id="complemento">
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="fv-row mb-7">
-                                <label class="required fw-semibold fs-6 mb-2">Nit</label>
-                                <input type="text" class="form-control" required name="nit" id="nit">
+                                <label class="fw-semibold fs-6 mb-2">Nit</label>
+                                <input type="text" class="form-control"  name="nit" id="nit">
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="fv-row mb-7">
-                                <label class="required fw-semibold fs-6 mb-2">Razon Social</label>
-                                <input type="text" class="form-control" required name="razon_social" id="razon_social">
+                                <label class="fw-semibold fs-6 mb-2">Razon Social</label>
+                                <input type="text" class="form-control"  name="razon_social" id="razon_social">
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-4">
                             <div class="fv-row mb-7">
-                                <label class="required fw-semibold fs-6 mb-2">Correo</label>
-                                <input type="email" class="form-control" required name="correo" id="correo">
+                                <label class="fw-semibold fs-6 mb-2">Correo</label>
+                                <input type="email" class="form-control"  name="correo" id="correo">
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="fv-row mb-7">
-                                <label class="required fw-semibold fs-6 mb-2">Celular</label>
-                                <input type="number" class="form-control" required name="celular" id="celular">
+                                <label class="fw-semibold fs-6 mb-2">Celular</label>
+                                <input type="number" class="form-control"  name="celular" id="celular">
                             </div>
                         </div>
                         <div class="col-md-5">
@@ -244,14 +244,14 @@
                         </div>
                         <div class="col-md-4">
                             <div class="fv-row mb-7">
-                                <label class="required fw-semibold fs-6 mb-2">COLOR</label>
-                                <input type="text" class="form-control" required name="color" id="color">
+                                <label class="fw-semibold fs-6 mb-2">COLOR</label>
+                                <input type="text" class="form-control" name="color" id="color">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="fv-row mb-7">
-                                <label class="required fw-semibold fs-6 mb-2">MARCA</label>
-                                <input type="text" class="form-control" required name="marca" id="marca">
+                                <label class="fw-semibold fs-6 mb-2">MARCA</label>
+                                <input type="text" class="form-control" name="marca" id="marca">
                             </div>
                         </div>
                     </div>
@@ -613,9 +613,32 @@
             })
 
             $('#buscar_placa, #buscar_cedula, #buscar_paterno, #buscar_materno, #buscar_nombre').on('keyup input', function() {
-                buscarVehiculo();
-                $('#table_vehiculos').show('toggle');
-                $('#detalle_ventas').hide('toggle');
+                var id = $(this).attr('id');
+                var valor = $(this).val().trim();
+                switch (id) {
+                    case 'buscar_placa':
+                        contadorPlaca = valor.length;
+                        break;
+                    case 'buscar_cedula':
+                        contadorCedula = valor.length;
+                        break;
+                    case 'buscar_paterno':
+                        contadorPaterno = valor.length;
+                        break;
+                    case 'buscar_materno':
+                        contadorMaterno = valor.length;
+                        break;
+                    case 'buscar_nombre':
+                        contadorNombre = valor.length;
+                        break;
+                    default:
+                        break;
+                }
+                if (contadorPlaca >= 3 || contadorCedula >= 3 || contadorPaterno >= 3 || contadorMaterno >= 3 || contadorNombre >= 3) {
+                    buscarVehiculo();
+                    $('#table_vehiculos').show('toggle');
+                    $('#detalle_ventas').hide('toggle');
+                }
             });
 
             // Agregar un evento para el enfoque (cuando el usuario hace clic en el campo)

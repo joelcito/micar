@@ -118,8 +118,46 @@ class PagoController extends Controller
     public function ajaxBuscarPorCobrar(Request $request){
         if($request->ajax()){
 
-            $facturas = Factura::where('estado_pago', 'Deuda')
-                                ->whereNull('estado')
+            // dd($request->all());
+
+            // $query = Factura::orderBy('id', 'desc');
+            $query = Factura::select('facturas.*')
+                            ->join('clientes', 'clientes.id', '=', 'facturas.cliente_id')
+                            ->join('vehiculos', 'vehiculos.id', '=', 'facturas.vehiculo_id');
+
+            if(!is_null($request->input('nombre'))){
+                $nombre = $request->input('nombre');
+                $query->where('clientes.nombres', $nombre);
+            }
+
+            if(!is_null($request->input('appaterno'))){
+                $appaterno = $request->input('appaterno');
+                $query->where('clientes.ap_paterno', $appaterno);
+            }
+
+            if(!is_null($request->input('apmaterno'))){
+                $apmaterno = $request->input('apmaterno');
+                $query->where('clientes.ap_materno', $apmaterno);
+            }
+
+            if(!is_null($request->input('cedula'))){
+                $cedula = $request->input('cedula');
+                $query->where('clientes.cedula', $cedula);
+            }
+
+            if(!is_null($request->input('placa'))){
+                $placa = $request->input('placa');
+                $query->where('vehiculos.placa', $placa);
+            }
+
+            if(!is_null($request->input('fecha_ini')) && !is_null($request->input('fecha_fin'))){
+                $fecha_ini = $request->input('fecha_ini');
+                $fecha_fin = $request->input('fecha_fin');
+                $query->whereBetween(DB::raw('LEFT(facturas.fecha, 10)'), [$fecha_ini, $fecha_fin]);
+            }
+
+            $facturas = $query->where('facturas.estado_pago', 'Deuda')
+                                ->whereNull('facturas.estado')
                                 ->get();
 
             // PARA VER SI HAY CAJA O NO
