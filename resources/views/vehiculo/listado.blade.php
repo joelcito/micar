@@ -612,9 +612,15 @@
                 $('#total').val(total)
             })
 
-            $('#buscar_placa, #buscar_cedula, #buscar_paterno, #buscar_materno, #buscar_nombre').on('keyup input', function() {
-                var id = $(this).attr('id');
-                var valor = $(this).val().trim();
+            // $('#buscar_placa, #buscar_cedula, #buscar_paterno, #buscar_materno, #buscar_nombre').on('keyup input', function() {
+            $('#buscar_placa, #buscar_cedula, #buscar_paterno, #buscar_materno, #buscar_nombre').on('keyup', function() {
+                var id              = $(this).attr('id');
+                var valor           = $(this).val().trim();
+                var contadorPlaca   = 0;
+                var contadorCedula  = 0;
+                var contadorPaterno = 0;
+                var contadorMaterno = 0;
+                var contadorNombre  = 0;
                 switch (id) {
                     case 'buscar_placa':
                         contadorPlaca = valor.length;
