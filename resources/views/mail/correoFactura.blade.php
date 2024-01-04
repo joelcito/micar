@@ -81,12 +81,6 @@
         <br>
         <hr>
         <br>
-        {{-- <div class="tituloFooter">
-            SOMOS ESPECIALISTAS EN LA FORMACION DE CONTADORES GENERALES
-        </div> --}}
-        {{-- <div class="line">
-            <a href="https://wa.link/wbeou8">WhatsApp</a> | <a href="https://www.facebook.com/EFGIPET">Facebook</a> | <a href="https://ef-gipet.edu.bo/">ef-gipet.edu.bo</a>
-        </div> --}}
     </div>
 </body>
 </html>
