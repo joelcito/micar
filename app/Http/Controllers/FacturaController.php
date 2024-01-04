@@ -1455,45 +1455,13 @@ class FacturaController extends Controller
         // Cargar el contenido de la vista del correo
         $templatePath = resource_path('views/mail/correoFactura.blade.php');
         $templateContent = file_get_contents($templatePath);
-        // ... Configura los datos del correo y la plantilla ...
-        // if($tipo === "basica"){
-        //     $monto = 0;
-        // }else if($tipo === "estandar"){
-        //     if($modalidad === "Mensual"){
-        //         $monto = 200;
-        //         $qr = Informacion::find(14);
-        //         $qrImg = $qr->descripcion;
-        //     }
-        //     else{
-        //         $monto = 2000;
-        //         $qr = Informacion::find(15);
-        //         $qrImg = $qr->descripcion;
-        //     }
-        // }else if($tipo === "superior"){
-        //     if($modalidad === "Mensual"){
-        //         $monto = 500;
-        //         $qr = Informacion::find(16);
-        //         $qrImg = $qr->descripcion;
-        //     }
-        //     else{
-        //         $monto = 5000;
-        //         $qr = Informacion::find(17);
-        //         $qrImg = $qr->descripcion;
-        //     }
-        // }
         $fecha = date('d/m/Y H:m:s');
         $data = [
             'title'     => 'Bienvenido a mi aplicación',
             'content'   => 'Gracias por unirte a nosotros. Esperamos que disfrutes de tu tiempo aquí.',
             'name'      => $nombre,
             'number'    => $numero,
-            'date'  => $fecha,
-            // 'tipo'      => strtoupper($tipo),
-            // 'modalidad' => strtoupper($modalidad),
-            // 'qr'        => $qrImg,
-            // 'monto'     => $monto,
-            // 'fecha'     => $fecha,
-            // 'url'     => url('vendedor/inicio'),
+            'date'  => $fecha
         ];
         foreach ($data as $key => $value)
             $templateContent = str_replace('{{ $' . $key . ' }}', $value, $templateContent);
@@ -1533,6 +1501,33 @@ class FacturaController extends Controller
             $mail->Subject = $subject;
             $mail->Body    = $templateContent;
 
+            $factura       = Factura::find($factura_id);
+            $xml           = $factura['productos_xml'];
+            $archivoXML    = new SimpleXMLElement($xml);
+            $cabeza        = (array) $archivoXML;
+            $cuf           = (string)$cabeza['cabecera']->cuf;
+            $numeroFactura = (string)$cabeza['cabecera']->numeroFactura;
+              // Genera el texto para el código QR
+            $textoQR = 'https://pilotosiat.impuestos.gob.bo/consulta/QR?nit=5427648016&cuf='.$cuf.'&numero='.$numeroFactura.'&t=2';
+              // Genera la ruta temporal para guardar la imagen del código QR
+            $rutaImagenQR = storage_path('app/public/qr_code.png');
+              // Genera el código QR y guarda la imagen en la ruta temporal
+            QrCode::generate($textoQR, $rutaImagenQR);
+            $pdf = PDF::loadView('pdf.generaPdfFacturaNew', compact('factura', 'archivoXML','rutaImagenQR'))->setPaper('letter');
+
+            // Genera la ruta donde se guardará el archivo PDF
+            $rutaPDF = storage_path('app/public/factura.pdf');
+            // Guarda el PDF en la ruta especificada
+            $pdf->save($rutaPDF);
+            // $pdfPath = "assets/docs/facturapdf.pdf";
+            $xmlPath = "assets/docs/facturaxml.xml";
+
+
+
+            $mail->addAttachment($rutaPDF, 'Factura.pdf'); // Adjuntar archivo PDF
+            $mail->addAttachment($xmlPath, 'Factura.xml'); // Adjuntar archivo XML
+
+
             $mail->send();
 
             // return 'Correo enviado correctamente';
@@ -1544,11 +1539,6 @@ class FacturaController extends Controller
             $data['msg'] = 'No se pudo enviar el correo: ' . $mail->ErrorInfo;
             // return 'No se pudo enviar el correo: ' . $mail->ErrorInfo;
         }
-
-        // dd($data);
-
-
-
 
 
 
