@@ -12,6 +12,7 @@
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
         "maatwebsite/excel": "^3.1",
+        "phpmailer/phpmailer": "^6.9",
         "phpoffice/phpspreadsheet": "^1.29",
         "robrichards/xmlseclibs": "^3.1",
         "simplesoftwareio/simple-qrcode": "^4.2"

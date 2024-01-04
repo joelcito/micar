@@ -23,6 +23,12 @@ use PDF;
 use Illuminate\Support\Str;
 use PharData;
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
+
+
 class FacturaController extends Controller
 {
     /**
@@ -346,7 +352,9 @@ class FacturaController extends Controller
 
                     }else{
                         $data['estado'] = "RECHAZADA";
-                        $data['msg'] = $for->resultado->RespuestaServicioFacturacion->mensajesList->descripcion;
+                        // dd($for);
+                        // $data['msg'] = $for->resultado->RespuestaServicioFacturacion->mensajesList->descripcion;
+                        $data['msg'] = json_encode($for->resultado->RespuestaServicioFacturacion->mensajesList);
                     }
 
                     // dd($for);
@@ -1438,43 +1446,148 @@ class FacturaController extends Controller
 
     protected function enviaCorreo($correo, $nombre, $numero, $fecha, $factura_id){
 
-        $factura = Factura::find($factura_id);
 
-        $xml = $factura['productos_xml'];
+        // ********************************  ESTE SI FUNCIONA AHROA *******************
 
-        $archivoXML = new SimpleXMLElement($xml);
+        $to         = $correo;
+        $subject    = 'FACTURA ELECTRONICA EN LINEA MICAR';
 
-        $cabeza = (array) $archivoXML;
+        // Cargar el contenido de la vista del correo
+        $templatePath = resource_path('views/mail/correoFactura.blade.php');
+        $templateContent = file_get_contents($templatePath);
+        // ... Configura los datos del correo y la plantilla ...
+        // if($tipo === "basica"){
+        //     $monto = 0;
+        // }else if($tipo === "estandar"){
+        //     if($modalidad === "Mensual"){
+        //         $monto = 200;
+        //         $qr = Informacion::find(14);
+        //         $qrImg = $qr->descripcion;
+        //     }
+        //     else{
+        //         $monto = 2000;
+        //         $qr = Informacion::find(15);
+        //         $qrImg = $qr->descripcion;
+        //     }
+        // }else if($tipo === "superior"){
+        //     if($modalidad === "Mensual"){
+        //         $monto = 500;
+        //         $qr = Informacion::find(16);
+        //         $qrImg = $qr->descripcion;
+        //     }
+        //     else{
+        //         $monto = 5000;
+        //         $qr = Informacion::find(17);
+        //         $qrImg = $qr->descripcion;
+        //     }
+        // }
+        $fecha = date('d/m/Y H:m:s');
+        $data = [
+            'title'     => 'Bienvenido a mi aplicación',
+            'content'   => 'Gracias por unirte a nosotros. Esperamos que disfrutes de tu tiempo aquí.',
+            'name'      => $nombre,
+            'number'    => $numero,
+            'date'  => $fecha,
+            // 'tipo'      => strtoupper($tipo),
+            // 'modalidad' => strtoupper($modalidad),
+            // 'qr'        => $qrImg,
+            // 'monto'     => $monto,
+            // 'fecha'     => $fecha,
+            // 'url'     => url('vendedor/inicio'),
+        ];
+        foreach ($data as $key => $value)
+            $templateContent = str_replace('{{ $' . $key . ' }}', $value, $templateContent);
 
-        $cuf            = (string)$cabeza['cabecera']->cuf;
-        $numeroFactura  = (string)$cabeza['cabecera']->numeroFactura;
 
-        // Genera el texto para el código QR
-        $textoQR = 'https://pilotosiat.impuestos.gob.bo/consulta/QR?nit=5427648016&cuf='.$cuf.'&numero='.$numeroFactura.'&t=2';
-        // Genera la ruta temporal para guardar la imagen del código QR
-        $rutaImagenQR = storage_path('app/public/qr_code.png');
-        // Genera el código QR y guarda la imagen en la ruta temporal
-        QrCode::generate($textoQR, $rutaImagenQR);
-        $pdf = PDF::loadView('pdf.generaPdfFacturaNew', compact('factura', 'archivoXML','rutaImagenQR'))->setPaper('letter');
+        $mail = new PHPMailer(true);
 
-        // Genera la ruta donde se guardará el archivo PDF
-        $rutaPDF = storage_path('app/public/factura.pdf');
-        // Guarda el PDF en la ruta especificada
-        $pdf->save($rutaPDF);
+        // Configuración de los parámetros SMTP
+        $smtpHost       = 'mail.micarautolavado.com';
+        $smtpPort       =  465;
+        // $smtpUsername   = 'suscripcion@comercio-latino.com';
+        // $smtpPassword   = 'Fc;D&0@A7(T%';
+        $smtpUsername   = 'admin@micarautolavado.com';
+        $smtpPassword   = '-Z{DjF[D@y8G';
 
-        // $pdfPath = "assets/docs/facturapdf.pdf";
-        $xmlPath = "assets/docs/facturaxml.xml";
+        // $smtpUsername   = 'sistemas@comercio-latino.com';
+        // $smtpPassword   = 'j@xKuZ(65VNK';
 
-        $mail = new EnviaCorreo($nombre, $numero, $fecha);
-        // $mail->attach($pdfPath, ['as' => 'Factura.pdf'])
-        $mail->attach($rutaPDF, ['as' => 'Factura.pdf'])
-            ->attach($xmlPath, ['as' => 'Factura.xml']);
+        try {
+            // $mail->isSMTP();
+            // $mail->Host         = $smtpHost;
+            // $mail->Port         = $smtpPort;
+            // $mail->SMTPAuth     = true;
+            // $mail->Username     = $smtpUsername;
+            // $mail->Password     = $smtpPassword;
+            // $mail->SMTPSecure   = PHPMailer::ENCRYPTION_STARTTLS; no va este
+            // $mail->SMTPSecure   = PHPMailer::ENCRYPTION_SMTPS;
+            // ... Configura los parámetros SMTP ...
+            $mail->setFrom('admin@micarautolavado.com', 'MI CAR AUTO LAVADO');
+            $mail->addAddress($to);
 
-        $response = Mail::to($correo)->send($mail);
+            // Agregar direcciones de correo electrónico en copia (CC)
+            // $mail->addCC('admin@comercio-latino.com', 'Administracion Comercio Latino');
+            // $mail->addCC('soporte@comercio-latino.com', 'Soporte Comercio Latino');
 
-        // Elimina el archivo PDF guardado en la ruta temporal
-        Storage::delete($rutaPDF);
-        // dd($response);
+            $mail->isHTML(true);
+            $mail->Subject = $subject;
+            $mail->Body    = $templateContent;
+
+            $mail->send();
+
+            // return 'Correo enviado correctamente';
+            $data['estado'] = 'success';
+            $data['msg']    = 'Correo enviado correctamente';
+
+        } catch (Exception $e) {
+            $data['estado'] = 'error';
+            $data['msg'] = 'No se pudo enviar el correo: ' . $mail->ErrorInfo;
+            // return 'No se pudo enviar el correo: ' . $mail->ErrorInfo;
+        }
+
+        // dd($data);
+
+
+
+
+
+
+        // *****************ESTO ES EL OTRO METODO QUE NO SIRVE CHEEE *****************
+        // $factura = Factura::find($factura_id);
+
+        // $xml = $factura['productos_xml'];
+
+        // $archivoXML = new SimpleXMLElement($xml);
+
+        // $cabeza = (array) $archivoXML;
+
+        // $cuf            = (string)$cabeza['cabecera']->cuf;
+        // $numeroFactura  = (string)$cabeza['cabecera']->numeroFactura;
+
+        // // Genera el texto para el código QR
+        // $textoQR = 'https://pilotosiat.impuestos.gob.bo/consulta/QR?nit=5427648016&cuf='.$cuf.'&numero='.$numeroFactura.'&t=2';
+        // // Genera la ruta temporal para guardar la imagen del código QR
+        // $rutaImagenQR = storage_path('app/public/qr_code.png');
+        // // Genera el código QR y guarda la imagen en la ruta temporal
+        // QrCode::generate($textoQR, $rutaImagenQR);
+        // $pdf = PDF::loadView('pdf.generaPdfFacturaNew', compact('factura', 'archivoXML','rutaImagenQR'))->setPaper('letter');
+
+        // // Genera la ruta donde se guardará el archivo PDF
+        // $rutaPDF = storage_path('app/public/factura.pdf');
+        // // Guarda el PDF en la ruta especificada
+        // $pdf->save($rutaPDF);
+
+        // // $pdfPath = "assets/docs/facturapdf.pdf";
+        // $xmlPath = "assets/docs/facturaxml.xml";
+
+        // $mail = new EnviaCorreo($nombre, $numero, $fecha);
+        // $mail->attach($rutaPDF, ['as' => 'Factura.pdf'])
+        //     ->attach($xmlPath, ['as' => 'Factura.xml']);
+
+        // $response = Mail::to($correo)->send($mail);
+
+        // // Elimina el archivo PDF guardado en la ruta temporal
+        // Storage::delete($rutaPDF);
     }
 
     protected function enviaCorreoAnulacion($correo, $nombre, $numero, $fecha){
