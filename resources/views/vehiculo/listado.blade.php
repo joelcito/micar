@@ -181,7 +181,7 @@
 
                 <div class="row">
                     <div class="col-md-12">
-                        <button class="btn btn-success w-100 btn-sm" onclick="registrarCajaApertura()">Gurdar</button>
+                        <button class="btn btn-success w-100 btn-sm" id="button_abrir_caja" onclick="registrarCajaApertura()"><i class="fa fa-spinner fa-spin" style="display:none;"></i> Guardar</button>
                     </div>
                 </div>
             </div>
@@ -318,7 +318,7 @@
                 </form>
                 <div class="row">
                     <div class="col-md-12">
-                        <button class="btn btn-success w-100 btn-sm" onclick="registrarCajaCierre()">Gurdar</button>
+                        <button class="btn btn-success w-100 btn-sm" id="button_cierre_caja" onclick="registrarCajaCierre()"><i class="fa fa-spinner fa-spin" style="display:none;"></i> Gurdar</button>
                     </div>
                 </div>
             </div>
@@ -1439,6 +1439,14 @@
         function registrarCajaApertura(){
             if($("#formularioAperturaCaja")[0].checkValidity()){
                 let datos = $("#formularioAperturaCaja").serializeArray();
+
+                // Obtén el botón y el icono de carga
+                var boton = $("#button_abrir_caja");
+                var iconoCarga = boton.find("i");
+                // Deshabilita el botón y muestra el icono de carga
+                boton.attr("disabled", true);
+                iconoCarga.show();
+
                 $.ajax({
                     url: "{{ url('pago/aperturaCaja') }}",
                     data: datos,
@@ -1474,6 +1482,14 @@
         function registrarCajaCierre(){
             if($("#formularioCierreCaja")[0].checkValidity()){
                 let datos = $("#formularioCierreCaja").serializeArray();
+
+                // Obtén el botón y el icono de carga
+                var boton = $("#button_cierre_caja");
+                var iconoCarga = boton.find("i");
+                // Deshabilita el botón y muestra el icono de carga
+                boton.attr("disabled", true);
+                iconoCarga.show();
+
                 $.ajax({
                     url: "{{ url('pago/cierreCaja') }}",
                     data: datos,

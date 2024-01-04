@@ -28,13 +28,15 @@ class ServicioController extends Controller
                 $servicio->modificador_id = Auth::user()->id;
             }
 
-            $servicio->descripcion     = $request->input('descripcion');
-            $servicio->unidad_venta    = $request->input('unidad_venta');
-            $servicio->precio          = $request->input('precio');
-            $servicio->categoria_id    = $request->input('categoria_id');
-            $servicio->codigoActividad = $request->input('cod_actividad');
-            $servicio->codigoProducto  = $request->input('cod_producto');
-            $servicio->unidadMedida    = $request->input('uni_medida');
+            $servicio->descripcion      = $request->input('descripcion');
+            $servicio->unidad_venta     = $request->input('unidad_venta');
+            $servicio->precio           = $request->input('precio');
+            $servicio->categoria_id     = $request->input('categoria_id');
+            $servicio->codigoActividad  = $request->input('cod_actividad');
+            $servicio->codigoProducto   = $request->input('cod_producto');
+            $servicio->unidadMedida     = $request->input('uni_medida');
+            $servicio->liquidacion      = $request->input('liquidacion');
+            $servicio->tipo_liquidacion = $request->input('tipo_liquidacion');
 
             $servicio->save();
 

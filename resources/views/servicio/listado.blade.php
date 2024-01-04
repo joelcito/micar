@@ -55,16 +55,32 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-3">
                                 <div class="fv-row mb-7">
                                     <label class="required fw-semibold fs-6 mb-2">Unidad de venta</label>
                                     <input type="text" name="unidad_venta" id="unidad_venta" class="form-control form-control-solid mb-3 mb-lg-0" required/>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-3">
                                 <div class="fv-row mb-7">
                                     <label class="required fw-semibold fs-6 mb-2">Precio</label>
                                     <input type="number" name="precio" id="precio" class="form-control form-control-solid mb-3 mb-lg-0" required/>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="fv-row mb-7">
+                                    <label class="required fw-semibold fs-6 mb-2">Liquidacion</label>
+                                    <input type="number" name="liquidacion" id="liquidacion" class="form-control form-control-solid mb-3 mb-lg-0" required/>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="fv-row mb-7">
+                                    <label class="required fw-semibold fs-6 mb-2">Tipo Liquidacion</label>
+                                    <select name="tipo_liquidacion" id="tipo_liquidacion" class="form-control">
+                                        <option value="depende">depende</option>
+                                        <option value="fijo">fijo</option>
+                                        <option value="porcentaje">porcentaje</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -196,10 +212,12 @@
             $('#cod_actividad').val('')
             $('#cod_producto').val('')
             $('#uni_medida').val('')
+            $('#liquidacion').val(0)
+            $('#tipo_liquidacion').val('')
             $('#kt_modal_add_servicio').modal('show');
         }
 
-        function editarServicio(servicio, descripcion, categoria, unidad, precio, cod_actividad, cod_producto, uni_medida){
+        function editarServicio(servicio, descripcion, categoria, unidad, precio, cod_actividad, cod_producto, uni_medida, liquidacion, tipo_liquidacion){
             $('#servicio_id').val(servicio)
             $('#descripcion').val(descripcion)
             $('#categoria_id').val(categoria)
@@ -208,6 +226,8 @@
             $('#cod_actividad').val(cod_actividad)
             $('#cod_producto').val(cod_producto)
             $('#uni_medida').val(uni_medida)
+            $('#liquidacion').val(liquidacion)
+            $('#tipo_liquidacion').val(tipo_liquidacion)
 
             $('#kt_modal_add_servicio').modal('show');
         }
