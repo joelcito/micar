@@ -203,6 +203,7 @@ class ServicioController extends Controller
 
     public function agregarProdcuto(Request $request){
         if($request->ajax()){
+
             $producto_ud = $request->input('new_producto');
             $servicio               = $producto_ud == 0 ?  new Servicio() : Servicio::find($producto_ud);
             $servicio->descripcion  = $request->input('new_descripcion');
@@ -210,6 +211,16 @@ class ServicioController extends Controller
             $servicio->precio       = $request->input('new_precio');
             $servicio->estado       = 'producto';
             $servicio->save();
+
+            if($producto_ud == 0){
+                $movimiento             = new Movimiento();
+                $movimiento->creador_id = Auth::user()->id;
+                $movimiento->servicio_id = $servicio->id;
+                $movimiento->ingreso = $request->input('new_cantidad');
+                $movimiento->fecha = date('Y-m-d H:i:s');
+                $movimiento->descripcion = "INGRESO";
+                $movimiento->save();
+            }
 
             $data['estado'] = 'success';
         }else{

@@ -1606,6 +1606,8 @@ class FacturaController extends Controller
                                 ->where('detalles.estado',"paraPagar")
                                 ->where('detalles.vehiculo_id',$vehiculo_d)
                                 ->get();
+                                // ->toSql();
+                                // dd($servicios, $vehiculo_d, $request->all());
 
             $factura                      = new Factura();
             $factura->creador_id          = Auth::user()->id;

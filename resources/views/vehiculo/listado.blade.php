@@ -427,12 +427,12 @@
                 </div>
                 <div class="col serviPro" style="display: none">
                     <label class="required fw-semibold fs-6 mb-2">Precio</label>
-                    <input type="text" readonly class="form-control" id="precio" name="precio" required>
+                    <input type="text" readonly class="form-control" id="precio" name="precio" required onchange="multiplicarPrecioAlTolta()">
                 </div>
 
                 <div class="col-md-2 serviPro" style="display: none">
                     <label class="required fw-semibold fs-6 mb-2">Cantidad Venta</label>
-                    <input type="number" class="form-control" id="cantidad" name="cantidad" min="1" required autocomplete="off">
+                    <input type="number" class="form-control" id="cantidad" name="cantidad" min="1" required autocomplete="off" onchange="multiplicarPrecioAlTolta()">
                 </div>
                 <div class="col-md-2 serviPro" style="display: none">
                     <label class="required fw-semibold fs-6 mb-2">Total</label>
@@ -457,7 +457,7 @@
                 </div>
 
                 <div class="col-md-6 serviPro" style="display: none">
-                    <button class="btn btn-success btn-icon btn-sm w-100 mt-10" type="button" onclick="agregarVenta()"><i class="fa fa-car-alt"></i>  Agregar</button>
+                    <button class="btn btn-success btn-icon btn-sm w-100 mt-10" type="button" id="btnAgregarProductoChe" onclick="agregarVenta()"><i class="fa fa-car-alt"></i>  Agregar</button>
                 </div>
             </div>
         </form>
@@ -524,7 +524,7 @@
                         <input type="number" class="form-control" id="numero_factura" value="{{ $numFac }}" readonly>
                     </div>
                     <div class="col-md-3">
-                        <label for="">Tipo Docuemnto</label>
+                        <label for="">Tipo Documento</label>
                         <select name="tipo_documento" id="tipo_documento" class="form-control" onchange="verificaNit()" required>
                             <option value="">SELECCIONE</option>
                             @foreach ($tipoDocumento as $te)
@@ -814,6 +814,16 @@
                             $('.serviPro').show('toggle');
                             $("#lavador_id").prop("required", false);
                             $('.serviAlma').show('toggle');
+
+                            if(json.id == 146 || json.id == 147 || json.id == 148)
+                                $('#precio').prop('readonly', false);
+                            else
+                                $('#precio').prop('readonly', true);
+
+                            if(data.cantidaAlacen <= 0)
+                                $('#btnAgregarProductoChe').prop('disabled', true);
+                            else
+                                $('#btnAgregarProductoChe').prop('disabled', false);
                         }
                     }
                 });
@@ -1585,6 +1595,11 @@
         function cancelarguardarCliente(){
             $('#modal_registro_usuario').modal('hide');
             $('#modal_registro_vehiculo').modal('show');
+        }
+
+        function multiplicarPrecioAlTolta(){
+            let valor = $('#precio').val();
+            $('#total').val(valor*$('#cantidad').val())
         }
 
     </script>

@@ -153,27 +153,27 @@ class VehiculoController extends Controller
 
     }
 
-    public function eliminarVenta(Request $request){
-        if($request->ajax()){
-            Venta::destroy($request->input('id'));
-            $data['estado'] = 'success';
-            $pago_id = $request->input('pago');
-            $data['pago_id'] = $pago_id;
-            $data['listado_ventas'] = $this->listadoArrayVentas($pago_id);
+    // public function eliminarVenta(Request $request){
+    //     if($request->ajax()){
+    //         Venta::destroy($request->input('id'));
+    //         $data['estado'] = 'success';
+    //         $pago_id = $request->input('pago');
+    //         $data['pago_id'] = $pago_id;
+    //         $data['listado_ventas'] = $this->listadoArrayVentas($pago_id);
 
-        }else{
-            $data['estado'] = 'error';
-        }
+    //     }else{
+    //         $data['estado'] = 'error';
+    //     }
 
-        return $data;
-    }
+    //     return $data;
+    // }
 
-    public function imprimeNota(Request $request, $pago_id){
+    // public function imprimeNota(Request $request, $pago_id){
 
-        $ventas = Venta::where('pago_id', $pago_id)->get();
+    //     $ventas = Venta::where('pago_id', $pago_id)->get();
 
-        return view('vehiculo.imprimeNota')->with(compact('ventas'));
-    }
+    //     return view('vehiculo.imprimeNota')->with(compact('ventas'));
+    // }
 
     public function buscarVehiculo(Request $request){
         if($request->ajax()){

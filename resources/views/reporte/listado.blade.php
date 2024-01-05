@@ -164,7 +164,7 @@
         })
 
         $( document ).ready(function() {
-            ajaxListado();
+            // ajaxListado();
         });
 
         function generarRepoCuentasCobrar(){

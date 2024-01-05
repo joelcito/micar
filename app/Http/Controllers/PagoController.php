@@ -687,7 +687,11 @@ class PagoController extends Controller
                                 'liquidacion_lavadores.liquidacion as liquidacionLl'
                                 )
                         ->join('servicios', 'detalles.servicio_id', '=', 'servicios.id')
-                        ->leftJoin('liquidacion_lavadores', 'detalles.servicio_id', '=', 'liquidacion_lavadores.servicio_id')
+                        ->leftjoin('liquidacion_lavadores', function($join){
+                            $join->on('detalles.servicio_id', '=', 'liquidacion_lavadores.servicio_id')
+                            ->on('detalles.lavador_id', '=', 'liquidacion_lavadores.lavador_id');
+                        })
+                        // ->leftJoin('liquidacion_lavadores', 'detalles.servicio_id', '=', 'liquidacion_lavadores.servicio_id')
                         ->whereIn('detalles.id', json_decode($liquidacion_vendedor_pago->detalles_id))
                         ->groupBy('detalles.servicio_id', 'liquidacion_lavadores.tipo_liquidacion', 'liquidacion_lavadores.liquidacion')
                         ->get();

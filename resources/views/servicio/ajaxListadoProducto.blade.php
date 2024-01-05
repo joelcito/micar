@@ -31,6 +31,8 @@
                         $cantidadIngreso = $p->movimientos->sum('ingreso');
                         $cantidadSalida = $p->movimientos->sum('salida');
                         $cantidadEnAlmacen = $cantidadIngreso - $cantidadSalida;
+                        // echo "<hr>".$cantidadIngreso."<br>";
+                        // echo $cantidadSalida;
                     @endphp
                     <a class="text-gray-800 text-hover-primary mb-1">{{ $cantidadEnAlmacen }}</a>
                 </td>
