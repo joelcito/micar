@@ -73,6 +73,8 @@
 <body>
     <header>
 
+        {{-- @dd($servicios[0]->movimientos->where('fecha', '2024-01-07')->sum('ingreso')) --}}
+
     </header>
     <main>
         <table width="100%">
@@ -85,10 +87,10 @@
                     </span>
                     <br>
                     <span style="font-size: 8pt;">
-
+                        DESDE: {{ $fecha_ini }}
                     </span>
                     <span style="font-size: 8pt;">
-                        FECHA: {{ date('d/m/Y') }}
+                        AL: {{ $fecha_fin }}
                     </span>
                 </td>
             </tr>
@@ -105,13 +107,14 @@
             <thead>
                 <tr>
                     <th>Nº</th>
-                    <th class="textCentrado" width="285px">DESCRIPCION</th>
+                    <th class="textCentrado" width="225px">DESCRIPCION</th>
                     <th class="textCentrado" width="60px">ALMACEN</th>
+                    <th class="textCentrado" width="60px">INGRESO</th>
                     <th class="textCentrado" width="60px">SALIDAS</th>
                     <th class="textCentrado" width="60px">SALDO ACTUAL</th>
                     <th class="textCentrado" width="60px">PRECIO VENTA</th>
                     <th class="textCentrado" width="60px">PRECIO VENTA TOAL</th>
-                    <th class="textCentrado" width="108px">OBSERVACION</th>
+                    {{-- <th class="textCentrado" width="108px">OBSERVACION</th> --}}
                 </tr>
             </thead>
             <tbody>
@@ -124,12 +127,27 @@
                 <tr>
                     <td>{{ $s->id }}</td>
                     <td>{{ $s->descripcion }}</td>
-                    <td>{{ $s->movimientos->sum('ingreso') }}</td>
-                    <td>{{ $s->movimientos->sum('salida') }}</td>
-                    <td>{{ $s->movimientos->sum('ingreso') - $s->movimientos->sum('salida') }}</td>
+                    <td>
+                        @php
+                            $ingresoFecha = $s->movimientos->whereBetween('fecha', [$fecha_ini." 00:00:00", $fecha_fin." 23:59:59"])
+                                                            ->sum('ingreso');
+                            $salidaFecha = $s->movimientos->whereBetween('fecha', [$fecha_ini." 00:00:00", $fecha_fin." 23:59:59"])
+                                                            ->sum('salida');
+
+                            $ingresoFechaNot = $s->movimientos->where('fecha', '<',$fecha_ini)
+                                                                ->whereNotBetween('fecha', [$fecha_ini." 00:00:00", $fecha_fin." 23:59:59"])
+                                                                ->sum('ingreso');
+                            $salidaFechaNot = $s->movimientos->where('fecha', '<',$fecha_ini)
+                                                                ->whereNotBetween('fecha', [$fecha_ini." 00:00:00", $fecha_fin." 23:59:59"])
+                                                                ->sum('salida');
+                        @endphp
+                        {{ $ingresoFechaNot - $salidaFechaNot }}
+                    </td>
+                    <td>{{ $ingresoFecha }}</td>
+                    <td>{{ $salidaFecha }}</td>
+                    <td>{{ ($ingresoFecha - $salidaFecha) + ($ingresoFechaNot - $salidaFechaNot) }}</td>
                     <td>{{ $s->precio }}</td>
-                    <td>{{ (int)($s->movimientos->sum('ingreso') - $s->movimientos->sum('salida')) * (int)$s->precio }}</td>
-                    <td>{{ $s->desMov }}</td>
+                    <td>{{ (int)($ingresoFecha - $salidaFecha) + ($ingresoFechaNot - $salidaFechaNot) * (int)$s->precio }}</td>
                 </tr>
                 @endforeach
             </tbody>

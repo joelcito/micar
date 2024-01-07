@@ -50,7 +50,7 @@
                     </div>
                 </div>
                 <div class="card-body py-4">
-                    <form action="{{ url('reporte/reporteInventario') }}" method="POST" target="_blank">
+                    <form action="{{ url('reporte/reporteInventarioExcel') }}" method="POST" target="_blank">
                         @csrf
                         <div class="row">
                             <div class="col-md-6">
@@ -67,9 +67,14 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <div class="card-body py-4">
-                                    <button class="btn btn-block btn-success btn-sm w-100" type="submit">GENERAR</button>
+                                    <button class="btn btn-block btn-danger btn-sm w-100" type="submit">GENERAR PDF <i class="fa fa-file-pdf"></i></button>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card-body py-4">
+                                    <button class="btn btn-block btn-success btn-sm w-100" type="submit">GENERAR EXCEL <i class="fa fa-file-excel"></i></button>
                                 </div>
                             </div>
                         </div>

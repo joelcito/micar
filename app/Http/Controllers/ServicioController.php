@@ -109,7 +109,7 @@ class ServicioController extends Controller
             $movimiento->creador_id  = Auth::user()->id;
             $movimiento->servicio_id = $servicio_id;
 
-            if($request->input('ingreso')){
+            if($request->input('tipo') == 'ingreso'){
                 $movimiento->ingreso     = $request->input('cantidad');
             }else{
                 $movimiento->salida     = $request->input('cantidad');

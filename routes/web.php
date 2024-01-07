@@ -216,6 +216,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/listado', [ReporteController::class, 'listado']);
         Route::post('/reporteCuentaPorCobrar', [ReporteController::class, 'reporteCuentaPorCobrar']);
         Route::post('/reporteInventario', [ReporteController::class, 'reporteInventario']);
+        Route::post('/reporteInventarioExcel', [ReporteController::class, 'reporteInventarioExcel']);
         Route::post('/reporteInformeVenta', [ReporteController::class, 'reporteInformeVenta']);
         Route::post('/reporteLibroVenta', [ReporteController::class, 'reporteLibroVenta']);
     });
