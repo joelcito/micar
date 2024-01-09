@@ -815,7 +815,7 @@
                             $("#lavador_id").prop("required", false);
                             $('.serviAlma').show('toggle');
 
-                            if(json.id == 146 || json.id == 147 || json.id == 148)
+                            if(json.id == 213 || json.id == 214 || json.id == 215)
                                 $('#precio').prop('readonly', false);
                             else
                                 $('#precio').prop('readonly', true);
