@@ -49,7 +49,7 @@
                         <div class="col-md-4">
                             <div class="fv-row mb-7">
                                 <label class="required fw-semibold fs-6 mb-2">Ap Materno</label>
-                                <input type="text" class="form-control"  name="ap_materno" id="ap_materno" required>
+                                <input type="text" class="form-control"  name="ap_materno" id="ap_materno">
                             </div>
                         </div>
                     </div>
@@ -57,7 +57,7 @@
                         <div class="col-md-4">
                             <div class="fv-row mb-7">
                                 <label class="required fw-semibold fs-6 mb-2">Cedula</label>
-                                <input type="number" class="form-control"  name="cedula" id="cedula" required>
+                                <input type="number" class="form-control"  name="cedula" id="cedula">
                             </div>
                         </div>
                         <div class="col-md-2">
