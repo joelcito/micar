@@ -341,13 +341,13 @@ class FacturaController extends Controller
                         // ***************** ENVIAMOS EL CORREO DE LA FACTURA *****************
                         if($swFacturaEnvio){
                             $nombre = $cliente->nombres." ".$cliente->ap_paterno." ".$cliente->ap_materno;
-                            $this->enviaCorreo(
-                                $cliente->correo,
-                                $nombre,
-                                $facturaVerdad->numero,
-                                $facturaVerdad->fecha,
-                                $facturaVerdad->id
-                            );
+                            // $this->enviaCorreo(
+                            //     $cliente->correo,
+                            //     $nombre,
+                            //     $facturaVerdad->numero,
+                            //     $facturaVerdad->fecha,
+                            //     $facturaVerdad->id
+                            // );
                         }
 
                     }else{
