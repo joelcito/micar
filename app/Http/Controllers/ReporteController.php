@@ -10,6 +10,7 @@ use PDF;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Closure;
 
 class ReporteController extends Controller
 {
@@ -359,5 +360,162 @@ class ReporteController extends Controller
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment; filename="' . urlencode($fileName) . '"');
         $writer->save('php://output');
+    }
+
+    public function reporteInventarioGeneralSalida(Request $request){
+
+        // dd($request->all());
+
+        $fecha_ini = $request->input('fecha_ini');
+        $fecha_fin = $request->input('fecha_fin');
+
+        $consulta = DB::table(DB::raw('(SELECT DISTINCT servicio_id FROM movimientos) as Servicios'))
+            ->leftJoin('movimientos as m', function ($join) use ($fecha_ini, $fecha_fin){
+                $join->on('Servicios.servicio_id', '=', 'm.servicio_id')
+                    // ->whereBetween(DB::raw('LEFT(m.fecha, 10)'), ['2024-01-17', '2024-01-19']);
+                    ->whereBetween(DB::raw('LEFT(m.fecha, 10)'), [$fecha_ini, $fecha_fin]);
+            })
+            ->select('Servicios.servicio_id', 'm.fecha', 'm.descripcion',DB::raw('COALESCE(SUM(CASE WHEN m.descripcion = "VENTA" THEN m.salida ELSE 0 END), 0) AS cantidad_salida'))
+            ->groupBy('Servicios.servicio_id', 'm.fecha', 'm.descripcion')
+            ->orderBy('Servicios.servicio_id')
+            ->orderBy('m.fecha')
+            ->get();
+
+            // -******* GENERECION DEL EXCEL -*******
+        $fileName = 'reporte_inventario_salidas.xlsx';
+        // return Excel::download(new CertificadoExport($carrera_persona_id), 'certificado.xlsx');
+        $spreadsheet = new Spreadsheet();
+
+        $sheet = $spreadsheet->getActiveSheet();
+
+        $sheet->setCellValue('B1', "REPORTE DE INVENTARIO INGRESOS Y SALIDAS");
+
+        $sheet->setCellValue('A3', "DESDE $fecha_ini HASTA $fecha_fin");
+
+        $sheet->setCellValue('A5', 'No');
+        $sheet->setCellValue('B5', 'PRODUCTO');
+        $sheet->setCellValue('C5', 'SALIDA');
+        $sheet->setCellValue('D5', 'FECHA');
+        $sheet->setCellValue('E5', 'PRECIO');
+        $sheet->setCellValue('F5', 'OBSERVACION');
+        // $sheet->setCellValue('G5', 'PRECIO VENTA');
+        // $sheet->setCellValue('H5', 'PRECIO VENTA TOTAL');
+
+        $contadorFilas = 6;
+
+        foreach($consulta as $key => $s){
+
+            $servicio = Servicio::find($s->servicio_id);
+
+            $sheet->setCellValue("A$contadorFilas", ($key + 1));
+            $sheet->setCellValue("B$contadorFilas", $servicio->descripcion);
+            $sheet->setCellValue("C$contadorFilas", $s->cantidad_salida);
+            $sheet->setCellValue("D$contadorFilas", $s->fecha);
+            $sheet->setCellValue("E$contadorFilas", $servicio->precio);
+            $sheet->setCellValue("F$contadorFilas", $s->descripcion);
+            // $sheet->setCellValue("G$contadorFilas", $s->precio);
+            // $sheet->setCellValue("H$contadorFilas", (int)($ingresoFecha - $salidaFecha) + ($ingresoFechaNot - $salidaFechaNot) * (int)$s->precio);
+
+            // if($f->estado == null){
+            //     $estadoFactura = 'V: VALIDA';
+            // }else{
+            //     $estadoFactura = 'V: ANULADO';
+            // }
+
+            // para sacar el debito fiscal
+            // $debito = $f->total * 0.13;
+
+            // $sheet->setCellValue("A$contadorFilas", 3);
+            // $sheet->setCellValue("B$contadorFilas", ++$key);
+            // $sheet->setCellValue("C$contadorFilas", date("d/m/Y",strtotime($f->fecha)));
+            // $sheet->setCellValue("D$contadorFilas", $f->numero);
+            // // $sheet->setCellValue("E$contadorFilas", $f->parametro->numero_autorizacion);
+            // $sheet->setCellValue("E$contadorFilas", $f->cuf);
+            // $sheet->setCellValue("F$contadorFilas", $estadoFactura);
+            // $sheet->setCellValue("G$contadorFilas", $f->nit);
+            // $sheet->setCellValue("H$contadorFilas", $f->razon_social);
+            // $sheet->setCellValue("I$contadorFilas", $f->total);
+            // $sheet->setCellValue("J$contadorFilas", 0);
+            // $sheet->setCellValue("K$contadorFilas", 0);
+            // $sheet->setCellValue("L$contadorFilas", 0);
+            // $sheet->setCellValue("M$contadorFilas", $f->total);
+            // $sheet->setCellValue("N$contadorFilas", 0);
+            // $sheet->setCellValue("O$contadorFilas", $f->total);
+            // $sheet->setCellValue("P$contadorFilas", $debito);
+            // $sheet->setCellValue("Q$contadorFilas", $f->codigo_control);
+
+            $contadorFilas++;
+        }
+
+
+         // damos el ancho a las celdas
+         $contadorLetras = 68; //comenzamos a partir de la letra D
+         for ($i=1; $i<=18; $i++) {
+             // extraemos la letra para la celda
+             $letra = chr($contadorLetras);
+
+             $spreadsheet->getActiveSheet()->getColumnDimension($letra)->setWidth(10);
+
+             $contadorLetras++;
+         }
+
+         $fuenteNegritaTitulo = array(
+         'font'  => array(
+             'bold'  => true,
+             // 'color' => array('rgb' => 'FF0000'),
+             'size'  => 22,
+             // 'name'  => 'Verdana'
+         ));
+
+         $fuenteNegrita = array(
+         'font'  => array(
+             'bold'  => true,
+             // 'color' => array('rgb' => 'FF0000'),
+             'size'  => 14,
+         ));
+
+         $fuenteNegritaCabecera = array(
+         'font'  => array(
+             'bold'  => true,
+             // 'color' => array('rgb' => 'FF0000'),
+             'size'  => 12,
+         ));
+
+
+        $spreadsheet->getActiveSheet()->getStyle("B1")->applyFromArray($fuenteNegritaTitulo);
+        $spreadsheet->getActiveSheet()->getStyle('A3')->applyFromArray($fuenteNegrita);
+        $spreadsheet->getActiveSheet()->getStyle("A5:F5")->applyFromArray($fuenteNegritaCabecera);
+        // Aplicar bordes a las celdas
+        $contadorFilas--;
+        $sheet->getStyle("A5:F$contadorFilas")->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
+
+        $spreadsheet->getActiveSheet()->getColumnDimension('B')->setWidth(30); // Establece el ancho de la columna B a 15
+
+        $writer = new Xlsx($spreadsheet);
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="' . urlencode($fileName) . '"');
+        $writer->save('php://output');
+
+
+    // Ahora puedes acceder a los resultados de la consulta
+    // foreach ($consulta as $resultado) {
+    //     // Accede a los valores, por ejemplo:
+    //     echo $resultado->servicio_id." | ".$resultado->fecha." | ".$resultado->cantidad_salida;
+    //     // echo $resultado->fecha;
+    //     // echo $resultado->cantidad_salida;
+    //     echo "<br>";
+    // }
+
+
+        // dd($consulta);
+
+
+
+
+        // dd($request->all());
+    }
+
+    public function reporteInventarioGeneralIngreso(Request $request){
+        dd($request->all());
     }
 }

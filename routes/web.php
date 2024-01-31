@@ -219,6 +219,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/reporteInventarioExcel', [ReporteController::class, 'reporteInventarioExcel']);
         Route::post('/reporteInformeVenta', [ReporteController::class, 'reporteInformeVenta']);
         Route::post('/reporteLibroVenta', [ReporteController::class, 'reporteLibroVenta']);
+        Route::post('/reporteInventarioGeneralSalida', [ReporteController::class, 'reporteInventarioGeneralSalida']);
+        Route::post('/reporteInventarioGeneralIngreso', [ReporteController::class, 'reporteInventarioGeneralIngreso']);
     });
 
 });

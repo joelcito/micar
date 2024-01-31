@@ -46,7 +46,7 @@
             <div class="card">
                 <div class="card-header border-0 pt-6">
                     <div class="card-title">
-                        <h3>REPORTE DE INVENTARIO INGRESOS Y SALIDAS</h3>
+                        <h3>REPORTE DE INVENTARIO INGRESOS Y SALIDAS DIARIO</h3>
                     </div>
                 </div>
                 <div class="card-body py-4">
@@ -156,6 +156,52 @@
             </div>
         </div>
     </div>
+    <br>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header border-0 pt-6">
+                    <div class="card-title">
+                        <h3>REPORTE DE INVENTARIO INGRESOS Y SALIDAS GENERAL</h3>
+                    </div>
+                </div>
+                <div class="card-body py-4">
+                    <form id="formularioInventariosDinamico" method="POST">
+                        @csrf
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card-body py-4">
+                                    <label class="required fw-semibold fs-6 mb-2">Fecha Ini</label>
+                                    <input type="date" name="fecha_ini" class="form-control" value="{{ date('Y-m-d') }}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card-body py-4">
+                                    <label class="required fw-semibold fs-6 mb-2">Fecha Fin</label>
+                                    <input type="date" name="fecha_fin" class="form-control" value="{{ date('Y-m-d') }}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card-body py-4">
+                                    <button class="btn btn-block btn-success btn-sm w-100" type="button" onclick="generaInventarioSalida()">GENERAR SALIDAS <i class="fa fa-file-pdf"></i></button>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card-body py-4">
+                                    <button class="btn btn-block btn-success btn-sm w-100" type="button" onclick="generaInventarioIngreso()">GENERAR INGRESO <i class="fa fa-file-excel"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+
+        </div>
+    </div>
 @stop()
 
 @section('js')
@@ -173,7 +219,16 @@
         });
 
         function generarRepoCuentasCobrar(){
+        }
 
+        function generaInventarioSalida(){
+            $('#formularioInventariosDinamico').attr('action', '{{ url("reporte/reporteInventarioGeneralSalida") }}' );
+            $('#formularioInventariosDinamico').submit();
+        }
+
+        function generaInventarioIngreso(){
+            $('#formularioInventariosDinamico').attr('action', '{{ url("reporte/reporteInventarioGeneralIngreso") }}' );
+            $('#formularioInventariosDinamico').submit();
         }
 
         // function ajaxListado(){
