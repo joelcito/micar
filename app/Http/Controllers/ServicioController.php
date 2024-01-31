@@ -110,26 +110,16 @@ class ServicioController extends Controller
             $movimiento->servicio_id = $servicio_id;
 
             if($request->input('tipo') == 'ingreso'){
-                $movimiento->ingreso     = $request->input('cantidad');
+                $movimiento->ingreso = $request->input('cantidad');
+                $movimiento->salida  = 0;
             }else{
-                $movimiento->salida     = $request->input('cantidad');
+                $movimiento->salida  = $request->input('cantidad');
+                $movimiento->ingreso = 0;
             }
 
             $movimiento->fecha       = date('Y-m-d H:i:s');
             $movimiento->descripcion = $request->input('descripcion');
             $movimiento->save();
-
-            // GUARDAMOS EN LA TABLA PAGOS
-            // $pago              = new Pago();
-            // $pago->creador_id  = Auth::user()->id;
-            // $pago->servicio_id = $request->input('servicio_id');
-            // $pago->cantidad    = $request->input('cantidad');
-            // $pago->monto       = $request->input('total_pagar');
-            // $pago->fecha       = date('Y-m-d H:i:s');
-            // $pago->tipo_pago   = $request->input('tipo_pago');
-            // $pago->estado      = "Salida";
-            // $pago->descripcion = $request->input('descripcion');
-            // $pago->save();
 
             $data['listado'] = $this->listadoArrayProducto();
             $data['estado'] = 'success';
@@ -213,11 +203,11 @@ class ServicioController extends Controller
             $servicio->save();
 
             if($producto_ud == 0){
-                $movimiento             = new Movimiento();
-                $movimiento->creador_id = Auth::user()->id;
+                $movimiento              = new Movimiento();
+                $movimiento->creador_id  = Auth::user()->id;
                 $movimiento->servicio_id = $servicio->id;
-                $movimiento->ingreso = $request->input('new_cantidad');
-                $movimiento->fecha = date('Y-m-d H:i:s');
+                $movimiento->ingreso     = $request->input('new_cantidad');
+                $movimiento->fecha       = date('Y-m-d H:i:s');
                 $movimiento->descripcion = "INGRESO";
                 $movimiento->save();
             }

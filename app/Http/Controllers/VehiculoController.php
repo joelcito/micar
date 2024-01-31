@@ -58,7 +58,6 @@ class VehiculoController extends Controller
             $vender = 0;
         }
 
-
         return view('vehiculo.listado')->with(compact('servicios', 'lavadores', 'clientes', 'verificacionSiat', 'numFac', 'tipoDocumento', 'vender'));
     }
 
