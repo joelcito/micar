@@ -34,7 +34,7 @@
                     </form>
                     <div class="row">
                         <div class="col-md-12">
-                            <button class="btn btn-success w-100" onclick="anularFactura()">Anular Factura</button>
+                            <button class="btn btn-success w-100" onclick="anularFactura()" id="boton_anular_factura"> <i class="fa fa-spinner fa-spin" style="display:none;"></i> Anular Factura</button>
                         </div>
                     </div>
                 </div>
@@ -229,6 +229,14 @@
                     confirmButtonText: 'Si, Anular!'
                 }).then((result) => {
                     if (result.isConfirmed) {
+
+                         // Obtén el botón y el icono de carga
+                         var boton = $("#boton_anular_factura");
+                         var iconoCarga = boton.find("i");
+                         // Deshabilita el botón y muestra el icono de carga
+                         boton.attr("disabled", true);
+                         iconoCarga.show();
+
                         $.ajax({
                             url: "{{ url('factura/anularFacturaNew') }}",
                             method: "POST",
