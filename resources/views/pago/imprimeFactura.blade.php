@@ -181,6 +181,19 @@
             font-size: 14px;
             cursor: pointer;
         }
+        #anulado{
+            position: absolute;
+            font-size: 75px;
+            color:rgb(227, 142, 142, 0.8);
+            font-weight: bold;
+            top: 35%;
+            left: -2%;
+            transform: rotate(-45deg);
+            /*display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;*/
+        }
 
 	</style>
 </head>
@@ -363,6 +376,9 @@
                 <div id="qrcode"></div>
             </center>
             <br>
+            @if ($factura->estado === "Anulado")
+                <p id="anulado">ANULADO</p>
+            @endif
 
 
         <div>

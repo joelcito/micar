@@ -31,17 +31,19 @@
                         $cantidadIngreso = $p->movimientos->sum('ingreso');
                         $cantidadSalida = $p->movimientos->sum('salida');
                         $cantidadEnAlmacen = $cantidadIngreso - $cantidadSalida;
-                        // echo "<hr>".$cantidadIngreso."<br>";
-                        // echo $cantidadSalida;
                     @endphp
                     <a class="text-gray-800 text-hover-primary mb-1">{{ $cantidadEnAlmacen }}</a>
                 </td>
                 <td class="text-end">
                     <button class="btn btn-sm btn-icon btn-success" onclick="modalAgregarProducto('{{ $p->id }}','{{ $p->descripcion }}', '{{ $p->precio }}')"><i class="fas fa-plus-circle"></i></button>
                     <button class="btn btn-sm btn-icon btn-dark" onclick="modalQuitarProducto('{{ $p->id }}','{{ $p->descripcion }}', '{{ $p->precio }}')"><i class="fas fa-minus-circle"></i></button>
-                    <button class="btn btn-warning btn-icon btn-sm" onclick="modalModificar('{{ $p->id }}','{{ $p->descripcion }}', '{{ $p->precio }}', '{{ $cantidadEnAlmacen }}')"><i class="fa fa-edit"></i></button>
-                    @if($p->movimientos->sum('salida') == 0)
-                        <button class="btn btn-danger btn-icon btn-sm" onclick="eliminarProduto('{{ $p->id }}',  '{{ $p->descripcion }}')"><i class="fa fa-trash"></i></button>
+                    @if (Auth::user()->isEdit())
+                        <button class="btn btn-warning btn-icon btn-sm" onclick="modalModificar('{{ $p->id }}','{{ $p->descripcion }}', '{{ $p->precio }}', '{{ $cantidadEnAlmacen }}')"><i class="fa fa-edit"></i></button>
+                    @endif
+                    @if(Auth::user()->isDelete())
+                        @if($p->movimientos->sum('salida') == 0)
+                            <button class="btn btn-danger btn-icon btn-sm" onclick="eliminarProduto('{{ $p->id }}',  '{{ $p->descripcion }}')"><i class="fa fa-trash"></i></button>
+                        @endif
                     @endif
                 </td>
             </tr>
@@ -68,6 +70,7 @@
             info      : 'Mostrando _START_ a _END_ de _TOTAL_ registros',
             emptyTable: 'No hay datos disponibles'
         },
-        order: []
+        order: [],
+        responsive:true
     });
 </script>

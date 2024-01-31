@@ -19,15 +19,11 @@
                     <td>
                         <a class="text-gray-800 text-hover-primary mb-1">{{ $r->descripcion }}</a>
                     </td>
-                    {{-- <td>
-                        <a class="text-gray-800 text-hover-primary mb-1">{{ $r->estado }}</a>
-                    </td> --}}
                     <td class="text-end">
                         <button class="btn btn-primary btn-icon btn-sm" onclick="permiusoRol('{{ $r->id }}')"><i class="fa fa-list"></i></button>
                         @if (Auth::user()->isEdit())
                             <button class="btn btn-warning btn-icon btn-sm" onclick="editarRol('{{ $r->id }}', '{{ $r->nombre }}', '{{ $r->descripcion }}')"><i class="fa fa-edit"></i></button>
                         @endif
-                        {{-- @dd($r->roles->count()) --}}
                         @if($r->roles->count() == 0)
                             <button class="btn btn-danger btn-icon btn-sm" onclick="eliminar('{{ $r->id }}')"><i class="fa fa-trash"></i></button>
                         @endif
@@ -55,6 +51,7 @@
                 info      : 'Mostrando _START_ a _END_ de _TOTAL_ registros',
                 emptyTable: 'No hay datos disponibles'
             },
-            order:[]
+            order:[],
+            responsive:true
         });
     </script>

@@ -16,7 +16,9 @@
                         <td>{{ $p['nombrePuntoVenta'] }}</td>
                         <td>{{ $p['tipoPuntoVenta'] }}</td>
                         <td>
-                            <button class="btn btn-danger btn-icon btn-sm" onclick="eliminaPuntoVenta('{{ $p['codigoPuntoVenta'] }}')"><i class="fa fa-trash"></i></button>
+                            @if(Auth::user()->isDelete())
+                                <button class="btn btn-danger btn-icon btn-sm" onclick="eliminaPuntoVenta('{{ $p['codigoPuntoVenta'] }}')"><i class="fa fa-trash"></i></button>
+                            @endif
                         </td>
                     </tr>
                 @else
@@ -25,7 +27,9 @@
                         <td>{{ $puntos['nombrePuntoVenta'] }}</td>
                         <td>{{ $puntos['tipoPuntoVenta'] }}</td>
                         <td>
-                            <button class="btn btn-danger btn-icon btn-sm" onclick="eliminaPuntoVenta('{{ $puntos['codigoPuntoVenta'] }}')"><i class="fa fa-trash"></i></button>
+                            @if(Auth::user()->isDelete())
+                                <button class="btn btn-danger btn-icon btn-sm" onclick="eliminaPuntoVenta('{{ $puntos['codigoPuntoVenta'] }}')"><i class="fa fa-trash"></i></button>
+                            @endif
                         </td>
                     </tr>
                     @break

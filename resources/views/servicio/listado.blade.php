@@ -140,7 +140,8 @@
         </div>
         <!--end::Card header-->
         <!--begin::Card body-->
-        <div class="card-body py-4">
+        {{--  <div class="card-body py-4 table-responsive">  --}}
+        <div class="card-body table-responsive">
             <div id="table_servicios">
 
             </div>

@@ -49,6 +49,8 @@
                 lengthMenu: 'Mostrar _MENU_ registros por página',
                 info: 'Mostrando _START_ a _END_ de _TOTAL_ registros',
                 emptyTable: 'No hay datos disponibles'
-            }
+            },
+            order: [],
+            responsive:true
         });
     </script>

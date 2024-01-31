@@ -341,13 +341,13 @@ class FacturaController extends Controller
                         // ***************** ENVIAMOS EL CORREO DE LA FACTURA *****************
                         if($swFacturaEnvio){
                             $nombre = $cliente->nombres." ".$cliente->ap_paterno." ".$cliente->ap_materno;
-                            // $this->enviaCorreo(
-                            //     $cliente->correo,
-                            //     $nombre,
-                            //     $facturaVerdad->numero,
-                            //     $facturaVerdad->fecha,
-                            //     $facturaVerdad->id
-                            // );
+                            $this->enviaCorreo(
+                                $cliente->correo,
+                                $nombre,
+                                $facturaVerdad->numero,
+                                $facturaVerdad->fecha,
+                                $facturaVerdad->id
+                            );
                         }
 
                     }else{
@@ -443,17 +443,17 @@ class FacturaController extends Controller
 
                 }
 
-                // if($swFacturaEnvio){
-                //     // ***************** ENVIAMOS EL CORREO DE LA FACTURA *****************
-                //     $nombre = $cliente->nombres." ".$cliente->ap_paterno." ".$cliente->ap_materno;
-                //     $this->enviaCorreo(
-                //         $cliente->correo,
-                //         $nombre,
-                //         $facturaVerdad->numero,
-                //         $facturaVerdad->fecha,
-                //         $facturaVerdad->id
-                //     );
-                // }
+                if($swFacturaEnvio){
+                    // ***************** ENVIAMOS EL CORREO DE LA FACTURA *****************
+                    $nombre = $cliente->nombres." ".$cliente->ap_paterno." ".$cliente->ap_materno;
+                    $this->enviaCorreo(
+                        $cliente->correo,
+                        $nombre,
+                        $facturaVerdad->numero,
+                        $facturaVerdad->fecha,
+                        $facturaVerdad->id
+                    );
+                }
 
                 $data['estado']     = 'OFFLINE';
             }
@@ -511,9 +511,13 @@ class FacturaController extends Controller
 
 
     public function numeroFactura(){
-        return Factura::where('facturado', 'Si')
-                        // ->max('numero');
-                        ->max(DB::raw('CAST(numero AS UNSIGNED)'));
+
+        $numero = Factura::where('facturado', 'Si')
+                            ->max(DB::raw('CAST(numero AS UNSIGNED)'));
+        if($numero == 0)
+            $numero  = 1231; //camnio de facura
+
+        return $numero;
     }
 
     public function anularFacturaNew(Request $request){
@@ -542,7 +546,7 @@ class FacturaController extends Controller
 
                 //protected function enviaCorreoAnulacion($correo, $nombre, $numero, $fecha){
 
-                //$this->enviaCorreoAnulacion($correo, $nombre, $numero, $fecha );
+                $this->enviaCorreoAnulacion($correo, $nombre, $numero, $fecha );
 
             }else{
                 $fatura->descripcion = $respuesta->resultado->RespuestaServicioFacturacion->mensajesList->descripcion;
@@ -1446,7 +1450,6 @@ class FacturaController extends Controller
 
     protected function enviaCorreo($correo, $nombre, $numero, $fecha, $factura_id){
 
-
         // ********************************  ESTE SI FUNCIONA AHROA *******************
 
         $to         = $correo;
@@ -1522,8 +1525,6 @@ class FacturaController extends Controller
             // $pdfPath = "assets/docs/facturapdf.pdf";
             $xmlPath = "assets/docs/facturaxml.xml";
 
-
-
             $mail->addAttachment($rutaPDF, 'Factura.pdf'); // Adjuntar archivo PDF
             $mail->addAttachment($xmlPath, 'Factura.xml'); // Adjuntar archivo XML
 
@@ -1581,8 +1582,98 @@ class FacturaController extends Controller
     }
 
     protected function enviaCorreoAnulacion($correo, $nombre, $numero, $fecha){
-        $mail = new CorreoAnulacion($nombre, $numero, $fecha);
-        $response = Mail::to($correo)->send($mail);
+
+        $to         = $correo;
+        $subject    = 'ANULACION DE FACTURA ELECTRONICA EN LINEA MICAR';
+
+            // Cargar el contenido de la vista del correo
+            $templatePath = resource_path('views/mail/correoAnulacionFactura.blade.php');
+            $templateContent = file_get_contents($templatePath);
+            $fecha = date('d/m/Y H:m:s');
+            $data = [
+                'title'     => 'Bienvenido a mi aplicación',
+                'content'   => 'Gracias por unirte a nosotros. Esperamos que disfrutes de tu tiempo aquí.',
+                'name'      => $nombre,
+                'number'    => $numero,
+                'date'  => $fecha
+            ];
+
+            foreach ($data as $key => $value)
+                $templateContent = str_replace('{{ $' . $key . ' }}', $value, $templateContent);
+
+            // Configuración de los parámetros SMTP
+            $smtpHost       = 'mail.micarautolavado.com';
+            $smtpPort       =  465;
+            // $smtpUsername   = 'suscripcion@comercio-latino.com';
+            // $smtpPassword   = 'Fc;D&0@A7(T%';
+            $smtpUsername   = 'admin@micarautolavado.com';
+            $smtpPassword   = '-Z{DjF[D@y8G';
+
+            // $smtpUsername   = 'sistemas@comercio-latino.com';
+            // $smtpPassword   = 'j@xKuZ(65VNK';
+
+            $mail = new PHPMailer(true);
+
+            try {
+                // $mail->isSMTP();
+                // $mail->Host         = $smtpHost;
+                // $mail->Port         = $smtpPort;
+                // $mail->SMTPAuth     = true;
+                // $mail->Username     = $smtpUsername;
+                // $mail->Password     = $smtpPassword;
+                // $mail->SMTPSecure   = PHPMailer::ENCRYPTION_STARTTLS; no va este
+                // $mail->SMTPSecure   = PHPMailer::ENCRYPTION_SMTPS;
+                // ... Configura los parámetros SMTP ...
+                $mail->setFrom('admin@micarautolavado.com', 'MI CAR AUTO LAVADO');
+                $mail->addAddress($to);
+
+                // Agregar direcciones de correo electrónico en copia (CC)
+                // $mail->addCC('admin@comercio-latino.com', 'Administracion Comercio Latino');
+                // $mail->addCC('soporte@comercio-latino.com', 'Soporte Comercio Latino');
+
+                $mail->isHTML(true);
+                $mail->Subject = $subject;
+                $mail->Body    = $templateContent;
+
+                //$factura       = Factura::find($factura_id);
+                //$xml           = $factura['productos_xml'];
+                //$archivoXML    = new SimpleXMLElement($xml);
+                //$cabeza        = (array) $archivoXML;
+                //$cuf           = (string)$cabeza['cabecera']->cuf;
+                //$numeroFactura = (string)$cabeza['cabecera']->numeroFactura;
+                  // Genera el texto para el código QR
+                //$textoQR = 'https://pilotosiat.impuestos.gob.bo/consulta/QR?nit=5427648016&cuf='.$cuf.'&numero='.$numeroFactura.'&t=2';
+                  // Genera la ruta temporal para guardar la imagen del código QR
+                //$rutaImagenQR = storage_path('app/public/qr_code.png');
+                  // Genera el código QR y guarda la imagen en la ruta temporal
+                // QrCode::generate($textoQR, $rutaImagenQR);
+                // $pdf = PDF::loadView('pdf.generaPdfFacturaNew', compact('factura', 'archivoXML','rutaImagenQR'))->setPaper('letter');
+
+                // // Genera la ruta donde se guardará el archivo PDF
+                // $rutaPDF = storage_path('app/public/factura.pdf');
+                // // Guarda el PDF en la ruta especificada
+                // $pdf->save($rutaPDF);
+                // $pdfPath = "assets/docs/facturapdf.pdf";
+                // $xmlPath = "assets/docs/facturaxml.xml";
+
+                // $mail->addAttachment($rutaPDF, 'Factura.pdf'); // Adjuntar archivo PDF
+                // $mail->addAttachment($xmlPath, 'Factura.xml'); // Adjuntar archivo XML
+
+
+                $mail->send();
+
+                // return 'Correo enviado correctamente';
+                $data['estado'] = 'success';
+                $data['msg']    = 'Correo enviado correctamente';
+
+            } catch (Exception $e) {
+                $data['estado'] = 'error';
+                $data['msg'] = 'No se pudo enviar el correo: ' . $mail->ErrorInfo;
+                // return 'No se pudo enviar el correo: ' . $mail->ErrorInfo;
+            }
+
+        // $mail = new CorreoAnulacion($nombre, $numero, $fecha);
+        // $response = Mail::to($correo)->send($mail);
     }
 
     // ============================= PARA LA GENERACION DEL RECIBO ==================================================

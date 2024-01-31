@@ -1,4 +1,5 @@
 <!--begin::Table-->
+    {{--  <table class="table align-middle table-row-dashed fs-6 gy-5" id="tabla_user">  --}}
     <table class="table align-middle table-row-dashed fs-6 gy-5" id="tabla_user">
         <thead>
             <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
@@ -94,6 +95,7 @@
                 info: 'Mostrando _START_ a _END_ de _TOTAL_ registros',
                 emptyTable: 'No hay datos disponibles'
             },
-            order: []
+            order: [],
+            responsive:true
         });
     </script>
