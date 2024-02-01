@@ -398,7 +398,8 @@
             $numeroFactura  = (string)$cabeza['cabecera']->numeroFactura;
         @endphp
 
-        let cadenaQr = 'https://pilotosiat.impuestos.gob.bo/consulta/QR?nit=5427648016&cuf={{ $cuf }}&numero={{ $numeroFactura }}&t=1';
+        //let cadenaQr = 'https://pilotosiat.impuestos.gob.bo/consulta/QR?nit=5427648016&cuf={{ $cuf }}&numero={{ $numeroFactura }}&t=1';
+        let cadenaQr = 'https://siat.impuestos.gob.bo/consulta/QR?nit=5427648016&cuf={{ $cuf }}&numero={{ $numeroFactura }}&t=1';
         var options = {
             text: cadenaQr,
             width: 120,
