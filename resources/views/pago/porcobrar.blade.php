@@ -71,7 +71,7 @@
                             <div class="col-md-4">
                                 <div class="fv-row mb-7">
                                     <label class="required fw-semibold fs-6 mb-2">Importe a pagar</label>
-                                    <input type="number" type="button" class="form-control" name="importe_pagar" id="importe_pagar" required min="1" value="0">
+                                    <input type="number" type="button" class="form-control" name="importe_pagar" id="importe_pagar" required min="0.1" step="0.01" value="0">
                                 </div>
                             </div>
                         </div>
@@ -208,6 +208,8 @@
             $('#impor_total').val(total)
             $('#impor_pagado').val(pagado)
             $('#impor_saldo').val((total)-(pagado))
+            $("#importe_pagar").val(0);
+            $("#tipo_pago").val("");
             $("#importe_pagar").attr("max", (total)-(pagado));
             $('#modalCobrar').modal('show')
         }
