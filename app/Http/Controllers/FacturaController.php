@@ -515,7 +515,7 @@ class FacturaController extends Controller
         $numero = Factura::where('facturado', 'Si')
                             ->max(DB::raw('CAST(numero AS UNSIGNED)'));
         if($numero == 0)
-            $numero  = 1231; //camnio de facura
+            $numero  = 746; //camnio de facura
 
         return $numero;
     }
@@ -572,7 +572,8 @@ class FacturaController extends Controller
         $numeroFactura  = (string)$cabeza['cabecera']->numeroFactura;
 
         // Genera el texto para el código QR
-        $textoQR = 'https://pilotosiat.impuestos.gob.bo/consulta/QR?nit=5427648016&cuf='.$cuf.'&numero='.$numeroFactura.'&t=2';
+        // $textoQR = 'https://pilotosiat.impuestos.gob.bo/consulta/QR?nit=5427648016&cuf='.$cuf.'&numero='.$numeroFactura.'&t=2';
+        $textoQR = $this->urlQr($cuf, $numeroFactura);
         // Genera la ruta temporal para guardar la imagen del código QR
         $rutaImagenQR = storage_path('app/public/qr_code.png');
         // Genera el código QR y guarda la imagen en la ruta temporal
@@ -821,8 +822,15 @@ class FacturaController extends Controller
         $numeroFactura  = (string)$cabeza['cabecera']->numeroFactura;
 
         // Genera el texto para el código QR
-        $textoQR = 'https://pilotosiat.impuestos.gob.bo/consulta/QR?nit=5427648016&cuf='.$cuf.'&numero='.$numeroFactura.'&t=2';
-        // dd($cuf,$numeroFactura, $textoQR);
+        // ******************************** DESARROLLO ********************************
+        // $textoQR = 'https://pilotosiat.impuestos.gob.bo/consulta/QR?nit=5427648016&cuf='.$cuf.'&numero='.$numeroFactura.'&t=2';
+
+        // ******************************** PRODUCCION ********************************
+        // $textoQR = 'https://siat.impuestos.gob.bo/consulta/QR?nit=5427648016&cuf='.$cuf.'&numero='.$numeroFactura.'&t=2';
+
+        $textoQR = $this->urlQr($cuf, $numeroFactura);
+
+
         // Genera la ruta temporal para guardar la imagen del código QR
         $rutaImagenQR = storage_path('app/public/qr_code.png');
         $urlImagenQR = asset(str_replace(storage_path('app/public'), 'storage', $rutaImagenQR));
@@ -1511,7 +1519,8 @@ class FacturaController extends Controller
             $cuf           = (string)$cabeza['cabecera']->cuf;
             $numeroFactura = (string)$cabeza['cabecera']->numeroFactura;
               // Genera el texto para el código QR
-            $textoQR = 'https://pilotosiat.impuestos.gob.bo/consulta/QR?nit=5427648016&cuf='.$cuf.'&numero='.$numeroFactura.'&t=2';
+            // $textoQR = 'https://pilotosiat.impuestos.gob.bo/consulta/QR?nit=5427648016&cuf='.$cuf.'&numero='.$numeroFactura.'&t=2';
+            $textoQR = $this->urlQr($cuf, $numeroFactura);
               // Genera la ruta temporal para guardar la imagen del código QR
             $rutaImagenQR = storage_path('app/public/qr_code.png');
               // Genera el código QR y guarda la imagen en la ruta temporal
@@ -2155,5 +2164,13 @@ class FacturaController extends Controller
         return $data;
     }
     // ============================= END PARA LA GENERACION DE LA TRAMSFERECNAI DE LA FACTURA ==================================================
+
+    protected function urlQr($cuf, $numeroFactura){
+        // ******************************** DESARROLLO ********************************
+        // return $textoQR = 'https://pilotosiat.impuestos.gob.bo/consulta/QR?nit=5427648016&cuf='.$cuf.'&numero='.$numeroFactura.'&t=2';
+
+        // ******************************** PRODUCCION ********************************
+        return $textoQR = 'https://siat.impuestos.gob.bo/consulta/QR?nit=5427648016&cuf='.$cuf.'&numero='.$numeroFactura.'&t=2';
+    }
 
 }

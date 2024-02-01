@@ -112,16 +112,16 @@ class UserController extends Controller
 
             $user = new User();
 
-            $user->nombres    = $request->input('nombres');
-            $user->ap_paterno = $request->input('ap_paterno');
-            $user->ap_materno = $request->input('ap_materno');
-            $user->name       = $request->input('nombres')." ".$request->input('ap_paterno')." ".$request->input('ap_materno');
-            $user->cedula     = $request->input('cedula');
-            $user->email      = $request->input('email');
-            $user->rol_id     = $request->input('rol_id');
+            $user->nombres            = $request->input('nombres');
+            $user->ap_paterno         = $request->input('ap_paterno');
+            $user->ap_materno         = $request->input('ap_materno');
+            $user->name               = $request->input('nombres')." ".$request->input('ap_paterno')." ".$request->input('ap_materno');
+            $user->cedula             = $request->input('cedula');
+            $user->email              = $request->input('email');
+            $user->rol_id             = $request->input('rol_id');
+            $user->codigo_punto_venta = 1;
 
             $rol              = Rol::find($user->rol_id);
-
             $user->menus      = $rol->menus;
             $user->permisos   = $rol->permisos;
             $user->direccion  = $request->input('direccion');
