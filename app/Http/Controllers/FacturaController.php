@@ -10,6 +10,7 @@ use App\Models\Factura;
 use App\Models\Pago;
 use App\Models\Vehiculo;
 use App\Models\Detalle;
+use App\Models\Movimiento;
 use App\Models\TipoDocumento;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -26,8 +27,7 @@ use PharData;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
-
-
+use PhpParser\Node\Expr\Cast\Double;
 
 class FacturaController extends Controller
 {
@@ -296,7 +296,8 @@ class FacturaController extends Controller
                         $facturaVerdad->tipo_pago               = $request->input('tipo_pago');
                         $facturaVerdad->monto_pagado            = $request->input('monto_pagado');
                         $facturaVerdad->cambio_devuelto         = $request->input('cambio');
-                        $facturaVerdad->estado_pago             = (((int)$facturaVerdad->monto_pagado - (int)$facturaVerdad->cambio_devuelto) == $facturaVerdad->total)? "Pagado" : "Deuda";
+                        // $facturaVerdad->estado_pago             = (((int)$facturaVerdad->monto_pagado - (int)$facturaVerdad->cambio_devuelto) == $facturaVerdad->total)? "Pagado" : "Deuda";
+                        $facturaVerdad->estado_pago             = (((double)$facturaVerdad->monto_pagado - (double)$facturaVerdad->cambio_devuelto) == $facturaVerdad->total)? "Pagado" : "Deuda";
                         $facturaVerdad->cuf                     = $datos['factura'][0]['cabecera']['cuf'];
                         $facturaVerdad->codigo_metodo_pago_siat = $datos['factura'][0]['cabecera']['codigoMetodoPago'];
                         $facturaVerdad->monto_total_subjeto_iva = $datos['factura'][0]['cabecera']['montoTotalSujetoIva'];
@@ -325,7 +326,8 @@ class FacturaController extends Controller
                             $pago->creador_id    = Auth::user()->id;
                             $pago->factura_id    = $facturaVerdad->id;
                             $pago->caja_id       = $datosVehiculo['caja'];
-                            $pago->monto         = (int)$request->input('monto_pagado')-(int)$request->input('cambio');
+                            // $pago->monto         = (int)$request->input('monto_pagado')-(int)$request->input('cambio');
+                            $pago->monto         = (double)$request->input('monto_pagado')-(double)$request->input('cambio');
                             $pago->descripcion   = "VENTA";
                             $pago->apertura_caja = "No";
                             $pago->fecha         = date('Y-m-d H:i:s');
@@ -398,7 +400,8 @@ class FacturaController extends Controller
                 $facturaVerdad->tipo_pago               = $request->input('tipo_pago');
                 $facturaVerdad->monto_pagado            = $request->input('monto_pagado');
                 $facturaVerdad->cambio_devuelto         = $request->input('cambio');
-                $facturaVerdad->estado_pago             = (((int)$facturaVerdad->monto_pagado - (int)$facturaVerdad->cambio_devuelto) == $facturaVerdad->total)? "Pagado" : "Deuda";
+                $facturaVerdad->estado_pago             = (((double)$facturaVerdad->monto_pagado - (double)$facturaVerdad->cambio_devuelto) == $facturaVerdad->total)? "Pagado" : "Deuda";
+                // $facturaVerdad->estado_pago             = (((int)$facturaVerdad->monto_pagado - (int)$facturaVerdad->cambio_devuelto) == $facturaVerdad->total)? "Pagado" : "Deuda";
                 $facturaVerdad->cuf                     = $datos['factura'][0]['cabecera']['cuf'];
                 $facturaVerdad->codigo_metodo_pago_siat = $datos['factura'][0]['cabecera']['codigoMetodoPago'];
                 $facturaVerdad->monto_total_subjeto_iva = $datos['factura'][0]['cabecera']['montoTotalSujetoIva'];
@@ -432,7 +435,8 @@ class FacturaController extends Controller
                     $pago->creador_id    = Auth::user()->id;
                     $pago->factura_id    = $facturaVerdad->id;
                     $pago->caja_id       = $datosVehiculo['caja'];
-                    $pago->monto         = (int)$request->input('monto_pagado')-(int)$request->input('cambio');
+                    // $pago->monto         = (int)$request->input('monto_pagado')-(int)$request->input('cambio');
+                    $pago->monto         = (double)$request->input('monto_pagado')-(double)$request->input('cambio');
                     $pago->descripcion   = "VENTA";
                     $pago->apertura_caja = "No";
                     $pago->fecha         = date('Y-m-d H:i:s');
@@ -1720,7 +1724,8 @@ class FacturaController extends Controller
             $factura->tipo_pago           = $request->input('tipo_pago');
             $factura->monto_pagado        = $request->input('monto_pagado');
             $factura->cambio_devuelto     = $request->input('cambio');
-            $factura->estado_pago         = (((int)$factura->monto_pagado - (int)$factura->cambio_devuelto) == $factura->total)? "Pagado" : "Deuda";
+            // $factura->estado_pago         = (((int)$factura->monto_pagado - (int)$factura->cambio_devuelto) == $factura->total)? "Pagado" : "Deuda";
+            $factura->estado_pago         = (((double)$factura->monto_pagado - (double)$factura->cambio_devuelto) == $factura->total)? "Pagado" : "Deuda";
             $factura->descuento_adicional = $descuento_adicional;
             $factura->save();
 
@@ -1738,7 +1743,8 @@ class FacturaController extends Controller
                 $pago->creador_id    = Auth::user()->id;
                 $pago->factura_id    = $factura->id;
                 $pago->caja_id       = $request->input('caja');
-                $pago->monto         = (int)$request->input('monto_pagado')-(int)$request->input('cambio');
+                // $pago->monto         = (int)$request->input('monto_pagado')-(int)$request->input('cambio');
+                $pago->monto         = (double)$request->input('monto_pagado')-(double)$request->input('cambio');
                 $pago->fecha         = date('Y-m-d H:i:s');
                 $pago->descripcion   = "VENTA";
                 $pago->apertura_caja = "No";
@@ -1793,7 +1799,12 @@ class FacturaController extends Controller
 
             Pago::where('factura_id',$factura_id)->delete();
 
+            $detalles_id = Detalle::where('factura_id', $factura_id)->get()->pluck('id');
+
             Detalle::where('factura_id', $factura_id)->delete();
+
+            // ANULAMOS LOS MOVIMIENTOS
+            Movimiento::whereIn('detalle_id', $detalles_id)->delete();
 
             // $ids = Pago::where('factura_id',$factura_id)->get()->pluck('id');
             // Pago::destroy($ids);
@@ -2087,7 +2098,8 @@ class FacturaController extends Controller
                             $facturaVerdad->tipo_pago               = $factura->tipo_pago;
                             $facturaVerdad->monto_pagado            = $factura->monto_pagado;
                             $facturaVerdad->cambio_devuelto         = $factura->cambio_devuelto;
-                            $facturaVerdad->estado_pago             = (((int)$facturaVerdad->monto_pagado - (int)$facturaVerdad->cambio_devuelto) == $facturaVerdad->total)? "Pagado" : "Deuda";
+                            // $facturaVerdad->estado_pago             = (((int)$facturaVerdad->monto_pagado - (int)$facturaVerdad->cambio_devuelto) == $facturaVerdad->total)? "Pagado" : "Deuda";
+                            $facturaVerdad->estado_pago             = (((double)$facturaVerdad->monto_pagado - (double)$facturaVerdad->cambio_devuelto) == $facturaVerdad->total)? "Pagado" : "Deuda";
                             $facturaVerdad->cuf                     = $datos['factura'][0]['cabecera']['cuf'];
                             $facturaVerdad->codigo_metodo_pago_siat = $datos['factura'][0]['cabecera']['codigoMetodoPago'];
                             $facturaVerdad->monto_total_subjeto_iva = $datos['factura'][0]['cabecera']['montoTotalSujetoIva'];

@@ -31,8 +31,9 @@
                 <td>{{ date('d/m/Y h:i a', strtotime($f->fecha)) }}</td>
                 <td>{{ number_format($f->total,2) }}</td>
                 <td>{{ number_format($pagado, 2) }}</td>
-                <td>{{ number_format(((int)$f->total - (int)$pagado), 2) }}</td>
+                <td>{{ number_format(((double)$f->total - (double)$pagado), 2) }}</td>
                 <td>
+                    <button class="btn btn-primary btn-icon btn-sm" onclick="verQueDebe()"><i class="fa fa-eye"></i></button>
                     <button type="button" {{ ($vender==0)? 'disabled' : '' }} class="btn btn-sm btn-success btn-icon" onclick="abreModalPagar(
                                                                                 '{{ $f->id }}',
                                                                                 '{{ $f->cliente->ap_paterno.' '.$f->cliente->ap_materno.' '.$f->cliente->nombres }}',

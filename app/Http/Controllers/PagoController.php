@@ -213,8 +213,8 @@ class PagoController extends Controller
 
             // VERIFICAR SI LA FACTURA FUE PAGADA EN TOTALIDAD
             $factura           = Factura::find($factura_id);
-            $pagadosPlazos     = (int) Pago::where('factura_id', $factura_id)->sum('monto');
-            $montoTotalFActura = (int) $factura->total;
+            $pagadosPlazos     = (double) Pago::where('factura_id', $factura_id)->sum('monto');
+            $montoTotalFActura = (double) $factura->total;
 
             if($montoTotalFActura === $pagadosPlazos){
                 $factura->estado_pago = 'Pagado';
