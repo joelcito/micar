@@ -40,6 +40,7 @@
                                     <label class="required fw-semibold fs-6 mb-2">Descripcion</label>
                                     <input type="text" class="form-control form-control-solid" required name="descripcion" id="descripcion" placeholder="LAVADO BASICO DE AUTO">
                                     <input type="hidden" name="servicio_id" id="servicio_id">
+                                    <input type="hidden" name="tipo_servicip" id="tipo_servicip" value="servicio">
                                 </div>
                             </div>
                             <div class="col-md-5">

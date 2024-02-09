@@ -37,6 +37,7 @@ class ServicioController extends Controller
             $servicio->unidadMedida     = $request->input('uni_medida');
             $servicio->liquidacion      = $request->input('liquidacion');
             $servicio->tipo_liquidacion = $request->input('tipo_liquidacion');
+            $servicio->estado           = $request->input('tipo_servicip');
 
             $servicio->save();
 
@@ -57,8 +58,7 @@ class ServicioController extends Controller
     }
 
     protected function listadoArray(){
-        // $servicios = Servicio::all();
-        $servicios = Servicio::where('estado','servicio')->get();
+        $servicios = Servicio::where('estado','servicio')->orderBy('id', 'DESC')->get();
         return view('servicio.ajaxListado')->with(compact('servicios'))->render();
     }
 
