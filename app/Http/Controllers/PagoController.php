@@ -57,12 +57,6 @@ class PagoController extends Controller
         return view('pago.ajaxListado')->with(compact('pagos'))->render();
     }
 
-    // public function detalle(Request $request, $pago_id){
-
-    //     $ventas = Venta::where('pago_id', $pago_id)->get();
-
-    //     return view('pago.detalle')->with(compact('ventas'));
-    // }
 
     public function eliminarPago(Request $request) {
         if($request->ajax()){
