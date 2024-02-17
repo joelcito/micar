@@ -206,6 +206,8 @@ class FacturaController extends Controller
 
             $cufPro                                                 = $this->generarBase16($cadenaConM11).$scodigoControl;
 
+            dd($scufd);
+
             $datos['factura'][0]['cabecera']['cuf']                 = $cufPro;
             $datos['factura'][0]['cabecera']['cufd']                = $scufd;
             $datos['factura'][0]['cabecera']['direccion']           = $sdireccion;
