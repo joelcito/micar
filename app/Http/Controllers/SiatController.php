@@ -1653,7 +1653,7 @@ class SiatController extends Controller
     }
 
     public function verificarConeccion(){
-        dd(session()->all(), session()->has('scufd'));
+        // dd(session()->all(), session()->has('scufd'));
         if(!session()->has('scufd')){
             $cufdDelDia = Cufd::where('punto_venta', $this->codigoPuntoVenta)
                                 ->latest()
