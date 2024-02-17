@@ -1659,7 +1659,7 @@ class SiatController extends Controller
                                 ->latest()
                                 ->first();
 
-            dd($cufdDelDia);
+            // dd($cufdDelDia);
             if($cufdDelDia){
                 $fechaVigencia = $cufdDelDia->fechaVigencia;
                 // dd(
