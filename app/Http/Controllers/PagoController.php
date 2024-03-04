@@ -47,7 +47,8 @@ class PagoController extends Controller
 
     protected function listadoArray($datos){
 
-        $query = Factura::select("*")
+        // $query = Factura::select("*")
+        $query = Factura::select("*", "facturas.id as factura_id")
                         ->join('clientes', 'clientes.id', '=', 'facturas.cliente_id')
                         ->join('vehiculos', 'vehiculos.id', '=', 'facturas.vehiculo_id');
 
@@ -95,6 +96,19 @@ class PagoController extends Controller
             $pagos = $query->limit(50)->get();
         }else{
             $pagos = $query->orderBy('facturas.id', 'desc')->limit(100)->get();
+            // $pagos = $query->orderBy('facturas.id', 'desc')->limit(100)->toSql();
+            // dd(
+            //     $pagos,
+            //     $datos['buscar_placa'],
+            //     $datos['buscar_ap_paterno'],
+            //     $datos['buscar_ap_materno'],
+            //     $datos['buscar_nombre'],
+            //     $datos['buscar_nit'],
+            //     $datos['buscar_fecha_ini'],
+            //     $datos['buscar_fecha_fin'],
+            //     $datos['tipo_emision']
+            // );
+
         }
 
         // $pagos = Factura::orderBy('id', 'desc')

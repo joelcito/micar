@@ -19,7 +19,7 @@
             @forelse ( $pagos as  $p )
                 <tr>
                     <td class=" align-items-center">
-                        <span class="text-info">{{ $p->id }}</span>
+                        <span class="text-info">{{ $p->factura_id }}</span>
                     </td>
                     <td>
                         @if ($p->vehiculo)
@@ -79,8 +79,8 @@
                     </td>
                     <td class="text-end">
                         @if($p->facturado === "Si")
-                            <a  class="btn btn-primary btn-icon btn-sm"href="{{ url('factura/generaPdfFacturaNew', [$p->id]) }}" target="_blank"><i class="fa fa-file-pdf"></i></a>
-                            <a  class="btn btn-white btn-icon btn-sm"href="{{ url('factura/imprimeFactura', [$p->id]) }}" target="_blank"><i class="fa fa-file-pdf"></i></a>
+                            <a  class="btn btn-primary btn-icon btn-sm"href="{{ url('factura/generaPdfFacturaNew', [$p->factura_id]) }}" target="_blank"><i class="fa fa-file-pdf"></i></a>
+                            <a  class="btn btn-white btn-icon btn-sm"href="{{ url('factura/imprimeFactura', [$p->factura_id]) }}" target="_blank"><i class="fa fa-file-pdf"></i></a>
                             @if ($p->uso_cafc === "si")
                                 {{--  ******************************** DESARROLLO ********************************  --}}
                                 {{--  <a href="https://pilotosiat.impuestos.gob.bo/consulta/QR?nit=5427648016&cuf={{ $p->cuf }}&numero={{ $p->numero_cafc }}&t=2" target="_blank" class="btn btn-dark btn-icon btn-sm"><i class="fa fa-file"></i></a>  --}}
@@ -98,9 +98,9 @@
                                 @if ($p->tipo_factura === "online")
                                     @if ($p->productos_xml != null)
                                         @if(Auth::user()->isDelete())
-                                            <button  class="btn btn-danger btn-icon btn-sm" type="button" onclick="modalAnular('{{ $p->id }}')"><i class="fa fa-trash"></i></button>
+                                            <button  class="btn btn-danger btn-icon btn-sm" type="button" onclick="modalAnular('{{ $p->factura_id }}')"><i class="fa fa-trash"></i></button>
                                         @endif
-                                        <button class="btn btn-icon btn-sm btn-info" onclick="modalNuevaFacturaTramsferencia('{{ $p->id }}')"><i class="fa fa-up-down"></i></button>
+                                        <button class="btn btn-icon btn-sm btn-info" onclick="modalNuevaFacturaTramsferencia('{{ $p->factura_id }}')"><i class="fa fa-up-down"></i></button>
                                     @else
 
                                     @endif
@@ -109,16 +109,16 @@
                                         <button class="btn btn-info btn-icon btn-sm" onclick="modalRecepcionFacuraContingenciaFueraLinea()"><i class="fa fa-upload" aria-hidden="true"></i></button>
                                     @else
                                         @if(Auth::user()->isDelete())
-                                            <button  class="btn btn-danger btn-icon btn-sm" type="button" onclick="modalAnular('{{ $p->id }}')"><i class="fa fa-trash"></i></button>
+                                            <button  class="btn btn-danger btn-icon btn-sm" type="button" onclick="modalAnular('{{ $p->factura_id }}')"><i class="fa fa-trash"></i></button>
                                         @endif
                                     @endif
                                 @endif
                             @endif
                         @else
                             @if($p->estado != 'Anulado')
-                                <a  class="btn btn-white btn-icon btn-sm"href="{{ url('factura/imprimeRecibo', [$p->id]) }}" target="_blank"><i class="fa fa-file-pdf"></i></a>
+                                <a  class="btn btn-white btn-icon btn-sm"href="{{ url('factura/imprimeRecibo', [$p->factura_id]) }}" target="_blank"><i class="fa fa-file-pdf"></i></a>
                                 @if(Auth::user()->isDelete())
-                                    <button  class="btn btn-danger btn-icon btn-sm" type="button" onclick="anularREcibo('{{ $p->id }}')"><i class="fa fa-trash"></i></button>
+                                    <button  class="btn btn-danger btn-icon btn-sm" type="button" onclick="anularREcibo('{{ $p->factura_id }}')"><i class="fa fa-trash"></i></button>
                                 @endif
                             @endif
                         @endif
