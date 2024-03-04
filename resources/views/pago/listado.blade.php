@@ -119,29 +119,49 @@
             </div>
         </div>
         <div class="card-body py-4">
+            <form id="formulario_busqueda_ventas">
+                <div class="row">
+                    <div class="col-md-1">
+                        <label for="">Placa</label>
+                        <input type="text" class="form-control" id="buscar_placa" name="buscar_placa">
+                    </div>
+                    <div class="col-md-1">
+                        <label for="">Ap Paterno</label>
+                        <input type="text" class="form-control" id="buscar_ap_paterno" name="buscar_ap_paterno">
+                    </div>
+                    <div class="col-md-1">
+                        <label for="">Ap Materno</label>
+                        <input type="text" class="form-control" id="buscar_ap_materno" name="buscar_ap_materno">
+                    </div>
+                    <div class="col-md-1">
+                        <label for="">Nombres</label>
+                        <input type="text" class="form-control" id="buscar_nombre" name="buscar_nombre">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="">Nit</label>
+                        <input type="number" class="form-control" id="buscar_nit" name="buscar_nit">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="">Fecha Inicio</label>
+                        <input type="date" class="form-control" id="buscar_fecha_ini" name="buscar_fecha_ini">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="">Fecha Fin</label>
+                        <input type="date" class="form-control" id="buscar_fecha_fin" name="buscar_fecha_fin">
+                    </div>
+                    <div class="col-md-1">
+                        <label for="">Tipo</label>
+                        <select name="tipo_emision" id="buscar_tipo_emision" name="buscar_tipo_emision" class="form-control">
+                            <option value="">SELECCIONE</option>
+                            <option value="Si">FACTURA</option>
+                            <option value="No">RECIBO</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
             <div class="row">
-                <div class="col-md-2">
-                    <label for="">Placa</label>
-                    <input type="text" class="form-control" id="buscar_nombre" name="buscar_nombre">
-                </div>
-                <div class="col-md-2">
-                    <label for="">Nombres</label>
-                    <input type="text" class="form-control" id="buscar_nombre" name="buscar_nombre">
-                </div>
-                <div class="col-md-2">
-                    <label for="">Nombres</label>
-                    <input type="text" class="form-control" id="buscar_nombre" name="buscar_nombre">
-                </div>
-                <div class="col-md-2">
-                    <label for="">Nombres</label>
-                    <input type="text" class="form-control" id="buscar_nombre" name="buscar_nombre">
-                </div>
-                <div class="col-md-2">
-                    <label for="">Nombres</label>
-                    <input type="text" class="form-control" id="buscar_nombre" name="buscar_nombre">
-                </div>
-                <div class="col-md-2">
-                    <button class="btn btn-success w-100 btn-sm mt-7"><i class="fa fa-search"></i>Buscar</button>
+                <div class="col-md-12">
+                    <button class="btn btn-success w-100 btn-sm mt-7" onclick="buscarFactura()"><i class="fa fa-search"></i>Buscar</button>
                 </div>
             </div>
             <div id="table_roles">
@@ -177,7 +197,7 @@
             ajaxListado();
         });
 
-       function guardarVenta(){
+        function guardarVenta(){
             if($("#formularioRol")[0].checkValidity()){
                 datos = $("#formularioRol").serializeArray()
                 $.ajax({
@@ -196,12 +216,11 @@
         }
 
         function ajaxListado(){
+            let datos = $('#formulario_busqueda_ventas').serializeArray();
             $.ajax({
-                url: "{{ url('pago/ajaxListado') }}",
+                url : "{{ url('pago/ajaxListado') }}",
                 type: 'POST',
-                data:{
-
-                },
+                data: datos,
                 dataType: 'json',
                 success: function(data) {
                     if(data.estado === 'success')
@@ -209,6 +228,10 @@
                 }
             });
         }
+
+        function buscarFactura(){
+            ajaxListado()
+        };
 
         function modalAnular(factura){
             $('#factura_id').val(factura)

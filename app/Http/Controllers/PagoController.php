@@ -28,11 +28,16 @@ class PagoController extends Controller
     }
 
     public function ajaxListado(Request $request){
+
+        // dd($request->all());
+
+        $datos = $request->all();
+
         $data = array();
 
         if($request->ajax()){
-            $data['listado']=$this->listadoArray();
-            $data['estado'] = 'success';
+            $data['listado'] = $this->listadoArray($datos);
+            $data['estado']  = 'success';
         }else{
             $data['estado'] = 'error';
         }
@@ -40,20 +45,62 @@ class PagoController extends Controller
         return json_encode($data);
     }
 
-    protected function listadoArray(){
-        // $pagos = Pago::select('ventas.pago_id', 'ventas.vehiculo_id','pagos.id', DB::raw('SUM(ventas.total) as total'))
-        //                ->join('ventas', 'pagos.id','=','ventas.pago_id')
-        //                ->groupBy('ventas.pago_id','ventas.vehiculo_id')
-        //                ->orderBy('pagos.id', 'DESC')
-        //                ->get();
-        $pagos = Factura::orderBy('id', 'desc')
+    protected function listadoArray($datos){
 
-                        // ->whereNull('estado') // solopara las anuaciones rapidas
-                        // ->where('codigo_descripcion','!=' , '')
-                        // ->where('codigo_descripcion','!=' , 'OBSERVADA')
+        $query = Factura::select("*")
+                        ->join('clientes', 'clientes.id', '=', 'facturas.cliente_id')
+                        ->join('vehiculos', 'vehiculos.id', '=', 'facturas.vehiculo_id');
 
-                        // ->take(200)
-                        ->get();
+        if(!is_null($datos['buscar_placa'])){
+            $placa = $datos['buscar_placa'];
+            $query->where('vehiculos.placa',  'LIKE',  "%$placa%");
+        }
+        if(!is_null($datos['buscar_ap_paterno'])){
+            $paterno = $datos['buscar_ap_paterno'];
+            $query->where('clientes.ap_paterno',  'LIKE',  "%$paterno%");
+        }
+        if(!is_null($datos['buscar_ap_materno'])){
+            $materno = $datos['buscar_ap_paterno'];
+            $query->where('clientes.ap_materno',  'LIKE',  "%$materno%");
+        }
+        if(!is_null($datos['buscar_nombre'])){
+            $nombres = $datos['buscar_nombre'];
+            $query->where('clientes.nombres',  'LIKE',  "%$nombres%");
+        }
+        if(!is_null($datos['buscar_nit'])){
+            $nit = $datos['buscar_nit'];
+            $query->where('clientes.nit',  "%$nit%");
+        }
+        if(!is_null($datos['buscar_fecha_ini']) && !is_null($datos['buscar_fecha_fin'])){
+            $fecha_ini = $datos['buscar_fecha_ini'];
+            $fecha_fin = $datos['buscar_fecha_fin'];
+            $query->whereBetween('facturas.fecha', [$fecha_ini." 00:00:00", $fecha_fin." 23:59:59"]);
+        }
+
+        if(!is_null($datos['tipo_emision'])){
+            $tipo_emision = $datos['tipo_emision'];
+            $query->where('facturas.facturado', $tipo_emision);
+        }
+
+        if(
+            !is_null($datos['buscar_placa']) &&
+            !is_null($datos['buscar_ap_paterno']) &&
+            !is_null($datos['buscar_ap_materno']) &&
+            !is_null($datos['buscar_nombre']) &&
+            !is_null($datos['buscar_nit']) &&
+            !is_null($datos['buscar_fecha_ini']) &&
+            !is_null($datos['buscar_fecha_fin']) &&
+            !is_null($datos['tipo_emision'])
+        ){
+            $pagos = $query->limit(50)->get();
+        }else{
+            $pagos = $query->orderBy('facturas.id', 'desc')->limit(100)->get();
+        }
+
+        // $pagos = Factura::orderBy('id', 'desc')
+        //                 // ->take(200)
+        //                 ->get();
+
         return view('pago.ajaxListado')->with(compact('pagos'))->render();
     }
 
