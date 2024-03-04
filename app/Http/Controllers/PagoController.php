@@ -52,7 +52,7 @@ class PagoController extends Controller
                         // ->where('codigo_descripcion','!=' , '')
                         // ->where('codigo_descripcion','!=' , 'OBSERVADA')
 
-                        ->take(200)
+                        // ->take(200)
                         ->get();
         return view('pago.ajaxListado')->with(compact('pagos'))->render();
     }
