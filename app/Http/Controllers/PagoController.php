@@ -48,7 +48,7 @@ class PagoController extends Controller
     protected function listadoArray($datos){
 
         // $query = Factura::select("*")
-        $query = Factura::select("*", "facturas.id as factura_id")
+        $query = Factura::select("*", "facturas.id as factura_id", "facturas.estado as estado_factura")
                         ->join('clientes', 'clientes.id', '=', 'facturas.cliente_id')
                         ->join('vehiculos', 'vehiculos.id', '=', 'facturas.vehiculo_id');
 

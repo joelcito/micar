@@ -52,7 +52,8 @@
                         @endif
                     </td>
                     <td>
-                        @if ($p->estado === "Anulado")
+                        {{-- @if ($p->estado === "Anulado") --}}
+                        @if ($p->estado_factura === "Anulado")
                             <span class="badge badge-danger badge-sm">ANULADO</span>
                         @else
                             <span class="badge badge-success badge-sm">VIGENTE</span>
@@ -95,7 +96,7 @@
                                 {{--  ******************************** PRODUCCION ********************************  --}}
                                 <a href="https://siat.impuestos.gob.bo/consulta/QR?nit=5427648016&cuf={{ $p->cuf }}&numero={{ $p->numero }}&t=2" target="_blank" class="btn btn-dark btn-icon btn-sm"><i class="fa fa-file"></i></a>
                             @endif
-                            @if ($p->estado != 'Anulado')
+                            @if ($p->estado_factura != 'Anulado')
                                 @if ($p->tipo_factura === "online")
                                     @if ($p->productos_xml != null)
                                         @if(Auth::user()->isDelete())
@@ -116,7 +117,7 @@
                                 @endif
                             @endif
                         @else
-                            @if($p->estado != 'Anulado')
+                            @if($p->estado_factura != 'Anulado')
                                 <a  class="btn btn-white btn-icon btn-sm"href="{{ url('factura/imprimeRecibo', [$p->factura_id]) }}" target="_blank"><i class="fa fa-file-pdf"></i></a>
                                 @if(Auth::user()->isDelete())
                                     <button  class="btn btn-danger btn-icon btn-sm" type="button" onclick="anularREcibo('{{ $p->factura_id }}')"><i class="fa fa-trash"></i></button>
