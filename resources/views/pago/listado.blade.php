@@ -501,6 +501,12 @@
                 $('#tramsfrencia_new_execpion').prop('checked', false);
             }
         }
+
+        function generaTicked(factura_id, vehiculo_id){
+            // console.log(factura_id, vehiculo_id)
+            let url = "{{ url('pago/imprimeTicked') }}/"+factura_id+"/"+vehiculo_id;
+            window.open(url, '_blank');
+        }
     </script>
 @endsection
 

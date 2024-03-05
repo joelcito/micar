@@ -210,8 +210,13 @@
                 <tr>
                     <td style="text-align: right; width: 150px"><b>SEÑORES:</b></td>
                     <td width="150px" style="text-align: left">
-                        {{--  @dd($factura->cliente)  --}}
                         {{ $factura->cliente->nombres." ".$factura->cliente->ap_paterno." ".$factura->cliente->ap_materno }}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: right; width: 150px"><b>PLACA:</b></td>
+                    <td width="150px" style="text-align: left">
+                        {{ $factura->vehiculo->placa }}
                     </td>
                 </tr>
                 {{--  <tr>
@@ -255,6 +260,7 @@
                         <tr>
                             <th>CANT</th>
                             <th>DESCRIPCION</th>
+                            <th>LAVADOR</th>
                             <th>P.UNIT.</th>
                             <th>P.TOTAL</th>
                         </tr>
@@ -271,6 +277,7 @@
                         <tr>
                             <td>{{ $pago->cantidad }}</td>
                             <td>{{ $pago->servicio->descripcion }}</td>
+                            <td>{{ $pago->lavador->nombres." ".$pago->lavador->ap_paterno." ".$pago->lavador->ap_materno }}</td>
                             <td>{{ $pago->precio }}</td>
                             <td>{{ $pago->importe }}</td>
                         </tr>

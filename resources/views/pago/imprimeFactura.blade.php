@@ -245,6 +245,12 @@
                     </td>
                 </tr>
                 <tr>
+                    <td style="text-align: right; width: 150px"><b>PLACA:</b></td>
+                    <td width="100px" style="text-align: left">
+                        {{ $factura->vehiculo->placa }}
+                    </td>
+                </tr>
+                <tr>
                     <td style="text-align: right; width: 150px"><b>FECHA DE EMISION:</b></td>
                     <td width="100px" style="text-align: left">
                         <div>

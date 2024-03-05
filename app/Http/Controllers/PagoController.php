@@ -756,6 +756,22 @@ class PagoController extends Controller
         return view('pago.imprimeLiquidacionVendedor')->with(compact('liquidacion_vendedor_pago', 'detalles'));
     }
 
+    public function imprimeTicked(Request $request, $factura_id, $vehiculo_id){
+
+        // dd($factura_id, $vehiculo_id);
+
+        
+        $pagos = Detalle::where('vehiculo_id',$vehiculo_id)
+                        // ->where('estado','Parapagar')
+                        ->where('factura_id',$factura_id)
+                        ->get();
+
+        // dd($pagos);
+
+        return view('pago.imprimeTicked')->with(compact('pagos'));
+
+    }
+
 
 
     // public function ajaxServiciosMasa(Request $request){

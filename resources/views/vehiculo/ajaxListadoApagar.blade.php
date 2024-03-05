@@ -97,6 +97,11 @@
             <button class="btn btn-info w-100 btn-sm" onclick="emitirTicket()">IMPRIME TICKET</button>
         </div>
     @else
+        @if (Auth::user()->isAdmin())
+            <div class="col-md">
+                <button class="btn btn-info w-100 btn-sm" onclick="emitirTicket()">IMPRIME TICKET</button>
+            </div>
+        @endif
         <div class="col-md">
             <button class="btn btn-success w-100 btn-sm" onclick="muestraDatosTipoPago()">RECIBO</button>
         </div>

@@ -1219,6 +1219,14 @@
                             })
                         }else{
                             if($('#formulario_tipo_pagos')[0].checkValidity()){
+
+                                // Obtén el botón y el icono de carga
+                                var boton = $("#boton_enviar_recivo");
+                                var iconoCarga = boton.find("i");
+                                // Deshabilita el botón y muestra el icono de carga
+                                boton.attr("disabled", true);
+                                iconoCarga.show();
+
                                 $.ajax({
                                     url: "{{ url('factura/emitirRecibo') }}",
                                     type: 'POST',
@@ -1405,8 +1413,12 @@
                                 timer: 5000
                             })
                         }else{
-                            let url = "{{ asset('factura/imprimeTicked') }}/"+vehiculo;
-                            window.location.href = url;
+                            // let url = "{{ asset('factura/imprimeTicked') }}/"+vehiculo;
+                            // window.location.href = url;
+
+                            let url = "{{ url('factura/imprimeTicked') }}/"+vehiculo;
+                            // Abrir la URL en una nueva ventana
+                            window.open(url, '_blank');
                         }
                     }
                 }
