@@ -277,7 +277,13 @@
                         <tr>
                             <td>{{ $pago->cantidad }}</td>
                             <td>{{ $pago->servicio->descripcion }}</td>
-                            <td>{{ $pago->lavador->nombres." ".$pago->lavador->ap_paterno." ".$pago->lavador->ap_materno }}</td>
+                            <td>
+                                @if ($pago->lavador)
+                                    {{ $pago->lavador->nombres." ".$pago->lavador->ap_paterno." ".$pago->lavador->ap_materno }}
+                                @else
+                                    {{ $factura->cliente->nombres." ".$factura->cliente->ap_paterno." ".$factura->cliente->ap_materno }}
+                                @endif
+                            </td>
                             <td>{{ $pago->precio }}</td>
                             <td>{{ $pago->importe }}</td>
                         </tr>
@@ -370,7 +376,7 @@
                 @endphp
                 {{-- <b>Son: {{ ucfirst($literal) }} 00/100 Bolivianos</b> --}}
                 <b>Son: {{ $literal }} @if ($centavos > 0){{ round($centavos) }}@else{{ '00' }}@endif/100 Bolivianos</b>
-            </div> 
+            </div>
             - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - <br>
             {{--  <p style="font-size:11px">
                 ESTA FACTURA CONTRIBUYE AL DESARROLLO DEL PAÍS, EL USO ILÍCITO SERÁ SANCIONADO PENALMENTE DE ACUERDO A LEY
