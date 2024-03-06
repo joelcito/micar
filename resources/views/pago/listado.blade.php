@@ -115,7 +115,7 @@
     <div class="card">
         <div class="card-header border-0 pt-6 bg-light-primary">
             <div class="card-title ">
-                <h1>Listado de Pagos</h1>
+                <h1>Listado de Ventas</h1>
             </div>
         </div>
         <div class="card-body py-4">

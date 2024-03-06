@@ -19,7 +19,9 @@
             @forelse ( $pagos as  $p )
                 <tr>
                     <td class=" align-items-center">
-                        <span class="text-info">{{ $p->factura_id }}</span>
+                        <span class="text-info">
+                            {{ $p->factura_id }}
+                        </span>
                     </td>
                     <td>
                         @if ($p->vehiculo)
@@ -137,7 +139,10 @@
 <!--end::Table-->
     <script>
         $('#kt_table_users1').DataTable({
-            // Habilitar el ordenamiento de columnas
-            ordering: false,
+            lengthMenu: [ -1 ],
+            ordering: true,
+            initComplete: function() {
+                this.api().order([0, "desc"]).draw();
+            }
         });
     </script>

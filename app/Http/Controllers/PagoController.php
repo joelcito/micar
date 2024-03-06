@@ -262,6 +262,7 @@ class PagoController extends Controller
             $pago->monto         = $request->input('importe_pagar');
             $pago->fecha         = date('Y-m-d H:i:s');
             $pago->apertura_caja = "No";
+            $pago->descripcion   = "PAGO CUENTA POR COBRAR";
             $pago->tipo_pago     = $request->input('tipo_pago');
             $pago->estado        = ($pago->tipo_pago === 'efectivo' )? 'Ingreso' : 'Salida';
             $pago->save();
@@ -686,6 +687,7 @@ class PagoController extends Controller
                     $pago->monto         = $pagarFactura;
                     $pago->fecha         = date('Y-m-d H:i:s');
                     $pago->apertura_caja = "No";
+                    $pago->descripcion   = "PAGO CUENTA POR COBRAR";
                     $pago->tipo_pago     = "efectivo";
                     $pago->estado        = 'Ingreso';
                     $pago->save();

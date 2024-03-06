@@ -78,7 +78,7 @@
                     </form>
                     <div class="row">
                         <div class="col-md-12">
-                            <button class="btn btn-sm btn-success w-100" onclick="pagarCuenta()">Pagar</button>
+                            <button class="btn btn-sm btn-success w-100" id="boton_pagarCuenta" onclick="pagarCuenta()">Pagar</button>
                         </div>
                     </div>
                 </div>
@@ -195,11 +195,27 @@
             $("#importe_pagar").val(0);
             $("#tipo_pago").val("");
             $("#importe_pagar").attr("max", (total)-(pagado));
+
+            // Obtén el botón y el icono de carga
+            var boton = $("#boton_pagarCuenta");
+            var iconoCarga = boton.find("i");
+            // Deshabilita el botón y muestra el icono de carga
+            boton.attr("disabled", false);
+            iconoCarga.show();
+
             $('#modalCobrar').modal('show')
         }
 
         function pagarCuenta(){
             if($("#formulario_cobro")[0].checkValidity()){
+                
+                // Obtén el botón y el icono de carga
+                var boton = $("#boton_pagarCuenta");
+                var iconoCarga = boton.find("i");
+                // Deshabilita el botón y muestra el icono de carga
+                boton.attr("disabled", true);
+                iconoCarga.show();
+
                 datos = $("#formulario_cobro").serializeArray()
                 $.ajax({
                     url: "{{ url('pago/pagarCuenta') }}",
