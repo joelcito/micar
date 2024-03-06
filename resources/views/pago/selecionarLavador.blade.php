@@ -112,7 +112,7 @@
             <div class="row">
                 <div class="col-md-3">
                     <label class="required fw-semibold fs-6 mb-2">Total Servicios</label>
-                    <input type="number" step="0.01" readonly class="form-control form-control-solid" name="total_servicios_lavador" id="total_servicios_lavador" value="{{ $sumaTatalPagar }}" required>
+                    <input type="number" step="0.01" readonly class="form-control form-control-solid" name="total_servicios_lavador" id="total_servicios_lavador" value="{{ $sumaTatalPagar }}" required min="1">
                 </div>
                 <div class="col-md-3">
                     <label class="required fw-semibold fs-6 mb-2">Cuentas por cobrar</label>
@@ -120,7 +120,7 @@
                 </div>
                 <div class="col-md-3">
                     <label class="required fw-semibold fs-6 mb-2">Liquido Pagable</label>
-                    <input type="number" class="form-control form-control-solid" name="total_liquido_pagable" id="total_liquido_pagable" value="{{ $sumaTatalPagar }}" readonly required>
+                    <input type="number" class="form-control form-control-solid" name="total_liquido_pagable" id="total_liquido_pagable" value="{{ $sumaTatalPagar }}" readonly required min="1">
                 </div>
                 <div class="col-md-3">
                     <button class="btn btn-success w-100 btn-sm mt-9" type="button" onclick="cancelarVendedor()">Pagar</button>
@@ -129,12 +129,12 @@
         </form>
     </div>
 </div>
-@section('js')
+{{-- @section('js')
 
 <script>
     console.log("hola che")
 </script>
-@endsection
+@endsection --}}
 <script>
     $('#tabla_user').DataTable({
         ordering: false
@@ -167,28 +167,37 @@
 
 
         if($("#formulario_pagar_vendedor")[0].checkValidity()){
-            $.ajax({
-                url: "{{ url('pago/cancelarVendedor') }}",
-                type: 'POST',
-                data:{
-                    total_servicios_lavador : $('#total_servicios_lavador').val(),
-                    cuentas_por_cobrar_pagar: $('#cuentas_por_cobrar_pagar').val(),
-                    total_liquido_pagable   : $('#total_liquido_pagable').val(),
-                    lavador_cliente         : $('#cliente_lavador').val(),
-                    fecha_ini               : "{{ $fecha_ini }}",
-                    fecha_fin               : "{{ $fecha_fin }}",
-                    lavador_usuario         : "{{ $lavador->id }}"
-                },
-                dataType: 'json',
-                success: function(data) {
-                    if(data.estado === 'success'){
-                        console.log(data)
-                        let url = "{{ asset('pago/imprimeLiquidacionVendedor') }}/"+data.LiquidacionLavadorPago.id;
-                        window.location.href = url;
+            if($('#total_servicios_lavador').val() > 0 && $('#total_liquido_pagable').val() > 0){
+                $.ajax({
+                    url: "{{ url('pago/cancelarVendedor') }}",
+                    type: 'POST',
+                    data:{
+                        total_servicios_lavador : $('#total_servicios_lavador').val(),
+                        cuentas_por_cobrar_pagar: $('#cuentas_por_cobrar_pagar').val(),
+                        total_liquido_pagable   : $('#total_liquido_pagable').val(),
+                        lavador_cliente         : $('#cliente_lavador').val(),
+                        fecha_ini               : "{{ $fecha_ini }}",
+                        fecha_fin               : "{{ $fecha_fin }}",
+                        lavador_usuario         : "{{ $lavador->id }}"
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        if(data.estado === 'success'){
+                            console.log(data)
+                            let url = "{{ asset('pago/imprimeLiquidacionVendedor') }}/"+data.LiquidacionLavadorPago.id;
+                            window.location.href = url;
+                        }
                     }
-                }
-            });
+                });
+            }else{
+                Swal.fire({
+                    icon : 'error',
+                    title: "ERRORA AL PROCESAR",
+                    text : "El (Total Servicios) y el (Liquido Pagable) deben ser mayor a 0",
+                })
+            }
         }else{
+            console.log("no")
             $("#formulario_pagar_vendedor")[0].reportValidity()
         }
     }
