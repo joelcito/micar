@@ -21,9 +21,9 @@
                             <div class="col-md-4">
                                 <div class="fv-row mb-7">
                                     <label class="required fw-semibold fs-6 mb-2">Monto</label>
-                                    <input type="number" id="monto" name="monto" class="form-control form-control-solid mb-3 mb-lg-0">
-                                    <input type="hidden" id="tipo" name="tipo">
-                                    <input type="hidden" value="{{ $vender }}" id="caja_abierto_ingre_cerra" name="caja_abierto_ingre_cerra">
+                                    <input type="number" id="monto" name="monto" class="form-control form-control-solid mb-3 mb-lg-0" min="0.1" step="0.01" value="0" required>
+                                    <input type="hidden" id="tipo" name="tipo" required>
+                                    <input type="hidden" value="{{ $vender }}" id="caja_abierto_ingre_cerra" name="caja_abierto_ingre_cerra" required>
                                 </div>
                             </div>
                             <div class="col-md-8">
