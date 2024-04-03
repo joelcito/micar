@@ -116,7 +116,8 @@
                 </div>
                 <div class="col-md-3">
                     <label class="required fw-semibold fs-6 mb-2">Cuentas por cobrar</label>
-                    <input type="number" class="form-control form-control-solid" name="cuentas_por_cobrar_pagar" id="cuentas_por_cobrar_pagar" value="0" min="0.1" step="0.01" oninput="realizarCalculo()" required>
+                    {{-- <input type="number" class="form-control form-control-solid" name="cuentas_por_cobrar_pagar" id="cuentas_por_cobrar_pagar" value="0" min="0.1" step="0.01" oninput="realizarCalculo()" required> --}}
+                    <input type="number" class="form-control form-control-solid" name="cuentas_por_cobrar_pagar" id="cuentas_por_cobrar_pagar" value="0" min="0" step="0.01" oninput="realizarCalculo()" required>
                 </div>
                 <div class="col-md-3">
                     <label class="required fw-semibold fs-6 mb-2">Liquido Pagable</label>
