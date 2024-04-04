@@ -42,7 +42,7 @@
                             <div class="col-md-6">
                                 <div class="fv-row mb-4">
                                     <label class="required fw-semibold fs-6 mb-2">Precio</label>
-                                    <input type="number" class="form-control form-control-solid" required name="new_precio" id="new_precio" min="1">
+                                    <input type="number" class="form-control form-control-solid" required name="new_precio" id="new_precio" min="0.1" step="0.01">
                                 </div>
                             </div>
                             <div class="col-md-6">
