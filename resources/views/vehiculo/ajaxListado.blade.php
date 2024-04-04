@@ -11,6 +11,7 @@
                 <th>Placa</th>
                 <th>Color</th>
                 <th>Marca</th>
+                <th>Celular</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -21,6 +22,7 @@
                   <td>{{ $v->placa }}</td>
                   <td>{{ $v->color }}</td>
                   <td>{{ $v->marca }}</td>
+                  <td>{{ $v->celular }}</td>
                   <td>
                     <button class="btn btn-success btn-icon btn-sm" {{ (!$vender)? 'disabled' : '' }} onclick="agregarServicio('{{ $v->placa }}', '{{ $v->marca }}', '{{ $v->ap_paterno }}', '{{ $v->ap_materno }}', '{{ $v->nombres }}', '{{ $v->idvehiculo }}', '{{ $v->idcliente }}', '{{ $v->complemento }}')"><i class="fa fa-donate"></i></button>
                     @if(Auth::user()->isDelete())
