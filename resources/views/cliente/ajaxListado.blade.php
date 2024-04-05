@@ -6,6 +6,7 @@
                 <th class="min-w-125px">Ap Paterno</th>
                 <th class="min-w-125px">Ap Materno</th>
                 <th class="min-w-125px">Nombres</th>
+                <th class="min-w-125px">Celular</th>
                 <th class="text-end min-w-100px">Actions</th>
             </tr>
         </thead>
@@ -24,6 +25,9 @@
                     <td>
                         <a class="text-gray-800 text-hover-primary">{{ $c->nombres }}</a>
                     </td>
+                    <td>
+                        <a class="text-gray-800 text-hover-primary">{{ $c->celular }}</a>
+                    </td>
                     <td class="text-end">
                         {{-- <button class="btn btn-warning btn-icon btn-sm" onclick="editarCliente('{{ $c->id }}', '{{ $c->nombres }}', '{{ $c->ap_paterno }}', '{{ $c->ap_materno }}', '{{ $c->cedula }}', '{{ $c->complemento }}', '{{ $c->nit }}', '{{ $c->razon_social }}', '{{ $c->correo }}', '{{ $c->celular }}')"><i class="fa fa-edit"></i></button> --}}
                         <a href="{{ url('cliente/perfil',[$c->id]) }}" class="btn btn-info btn-icon btn-sm"><i class="fa fa-eye"></i></a>
@@ -39,7 +43,8 @@
     </table>
     <script>
         $('#tabla_user').DataTable({
-            dom: 'lfrtip',
+            dom: 'lrtip',
+            // dom: 'lfrtip',
             lengthMenu: [10, 25, 50, 100], // Opciones de longitud de página
             language: {
                 // Personalizar textos y mensajes
@@ -54,7 +59,7 @@
                 info      : 'Mostrando _START_ a _END_ de _TOTAL_ registros',
                 emptyTable: 'No hay datos disponibles'
             },
-            order:[],
-            responsive:true
+            order     : [],
+            responsive: true,
         });
     </script>

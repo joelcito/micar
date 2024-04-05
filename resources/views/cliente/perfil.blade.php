@@ -116,22 +116,28 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="fv-row mb-7">
                             <label class="required fw-semibold fs-6 mb-2">Nit</label>
                             <input type="text" class="form-control" value="{{ $cliente->nit }}" id="act_nit" name="act_nit">
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="fv-row mb-7">
                             <label class="required fw-semibold fs-6 mb-2">Razon Social</label>
                             <input type="text" class="form-control" value="{{ $cliente->razon_social }}" id="act_razon_social" name="act_razon_social">
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="fv-row mb-7">
                             <label class="required fw-semibold fs-6 mb-2">Correo</label>
                             <input type="text" class="form-control" value="{{ $cliente->correo }}"  id="act_correo" name="act_correo">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="fv-row mb-7">
+                            <label class="required fw-semibold fs-6 mb-2">Ceular</label>
+                            <input type="number" class="form-control" value="{{ $cliente->celular }}"  id="act_celular" name="act_celular">
                         </div>
                     </div>
                 </div>

@@ -157,6 +157,24 @@
         <!--end::Card header-->
         <!--begin::Card body-->
         <div class="card-body py-4">
+            <div class="row">
+                <div class="col-md-3">
+                    <label class="fw-semibold fs-6 mb-2">Cedula</label>
+                    <input type="text" class="form-control" name="buscar_cedula" id="buscar_cedula">
+                </div>
+                <div class="col-md-3">
+                    <label class="fw-semibold fs-6 mb-2">Ap Paterno</label>
+                    <input type="text" class="form-control" name="buscar_paterno" id="buscar_paterno">
+                </div>
+                <div class="col-md-3">
+                    <label class="fw-semibold fs-6 mb-2">Ap Materno</label>
+                    <input type="text" class="form-control" name="buscar_materno" id="buscar_materno">
+                </div>
+                <div class="col-md-3">
+                    <label class="fw-semibold fs-6 mb-2">Nombres</label>
+                    <input type="text" class="form-control" name="buscar_nombres" id="buscar_nombres">
+                </div>
+            </div>
             <div id="table_categoria">
 
             </div>
@@ -178,12 +196,55 @@
 
         $( document ).ready(function() {
             ajaxListado();
+
+
+            $('#buscar_cedula, #buscar_paterno, #buscar_materno, #buscar_nombres').on('keyup', function(){
+
+                var id              = $(this).attr('id');
+                var valor           = $(this).val().trim();
+                var contadorCedula  = 0;
+                var contadorPaterno = 0;
+                var contadorMaterno = 0;
+                var contadorNombre  = 0;
+
+                switch (id) {
+                    case 'buscar_cedula':
+                        contadorCedula = valor.length;
+                        break;
+                    case 'buscar_paterno':
+                        contadorPaterno = valor.length;
+                        break;
+                    case 'buscar_materno':
+                        contadorMaterno = valor.length;
+                        break;
+                    case 'buscar_nombres':
+                        contadorNombre = valor.length;
+                        break;
+                    default:
+                        break;
+                }
+
+                if (contadorCedula >= 3 || contadorPaterno >= 3 || contadorMaterno >= 3 || contadorNombre >= 3) {
+                    ajaxListado();
+                    // $('#table_vehiculos').show('toggle');
+                    // $('#detalle_ventas').hide('toggle');
+                }
+
+            });
+
         });
 
         function ajaxListado(){
+            let datos = {
+                buscar_cedula : $('#buscar_cedula').val(),
+                buscar_paterno: $('#buscar_paterno').val(),
+                buscar_materno: $('#buscar_materno').val(),
+                buscar_nombres: $('#buscar_nombres').val(),
+            }
             $.ajax({
                 url: "{{ url('cliente/ajaxListado') }}",
                 type: 'POST',
+                data: datos,
                 dataType: 'json',
                 success: function(data) {
                     if(data.estado === 'success')
