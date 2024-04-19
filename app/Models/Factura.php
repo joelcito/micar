@@ -23,8 +23,11 @@ class Factura extends Model
         $facturas = Factura::where('estado_pago', 'Deuda')
                             ->where('vehiculo_id',$vehiculo)
                             ->where('cliente_id',$cliente)
+                            ->whereNull('estado')
                             ->orderBy('id', 'asc')
                             ->get();
+                            // ->toSql();
+                            // dd($facturas, $vehiculo, $cliente);
 
         return $facturas;
     }
