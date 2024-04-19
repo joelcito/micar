@@ -182,7 +182,7 @@ class PagoController extends Controller
 
             if(!is_null($request->input('nombre'))){
                 $nombre = $request->input('nombre');
-                $query->where('clientes.nombres', $nombre);
+                $query->where('clientes.nombres', 'like', "%$nombre%");
             }
 
             if(!is_null($request->input('appaterno'))){
@@ -214,6 +214,8 @@ class PagoController extends Controller
             $facturas = $query->where('facturas.estado_pago', 'Deuda')
                                 ->whereNull('facturas.estado')
                                 ->get();
+                                // ->toSql();
+            // dd($facturas);
 
             // PARA VER SI HAY CAJA O NO
             $ultimaCajaAperturada = Caja::where('estado', 'Abierto')

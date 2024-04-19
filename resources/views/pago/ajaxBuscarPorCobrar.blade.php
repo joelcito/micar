@@ -9,6 +9,7 @@
             <th>Cedula</th>
             <th>Placa</th>
             <th>Fecha</th>
+            <th>Rec/Fac</th>
             <th>Importe Total</th>
             <th>Importe Pagado</th>
             <th>Importe Saldo</th>
@@ -29,6 +30,13 @@
                 <td>{{ $f->cliente->cedula }}</td>
                 <td>{{ $f->vehiculo->placa }}</td>
                 <td>{{ date('d/m/Y h:i a', strtotime($f->fecha)) }}</td>
+                <td>
+                    @if ($f->facturado == "Si")
+                        <span class="text-success">N° Fac: </span>{{ $f->numero }}
+                    @else
+                        <span class="text-primary">N° Rec: </span>{{ $f->numero_recibo }}
+                    @endif
+                </td>
                 <td>{{ number_format($f->total,2) }}</td>
                 <td>{{ number_format($pagado, 2) }}</td>
                 <td>{{ number_format(((double)$f->total - (double)$pagado), 2) }}</td>
