@@ -234,6 +234,7 @@
                     <thead>
                         <tr>
                             <th>CANT</th>
+                            <th>LAV.</th>
                             <th>DESCRIPCION</th>
                             <th>P.UNIT.</th>
                             <th>P.TOTAL</th>
@@ -250,6 +251,11 @@
                         @endphp
                         <tr>
                             <td>{{ $pago->cantidad }}</td>
+                            <td>
+                                @if ($pago->lavador)
+                                {{ $pago->lavador->nombres." ".$pago->lavador->ap_paterno." ".$pago->lavador->ap_materno }}
+                                @endif
+                            </td>
                             <td>{{ $pago->servicio->descripcion }}</td>
                             <td>{{ $pago->precio }}</td>
                             <td>{{ $pago->importe }}</td>
