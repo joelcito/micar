@@ -51,6 +51,7 @@
 
                         <a href="{{ url('user/detalle',[$u->id]) }}" class="btn btn-icon btn-info btn-sm"><i class="fa fa-eye"></i></a>
                         @if (Auth::user()->isDelete())
+                            <button class="btn btn-dark btn-icon btn-sm" onclick="cambiarPass({{ $u->id }})"><i class="fa fa-lock"></i></button>
                             <button class="btn btn-icon btn-danger btn-sm" onclick="eliminarUsuario('{{ $u->id }}', '{{ $u->name }}')"><i class="fa fa-trash"></i></button>
                         @endif
                     </td>

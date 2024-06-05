@@ -207,7 +207,7 @@
                                             </form>
 										</div>
                                         <div class="menu-item px-5">
-                                            <a class="menu-link px-5" onclick="cambiarPass()">Cambiar Contraseña</a>
+                                            <a class="menu-link px-5" onclick="cambiarPass({{ Auth::user()->id }})">Cambiar Contraseña</a>
 										</div>
 										<!--end::Menu item-->
 									</div>
@@ -1619,7 +1619,7 @@
                                 <div class="col-md-6">
                                     <div class="fv-row mb-7">
                                         <label class="required fw-semibold fs-6 mb-2">Nueva Contraseña</label>
-                                        <input type="hidden" id="user_id_new_pro" name="user_id_new_pro" value="{{ Auth::user()->id }}" required>
+                                        <input type="text" id="user_id_new_pro" name="user_id_new_pro" value="0" required>
                                         <input type="password" id="pass1" name="pass1" class="form-control form-control-solid mb-3 mb-lg-0" oneyup="verificarTiempoReal()" required>
                                     </div>
                                 </div>
@@ -1653,7 +1653,8 @@
 		<script src="{{ asset('assets/js/scripts.bundle.js') }}"></script>
 
         <script>
-            function cambiarPass(){
+            function cambiarPass(usuario){
+				$('#user_id_new_pro').val(usuario)
                 $('#kt_modal_upgrade_plan').modal('show')
             }
 
