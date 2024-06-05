@@ -1619,7 +1619,7 @@
                                 <div class="col-md-6">
                                     <div class="fv-row mb-7">
                                         <label class="required fw-semibold fs-6 mb-2">Nueva Contraseña</label>
-                                        <input type="text" id="user_id_new_pro" name="user_id_new_pro" value="0" required>
+                                        <input type="hidden" id="user_id_new_pro" name="user_id_new_pro" value="0" required>
                                         <input type="password" id="pass1" name="pass1" class="form-control form-control-solid mb-3 mb-lg-0" oneyup="verificarTiempoReal()" required>
                                     </div>
                                 </div>
