@@ -95,7 +95,7 @@ class PagoController extends Controller
         ){
             $pagos = $query->limit(50)->get();
         }else{
-            $pagos = $query->orderBy('facturas.id', 'desc')->limit(100)->get();
+            $pagos = $query->orderBy('facturas.id', 'desc')->limit(500)->get();
             // $pagos = $query->orderBy('facturas.id', 'desc')->limit(100)->toSql();
             // dd(
             //     $pagos,

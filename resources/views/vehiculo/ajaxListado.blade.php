@@ -24,6 +24,7 @@
                   <td>{{ $v->marca }}</td>
                   <td>{{ $v->celular }}</td>
                   <td>
+                    <a href="{{ url('cliente/perfil',[$v->idcliente]) }}" class="btn btn-warning btn-icon btn-sm"><i class="fa fa-edit"></i></a>
                     <button class="btn btn-success btn-icon btn-sm" {{ (!$vender)? 'disabled' : '' }} onclick="agregarServicio('{{ $v->placa }}', '{{ $v->marca }}', '{{ $v->ap_paterno }}', '{{ $v->ap_materno }}', '{{ $v->nombres }}', '{{ $v->idvehiculo }}', '{{ $v->idcliente }}', '{{ $v->complemento }}')"><i class="fa fa-donate"></i></button>
                     @if(Auth::user()->isDelete())
                         <button class="btn btn-danger btn-icon btn-sm" onclick="eliminrCategoria('{{ $v->idvehiculo }}')"><i class="fa fa-trash"></i></button>
