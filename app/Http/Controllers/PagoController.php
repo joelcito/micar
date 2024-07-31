@@ -48,7 +48,7 @@ class PagoController extends Controller
     protected function listadoArray($datos){
 
         // $query = Factura::select("*")
-        $query = Factura::select("*", "facturas.id as factura_id", "facturas.estado as estado_factura")
+        $query = Factura::select("*", "facturas.id as factura_id", "facturas.estado as estado_factura", "facturas.nit as nitFactura")
                         ->join('clientes', 'clientes.id', '=', 'facturas.cliente_id')
                         ->join('vehiculos', 'vehiculos.id', '=', 'facturas.vehiculo_id');
 
@@ -70,7 +70,8 @@ class PagoController extends Controller
         }
         if(!is_null($datos['buscar_nit'])){
             $nit = $datos['buscar_nit'];
-            $query->where('clientes.nit',  "%$nit%");
+            // $query->where('clientes.nit', "$nit");
+            $query->where('facturas.nit', "$nit");
         }
         if(!is_null($datos['buscar_fecha_ini']) && !is_null($datos['buscar_fecha_fin'])){
             $fecha_ini = $datos['buscar_fecha_ini'];

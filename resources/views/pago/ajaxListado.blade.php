@@ -5,6 +5,7 @@
                 <th>ID</th>
                 <th>Placa</th>
                 <th >Cliente</th>
+                <th >Nit</th>
                 <th >Fecha</th>
                 <th >Monto</th>
                 <th >Tipo</th>
@@ -32,6 +33,9 @@
                         @if ($p->vehiculo)
                         <a class="text-gray-800 text-hover-primary mb-1">{{ $p->vehiculo->cliente->nombres." ".$p->vehiculo->cliente->ap_paterno." ".$p->vehiculo->cliente->ap_materno }}</a>
                         @endif
+                    </td>
+                    <td>
+                        <a class="text-gray-800 text-hover-primary mb-1">{{ $p->nitFactura }}</a>
                     </td>
                     <td>
                         <a class="text-gray-800 text-hover-primary mb-1">{{ $p->fecha }}</a>

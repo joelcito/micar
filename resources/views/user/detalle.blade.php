@@ -246,6 +246,7 @@
                                                                     <thead>
                                                                         <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
                                                                             <th>Servicio</th>
+                                                                            <th>Placa</th>
                                                                             <th>Precio</th>
                                                                             <th>Cantidad</th>
                                                                             <th>Descuento</th>
@@ -258,6 +259,7 @@
                                                                         @forelse ( $serviciosRealizados as  $ser )
                                                                             <tr>
                                                                                 <td>{{ $ser->servicio->descripcion }}</td>
+                                                                                <td>{{ $ser->vehiculo->placa }}</td>
                                                                                 <td>{{ $ser->precio }}</td>
                                                                                 <td>{{ $ser->cantidad }}</td>
                                                                                 <td>{{ $ser->descuento }}</td>

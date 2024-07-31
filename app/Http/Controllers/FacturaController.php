@@ -136,6 +136,9 @@ class FacturaController extends Controller
 
             // dd($request->all());
 
+            $newNumeroFacturaDesdeBack = $this->numeroFactura() + 1;
+            $datos['factura'][0]['cabecera']['numeroFactura'] = $newNumeroFacturaDesdeBack;
+
             // ********************************* ESTO ES PARA GENERAR LA FACTURA *********************************
             $datos           = $request->input('datos');
             $datosVehiculo   = $request->input('datosVehiculo');
