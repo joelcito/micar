@@ -777,6 +777,20 @@ class PagoController extends Controller
 
     }
 
+    public function verQueDebe(Request $request){
+
+        if($request->ajax()){
+
+            dd($request->all());
+            
+        }else{
+
+        }
+
+        // return $data;
+        
+    } 
+
 
 
     // public function ajaxServiciosMasa(Request $request){

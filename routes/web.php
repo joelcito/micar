@@ -151,6 +151,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/selecionarLavador', [PagoController::class, 'selecionarLavador']);
         Route::post('/buscarCuentasPorCobrar', [PagoController::class, 'buscarCuentasPorCobrar']);
         Route::post('/cancelarVendedor', [PagoController::class, 'cancelarVendedor']);
+        Route::post('/verQueDebe', [PagoController::class, 'verQueDebe']);
     });
 
     // Route::post('/pago/ajaxListado', [PagoController::class, 'ajaxListado']);

@@ -78,10 +78,13 @@ class Detalle extends Model
                     })
                     ->where('detalles.lavador_id', $lavador)
                     ->where('detalles.estado_liquidacion', 'Debe')
+                    ->where('detalles.estado', 'Finalizado')
                     ->whereBetween('detalles.fecha', [$fecha_ini, $fecha_fin])
                     ->whereNull('detalles.deleted_at')
                     ->groupBy('detalles.servicio_id', 'liquidacion_lavadores.tipo_liquidacion', 'liquidacion_lavadores.liquidacion')
                     ->get();
+                    // ->toSql();
+                    // dd($detalles, $lavador, $fecha_ini, $fecha_fin);
 
         return $detalles;
                 

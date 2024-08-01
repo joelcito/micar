@@ -241,8 +241,31 @@
             }
         }
 
-        function verQueDebe(){
+        function verQueDebe(factura){
+            $.ajax({
+                    url: "{{ url('pago/verQueDebe') }}",
+                    data:{
+                        factura:factura
+                    },
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function(data) {
 
+                        console.log(data)
+
+                        // if(data.estado === 'success'){
+                        //     Swal.fire({
+                        //         icon: 'success',
+                        //         title: "Se guardo con exito!",
+                        //         showConfirmButton: false, // No mostrar botón de confirmación
+                        //         timer: 1500, // 5 segundos
+                        //         timerProgressBar: true
+                        //     });
+                        //     ajaxListado();
+                        //     $('#modalCobrar').modal('hide')
+                        // }
+                    }
+                });
         }
     </script>
 @endsection

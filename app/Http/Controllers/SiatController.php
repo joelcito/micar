@@ -32,35 +32,35 @@ class SiatController extends Controller
     }
 
     // ******************************** DESARROLLO ********************************
-    // protected $header                   = "apikey: TokenApi eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI1NDI3NjQ4U2N6IiwiY29kaWdvU2lzdGVtYSI6Ijc3MkNCMUI1QTc0OUI0MTk0MjBGQjA2Iiwibml0IjoiSDRzSUFBQUFBQUFBQURNMU1USTNNN0V3TURRREFBc2lNQ29LQUFBQSIsImlkIjoxMDE3OTY5LCJleHAiOjE3MzU2ODkzMTUsImlhdCI6MTcwNjY3MzI4NSwibml0RGVsZWdhZG8iOjU0Mjc2NDgwMTYsInN1YnNpc3RlbWEiOiJTRkUifQ.DyCmanTysmzWWQ3TYV2X90oQf7C0fq36Ys3DCWyjmuM2hHxbeuLUfWWlTmewS59t37QnO4l9qiv1ZTdMVZjfAA";
-    // protected $timeout                  = 5;                            // TIEMPO EN ESPERA PARA QUE RESPONDA SITA
-    // protected $codigoAmbiente           = 2;                            // si estamos desarrollo o pruebas  1 Produccion --- 2 Desarrollo
-    // protected $codigoModalidad          = 1;                            // que modalidad de facturacion es  1 Electronica --- 2 Computarizada
-    // protected $codigoPuntoVenta;                                        // NUMOER DE QUE PUNTO DE VENTA ES
-    // protected $codigoSistema            = "772CB1B5A749B419420FB06";    // CODIGO DE SISTEMA QUE TE DA SIAT
-    // protected $codigoSucursal           = 0;                            // CODIGO DE TU SUCURSAL
-    // protected $nit                      = "5427648016";                 // NIT DE LA EMPRESA
-    // protected $codigoDocumentoSector    = 1;                            // COMPRA Y VENTA
-    // protected $url1                     = "https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionCodigos?wsdl";
-    // protected $url2                     = "https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionSincronizacion?wsdl";
-    // protected $url3                     = "https://pilotosiatservicios.impuestos.gob.bo/v2/ServicioFacturacionCompraVenta?wsdl";
-    // protected $url4                     = "https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionOperaciones?wsdl";
-
-
-    // ******************************** PRODUCCION ********************************
-    protected $header                   = "apikey: TokenApi eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI1NDI3NjQ4U2N6IiwiY29kaWdvU2lzdGVtYSI6Ijc3MkNCMUI1QTc0OUI0MTk0MjBGQjA2Iiwibml0IjoiSDRzSUFBQUFBQUFBQURNMU1USTNNN0V3TURRREFBc2lNQ29LQUFBQSIsImlkIjoxMDE3OTY5LCJleHAiOjE3MzgzMDM2OTIsImlhdCI6MTcwNjc4MjA2Miwibml0RGVsZWdhZG8iOjU0Mjc2NDgwMTYsInN1YnNpc3RlbWEiOiJTRkUifQ.XhLg40oy1MYSHU5Z5Tg7JE-VJvmqFyfdzoudCwAjO88I_ZtiNZeQHs2vWq5YQd5zrY3fR2dN57ksdV-oJTXo-A";
+    protected $header                   = "apikey: TokenApi eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI1NDI3NjQ4U2N6IiwiY29kaWdvU2lzdGVtYSI6Ijc3MkNCMUI1QTc0OUI0MTk0MjBGQjA2Iiwibml0IjoiSDRzSUFBQUFBQUFBQURNMU1USTNNN0V3TURRREFBc2lNQ29LQUFBQSIsImlkIjoxMDE3OTY5LCJleHAiOjE3MzU2ODkzMTUsImlhdCI6MTcwNjY3MzI4NSwibml0RGVsZWdhZG8iOjU0Mjc2NDgwMTYsInN1YnNpc3RlbWEiOiJTRkUifQ.DyCmanTysmzWWQ3TYV2X90oQf7C0fq36Ys3DCWyjmuM2hHxbeuLUfWWlTmewS59t37QnO4l9qiv1ZTdMVZjfAA";
     protected $timeout                  = 5;                            // TIEMPO EN ESPERA PARA QUE RESPONDA SITA
-    protected $codigoAmbiente           = 1;                            // si estamos desarrollo o pruebas  1 Produccion --- 2 Desarrollo
+    protected $codigoAmbiente           = 2;                            // si estamos desarrollo o pruebas  1 Produccion --- 2 Desarrollo
     protected $codigoModalidad          = 1;                            // que modalidad de facturacion es  1 Electronica --- 2 Computarizada
     protected $codigoPuntoVenta;                                        // NUMOER DE QUE PUNTO DE VENTA ES
     protected $codigoSistema            = "772CB1B5A749B419420FB06";    // CODIGO DE SISTEMA QUE TE DA SIAT
     protected $codigoSucursal           = 0;                            // CODIGO DE TU SUCURSAL
     protected $nit                      = "5427648016";                 // NIT DE LA EMPRESA
     protected $codigoDocumentoSector    = 1;                            // COMPRA Y VENTA
-    protected $url1                     = "https://siatrest.impuestos.gob.bo/v2/FacturacionCodigos?wsdl";
-    protected $url2                     = "https://siatrest.impuestos.gob.bo/v2/FacturacionSincronizacion?wsdl";
-    protected $url3                     = "https://siatrest.impuestos.gob.bo/v2/ServicioFacturacionCompraVenta?wsdl";
-    protected $url4                     = "https://siatrest.impuestos.gob.bo/v2/FacturacionOperaciones?wsdl";
+    protected $url1                     = "https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionCodigos?wsdl";
+    protected $url2                     = "https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionSincronizacion?wsdl";
+    protected $url3                     = "https://pilotosiatservicios.impuestos.gob.bo/v2/ServicioFacturacionCompraVenta?wsdl";
+    protected $url4                     = "https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionOperaciones?wsdl";
+
+
+    // ******************************** PRODUCCION ********************************
+    // protected $header                   = "apikey: TokenApi eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI1NDI3NjQ4U2N6IiwiY29kaWdvU2lzdGVtYSI6Ijc3MkNCMUI1QTc0OUI0MTk0MjBGQjA2Iiwibml0IjoiSDRzSUFBQUFBQUFBQURNMU1USTNNN0V3TURRREFBc2lNQ29LQUFBQSIsImlkIjoxMDE3OTY5LCJleHAiOjE3MzgzMDM2OTIsImlhdCI6MTcwNjc4MjA2Miwibml0RGVsZWdhZG8iOjU0Mjc2NDgwMTYsInN1YnNpc3RlbWEiOiJTRkUifQ.XhLg40oy1MYSHU5Z5Tg7JE-VJvmqFyfdzoudCwAjO88I_ZtiNZeQHs2vWq5YQd5zrY3fR2dN57ksdV-oJTXo-A";
+    // protected $timeout                  = 5;                            // TIEMPO EN ESPERA PARA QUE RESPONDA SITA
+    // protected $codigoAmbiente           = 1;                            // si estamos desarrollo o pruebas  1 Produccion --- 2 Desarrollo
+    // protected $codigoModalidad          = 1;                            // que modalidad de facturacion es  1 Electronica --- 2 Computarizada
+    // protected $codigoPuntoVenta;                                        // NUMOER DE QUE PUNTO DE VENTA ES
+    // protected $codigoSistema            = "772CB1B5A749B419420FB06";    // CODIGO DE SISTEMA QUE TE DA SIAT
+    // protected $codigoSucursal           = 0;                            // CODIGO DE TU SUCURSAL
+    // protected $nit                      = "5427648016";                 // NIT DE LA EMPRESA
+    // protected $codigoDocumentoSector    = 1;                            // COMPRA Y VENTA
+    // protected $url1                     = "https://siatrest.impuestos.gob.bo/v2/FacturacionCodigos?wsdl";
+    // protected $url2                     = "https://siatrest.impuestos.gob.bo/v2/FacturacionSincronizacion?wsdl";
+    // protected $url3                     = "https://siatrest.impuestos.gob.bo/v2/ServicioFacturacionCompraVenta?wsdl";
+    // protected $url4                     = "https://siatrest.impuestos.gob.bo/v2/FacturacionOperaciones?wsdl";
 
     public function verificarComunicacion(){
         $wsdl = $this->url1;

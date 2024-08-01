@@ -41,7 +41,7 @@
                 <td>{{ number_format($pagado, 2) }}</td>
                 <td>{{ number_format(((double)$f->total - (double)$pagado), 2) }}</td>
                 <td>
-                    <button class="btn btn-primary btn-icon btn-sm" onclick="verQueDebe()"><i class="fa fa-eye"></i></button>
+                    <button class="btn btn-primary btn-icon btn-sm" onclick="verQueDebe('{{ $f->id }}')"><i class="fa fa-eye"></i></button>
                     <button type="button" {{ ($vender==0)? 'disabled' : '' }} class="btn btn-sm btn-success btn-icon" onclick="abreModalPagar(
                                                                                 '{{ $f->id }}',
                                                                                 '{{ $f->cliente->ap_paterno.' '.$f->cliente->ap_materno.' '.$f->cliente->nombres }}',
