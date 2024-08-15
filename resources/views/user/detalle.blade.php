@@ -257,21 +257,23 @@
                                                                     </thead>
                                                                     <tbody class="text-gray-600 fw-semibold">
                                                                         @forelse ( $serviciosRealizados as  $ser )
-                                                                            <tr>
-                                                                                <td>{{ $ser->servicio->descripcion }}</td>
-                                                                                <td>{{ $ser->vehiculo->placa }}</td>
-                                                                                <td>{{ $ser->precio }}</td>
-                                                                                <td>{{ $ser->cantidad }}</td>
-                                                                                <td>{{ $ser->descuento }}</td>
-                                                                                <td>{{ $ser->total }}</td>
-                                                                                <td>{{ $ser->fecha }}</td>
-                                                                                <td>
-                                                                                    @if($ser->estado_liquidacion === 'Debe')
-                                                                                        <small class="badge badge-danger">Debe</small>
-                                                                                    @else
-                                                                                    <small class="badge badge-success">Pagado</small>
-                                                                                    @endif
-                                                                            </tr>
+                                                                            @if ($ser->vehiculo)
+                                                                                <tr>
+                                                                                    <td>{{ $ser->servicio->descripcion }}</td>
+                                                                                    <td>{{ $ser->vehiculo->placa }}</td>
+                                                                                    <td>{{ $ser->precio }}</td>
+                                                                                    <td>{{ $ser->cantidad }}</td>
+                                                                                    <td>{{ $ser->descuento }}</td>
+                                                                                    <td>{{ $ser->total }}</td>
+                                                                                    <td>{{ $ser->fecha }}</td>
+                                                                                    <td>
+                                                                                        @if($ser->estado_liquidacion === 'Debe')
+                                                                                            <small class="badge badge-danger">Debe</small>
+                                                                                        @else
+                                                                                        <small class="badge badge-success">Pagado</small>
+                                                                                        @endif
+                                                                                </tr>
+                                                                            @endif
                                                                         @empty
                                                                             <h4 class="text-danger text-center">Sin registros</h4>
                                                                         @endforelse
