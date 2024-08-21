@@ -228,7 +228,7 @@ class FacturaController extends Controller
 
             //  =========================   DE AQUI COMENZAMOS EL FIRMADO CHEEEEE ==============================\
 
-            $firmador = new FirmadorBoliviaSingle('assets/certificate/softoken.p12', "5427648Scz");
+            $firmador = new FirmadorBoliviaSingle('assets/certificate/softoken.p12', "Micar5427648");
             $xmlFirmado = $firmador->firmarRuta('assets/docs/facturaxml.xml');
             file_put_contents('assets/docs/facturaxml.xml', $xmlFirmado);
 
@@ -1266,7 +1266,7 @@ class FacturaController extends Controller
 
             //  =========================   DE AQUI COMENZAMOS EL FIRMADO CHEEEEE ==============================\
 
-            $firmador = new FirmadorBoliviaSingle('assets/certificate/softoken.p12', "5427648Scz");
+            $firmador = new FirmadorBoliviaSingle('assets/certificate/softoken.p12', "Micar5427648");
             $xmlFirmado = $firmador->firmarRuta('assets/docs/facturaxml.xml');
             file_put_contents('assets/docs/facturaxml.xml', $xmlFirmado);
 
@@ -2064,7 +2064,7 @@ class FacturaController extends Controller
 
                 //  =========================   DE AQUI COMENZAMOS EL FIRMADO CHEEEEE ==============================\
 
-                $firmador = new FirmadorBoliviaSingle('assets/certificate/softoken.p12', "5427648Scz");
+                $firmador = new FirmadorBoliviaSingle('assets/certificate/softoken.p12', "Micar5427648");
                 $xmlFirmado = $firmador->firmarRuta('assets/docs/facturaxml.xml');
                 file_put_contents('assets/docs/facturaxml.xml', $xmlFirmado);
 
