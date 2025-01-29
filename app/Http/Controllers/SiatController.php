@@ -32,7 +32,7 @@ class SiatController extends Controller
     }
 
     // ******************************** DESARROLLO ********************************
-    // protected $header                   = "apikey: TokenApi eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI1NDI3NjQ4U2N6IiwiY29kaWdvU2lzdGVtYSI6Ijc3MkNCMUI1QTc0OUI0MTk0MjBGQjA2Iiwibml0IjoiSDRzSUFBQUFBQUFBQURNMU1USTNNN0V3TURRREFBc2lNQ29LQUFBQSIsImlkIjoxMDE3OTY5LCJleHAiOjE3MzU2ODkzMTUsImlhdCI6MTcwNjY3MzI4NSwibml0RGVsZWdhZG8iOjU0Mjc2NDgwMTYsInN1YnNpc3RlbWEiOiJTRkUifQ.DyCmanTysmzWWQ3TYV2X90oQf7C0fq36Ys3DCWyjmuM2hHxbeuLUfWWlTmewS59t37QnO4l9qiv1ZTdMVZjfAA";
+    // protected $header                   = "apikey: TokenApi eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtaWNhcmF1dG9sYXZhZG9AZ21haWwuY29tIiwiY29kaWdvU2lzdGVtYSI6Ijc3MkNCMUI1QTc0OUI0MTk0MjBGQjA2Iiwibml0IjoiSDRzSUFBQUFBQUFBQURNMU1USTNNN0V3TURRREFBc2lNQ29LQUFBQSIsImlkIjo1NDI0NjE0LCJleHAiOjE3Njk2Nzg1MTMsImlhdCI6MTczODE1Njg4Mywibml0RGVsZWdhZG8iOjU0Mjc2NDgwMTYsInN1YnNpc3RlbWEiOiJTRkUifQ.h-nbE4prNWPJA0Rl20T5iaWsPZZGQAvp1_KpFsvMmnY0g7zMMp72N8H_o22ONV2KMFC8k5raTt5dFH4FrKr3ZA";
     // protected $timeout                  = 5;                            // TIEMPO EN ESPERA PARA QUE RESPONDA SITA
     // protected $codigoAmbiente           = 2;                            // si estamos desarrollo o pruebas  1 Produccion --- 2 Desarrollo
     // protected $codigoModalidad          = 1;                            // que modalidad de facturacion es  1 Electronica --- 2 Computarizada
