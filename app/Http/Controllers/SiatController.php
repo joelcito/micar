@@ -16,7 +16,7 @@ class SiatController extends Controller
         if(!session()->has('scuis')){
             $codigoCuis = json_decode($this->cuis());
             if($codigoCuis->estado === "success"){
-                // dd($codigoCuis);
+                dd($codigoCuis);
                 session(['scuis'                => $codigoCuis->resultado->RespuestaCuis->codigo]);
                 session(['sfechaVigenciaCuis'   => $codigoCuis->resultado->RespuestaCuis->fechaVigencia]);
                 $data['$codigoCuis->estado === "success"'] = 'si';
