@@ -23,7 +23,7 @@ class SiatController extends Controller
                     session(['sfechaVigenciaCuis'   => $codigoCuis->resultado->RespuestaCuis->fechaVigencia]);
                     $data['$codigoCuis->estado === "success"'] = 'si';
                 }else{
-                    session(['scuis'                => '5E173918']);
+                    session(['scuis'                => '5FBF22F7']);
                     session(['sfechaVigenciaCuis'   => 'VERIFICAR']);
                 }
             }else{
