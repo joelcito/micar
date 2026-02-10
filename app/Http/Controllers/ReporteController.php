@@ -127,9 +127,11 @@ class ReporteController extends Controller
                                 ->sum('salida');
 
             $ingresoFechaNot = $movs->where('fecha', '<', $fecha_ini)
+                                    ->whereNotBetween('fecha', [$fecha_ini." 00:00:00", $fecha_fin." 23:59:59"])
                                     ->sum('ingreso');
 
             $salidaFechaNot = $movs->where('fecha', '<', $fecha_ini)
+                                    ->whereNotBetween('fecha', [$fecha_ini." 00:00:00", $fecha_fin." 23:59:59"])
                                     ->sum('salida');
 
             $sheet->setCellValue("C$contadorFilas", $ingresoFechaNot - $salidaFechaNot);
