@@ -70,13 +70,13 @@ class ReporteController extends Controller
         $fecha_ini = $request->input('fecha_ini');
         $fecha_fin = $request->input('fecha_fin');
 
-        // $servicios = Servicio::select('servicios.*')
-        //                         ->where('servicios.estado','producto')
-        //                         ->get();
+        $servicios = Servicio::select('servicios.*')
+                                ->where('servicios.estado','producto')
+                                ->get();
 
-        $servicios = Servicio::with('movimientosFinalizados')
-                            ->where('servicios.estado', 'producto')
-                            ->get();
+        // $servicios = Servicio::with('movimientosFinalizados')
+        //                     ->where('servicios.estado', 'producto')
+        //                     ->get();
 
         // -******* GENERECION DEL EXCEL -*******
         $fileName = 'reporte_inventario.xlsx';
@@ -101,38 +101,38 @@ class ReporteController extends Controller
 
         foreach($servicios as $key => $s){
 
-            $movs = $s->movimientosFinalizados;
+            // $movs = $s->movimientosFinalizados;
 
             $sheet->setCellValue("A$contadorFilas", $s->id);
             $sheet->setCellValue("B$contadorFilas", $s->descripcion);
 
-            // $ingresoFecha = $s->movimientos->whereBetween('fecha', [$fecha_ini." 00:00:00", $fecha_fin." 23:59:59"])
-            //                                 ->sum('ingreso');
+            $ingresoFecha = $s->movimientos->whereBetween('fecha', [$fecha_ini." 00:00:00", $fecha_fin." 23:59:59"])
+                                            ->sum('ingreso');
 
-            // $salidaFecha = $s->movimientos->whereBetween('fecha', [$fecha_ini." 00:00:00", $fecha_fin." 23:59:59"])
-            //                                 ->sum('salida');
+            $salidaFecha = $s->movimientos->whereBetween('fecha', [$fecha_ini." 00:00:00", $fecha_fin." 23:59:59"])
+                                            ->sum('salida');
 
-            // $ingresoFechaNot = $s->movimientos->where('fecha', '<',$fecha_ini)
-            //                                 ->whereNotBetween('fecha', [$fecha_ini." 00:00:00", $fecha_fin." 23:59:59"])
-            //                                 ->sum('ingreso');
+            $ingresoFechaNot = $s->movimientos->where('fecha', '<',$fecha_ini)
+                                            ->whereNotBetween('fecha', [$fecha_ini." 00:00:00", $fecha_fin." 23:59:59"])
+                                            ->sum('ingreso');
 
-            // $salidaFechaNot = $s->movimientos->where('fecha', '<',$fecha_ini)
-            //                                 ->whereNotBetween('fecha', [$fecha_ini." 00:00:00", $fecha_fin." 23:59:59"])
-            //                                 ->sum('salida');
+            $salidaFechaNot = $s->movimientos->where('fecha', '<',$fecha_ini)
+                                            ->whereNotBetween('fecha', [$fecha_ini." 00:00:00", $fecha_fin." 23:59:59"])
+                                            ->sum('salida');
 
-            $ingresoFecha = $movs->whereBetween('fecha', [$fecha_ini . " 00:00:00", $fecha_fin . " 23:59:59"])
-                                ->sum('ingreso');
+            // $ingresoFecha = $movs->whereBetween('fecha', [$fecha_ini . " 00:00:00", $fecha_fin . " 23:59:59"])
+            //                     ->sum('ingreso');
 
-            $salidaFecha = $movs->whereBetween('fecha', [$fecha_ini . " 00:00:00", $fecha_fin . " 23:59:59"])
-                                ->sum('salida');
+            // $salidaFecha = $movs->whereBetween('fecha', [$fecha_ini . " 00:00:00", $fecha_fin . " 23:59:59"])
+            //                     ->sum('salida');
 
-            $ingresoFechaNot = $movs->where('fecha', '<', $fecha_ini)
-                                    ->whereNotBetween('fecha', [$fecha_ini." 00:00:00", $fecha_fin." 23:59:59"])
-                                    ->sum('ingreso');
+            // $ingresoFechaNot = $movs->where('fecha', '<', $fecha_ini)
+            //                         ->whereNotBetween('fecha', [$fecha_ini." 00:00:00", $fecha_fin." 23:59:59"])
+            //                         ->sum('ingreso');
 
-            $salidaFechaNot = $movs->where('fecha', '<', $fecha_ini)
-                                    ->whereNotBetween('fecha', [$fecha_ini." 00:00:00", $fecha_fin." 23:59:59"])
-                                    ->sum('salida');
+            // $salidaFechaNot = $movs->where('fecha', '<', $fecha_ini)
+            //                         ->whereNotBetween('fecha', [$fecha_ini." 00:00:00", $fecha_fin." 23:59:59"])
+            //                         ->sum('salida');
 
             $sheet->setCellValue("C$contadorFilas", $ingresoFechaNot - $salidaFechaNot);
             $sheet->setCellValue("D$contadorFilas", $ingresoFecha);
