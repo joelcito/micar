@@ -70,23 +70,16 @@ class ReporteController extends Controller
         $fecha_ini = $request->input('fecha_ini');
         $fecha_fin = $request->input('fecha_fin');
 
-        $servicios = Servicio::select('servicios.*')
-                                ->where('servicios.estado','producto')
-                                ->get();
+        // $servicios = Servicio::select('servicios.*')
+        //                         ->where('servicios.estado','producto')
+        //                         ->get();
 
-
-        // $facturasQ = Factura::orderBy('id', 'asc');
-
-        // $facturasQ->where('facturado', 'Si')
-        //         ->whereBetween(DB::raw('LEFT(`fecha`, 10)'), [$fecha_ini, $fecha_fin])
-        //         ->orderBy('numero', 'desc')
-        //         ->get();
-
-        // $facturas = $facturasQ->get();
+        $servicios = Servicio::with('movimientosFinalizados')
+                            ->where('servicios.estado', 'producto')
+                            ->get();
 
         // -******* GENERECION DEL EXCEL -*******
         $fileName = 'reporte_inventario.xlsx';
-            // return Excel::download(new CertificadoExport($carrera_persona_id), 'certificado.xlsx');
         $spreadsheet = new Spreadsheet();
 
         $sheet = $spreadsheet->getActiveSheet();
@@ -104,35 +97,40 @@ class ReporteController extends Controller
         $sheet->setCellValue('G5', 'PRECIO VENTA');
         $sheet->setCellValue('H5', 'PRECIO VENTA TOTAL');
 
-        // $sheet->setCellValue('I5', 'IMPORTE DE LA VENTA');
-        // $sheet->setCellValue('J5', 'IMPORTE ICE/IEHD/TASAS');
-        // $sheet->setCellValue('K5', 'EXPORTACIONES Y OPERACIONES EXENTAS');
-        // $sheet->setCellValue('L5', 'VENTAS GRAVADAS A TASA CERO');
-        // $sheet->setCellValue('M5', 'SUBTOTAL');
-        // $sheet->setCellValue('N5', 'DESCUENTOS, BONIFICACIONES Y REBAJAS OTORGADAS');
-        // $sheet->setCellValue('O5', 'IMPORTE BASE PARA DEBITO FISCAL');
-        // $sheet->setCellValue('P5', 'DEBITO FISCAL');
-        // $sheet->setCellValue('Q5', 'CODIGO CONTROL');
-
         $contadorFilas = 6;
 
         foreach($servicios as $key => $s){
 
+            $movs = $s->movimientosFinalizados;
+
             $sheet->setCellValue("A$contadorFilas", $s->id);
             $sheet->setCellValue("B$contadorFilas", $s->descripcion);
 
-            $ingresoFecha = $s->movimientos->whereBetween('fecha', [$fecha_ini." 00:00:00", $fecha_fin." 23:59:59"])
-                                            ->sum('ingreso');
-                                $salidaFecha = $s->movimientos->whereBetween('fecha', [$fecha_ini." 00:00:00", $fecha_fin." 23:59:59"])
-                                            ->sum('salida');
+            // $ingresoFecha = $s->movimientos->whereBetween('fecha', [$fecha_ini." 00:00:00", $fecha_fin." 23:59:59"])
+            //                                 ->sum('ingreso');
 
-                                $ingresoFechaNot = $s->movimientos->where('fecha', '<',$fecha_ini)
-                                                ->whereNotBetween('fecha', [$fecha_ini." 00:00:00", $fecha_fin." 23:59:59"])
-                                                ->sum('ingreso');
-                                $salidaFechaNot = $s->movimientos->where('fecha', '<',$fecha_ini)
-                                                ->whereNotBetween('fecha', [$fecha_ini." 00:00:00", $fecha_fin." 23:59:59"])
-                                                ->sum('salida');
+            // $salidaFecha = $s->movimientos->whereBetween('fecha', [$fecha_ini." 00:00:00", $fecha_fin." 23:59:59"])
+            //                                 ->sum('salida');
 
+            // $ingresoFechaNot = $s->movimientos->where('fecha', '<',$fecha_ini)
+            //                                 ->whereNotBetween('fecha', [$fecha_ini." 00:00:00", $fecha_fin." 23:59:59"])
+            //                                 ->sum('ingreso');
+
+            // $salidaFechaNot = $s->movimientos->where('fecha', '<',$fecha_ini)
+            //                                 ->whereNotBetween('fecha', [$fecha_ini." 00:00:00", $fecha_fin." 23:59:59"])
+            //                                 ->sum('salida');
+
+            $ingresoFecha = $movs->whereBetween('fecha', [$fecha_ini . " 00:00:00", $fecha_fin . " 23:59:59"])
+                                ->sum('ingreso');
+
+            $salidaFecha = $movs->whereBetween('fecha', [$fecha_ini . " 00:00:00", $fecha_fin . " 23:59:59"])
+                                ->sum('salida');
+
+            $ingresoFechaNot = $movs->where('fecha', '<', $fecha_ini)
+                                    ->sum('ingreso');
+
+            $salidaFechaNot = $movs->where('fecha', '<', $fecha_ini)
+                                    ->sum('salida');
 
             $sheet->setCellValue("C$contadorFilas", $ingresoFechaNot - $salidaFechaNot);
             $sheet->setCellValue("D$contadorFilas", $ingresoFecha);
@@ -141,38 +139,8 @@ class ReporteController extends Controller
             $sheet->setCellValue("G$contadorFilas", $s->precio);
             $sheet->setCellValue("H$contadorFilas", (int)($ingresoFecha - $salidaFecha) + ($ingresoFechaNot - $salidaFechaNot) * (int)$s->precio);
 
-            // if($f->estado == null){
-            //     $estadoFactura = 'V: VALIDA';
-            // }else{
-            //     $estadoFactura = 'V: ANULADO';
-            // }
-
-            // para sacar el debito fiscal
-            // $debito = $f->total * 0.13;
-
-            // $sheet->setCellValue("A$contadorFilas", 3);
-            // $sheet->setCellValue("B$contadorFilas", ++$key);
-            // $sheet->setCellValue("C$contadorFilas", date("d/m/Y",strtotime($f->fecha)));
-            // $sheet->setCellValue("D$contadorFilas", $f->numero);
-            // // $sheet->setCellValue("E$contadorFilas", $f->parametro->numero_autorizacion);
-            // $sheet->setCellValue("E$contadorFilas", $f->cuf);
-            // $sheet->setCellValue("F$contadorFilas", $estadoFactura);
-            // $sheet->setCellValue("G$contadorFilas", $f->nit);
-            // $sheet->setCellValue("H$contadorFilas", $f->razon_social);
-            // $sheet->setCellValue("I$contadorFilas", $f->total);
-            // $sheet->setCellValue("J$contadorFilas", 0);
-            // $sheet->setCellValue("K$contadorFilas", 0);
-            // $sheet->setCellValue("L$contadorFilas", 0);
-            // $sheet->setCellValue("M$contadorFilas", $f->total);
-            // $sheet->setCellValue("N$contadorFilas", 0);
-            // $sheet->setCellValue("O$contadorFilas", $f->total);
-            // $sheet->setCellValue("P$contadorFilas", $debito);
-            // $sheet->setCellValue("Q$contadorFilas", $f->codigo_control);
-
             $contadorFilas++;
         }
-
-
 
          // damos el ancho a las celdas
          $contadorLetras = 68; //comenzamos a partir de la letra D

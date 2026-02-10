@@ -22,4 +22,9 @@ class Movimiento extends Model
         'estado',
         'deleted_at',
     ];
+
+    public function detalle()
+    {
+        return $this->belongsTo(Detalle::class);
+    }
 }

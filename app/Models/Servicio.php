@@ -31,4 +31,12 @@ class Servicio extends Model
     {
         return $this->hasMany(Movimiento::class);
     }
+
+    public function movimientosFinalizados()
+    {
+        return $this->hasMany(Movimiento::class)
+            ->whereHas('detalle', function ($q) {
+                $q->where('estado', 'Finalizado');
+            });
+    }
 }
