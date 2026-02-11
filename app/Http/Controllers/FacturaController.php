@@ -1868,7 +1868,7 @@ class FacturaController extends Controller
 
         if($request->ajax()){
 
-            $cufds = Cufd::orderBy('id', 'desc')->get();
+            $cufds = Cufd::orderBy('id', 'desc')->limit(50)->get();
 
             $data['estado'] = true;
             $data['data'] = view('pago.ajaxListadoCufd')->with(compact('cufds'))->render();
