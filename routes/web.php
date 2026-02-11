@@ -171,6 +171,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/imprimeFactura/{factura_id}', [FacturaController::class, 'imprimeFactura']);
         Route::get('/imprimeRecibo/{factura_id}', [FacturaController::class, 'imprimeRecibo']);
         Route::get('/imprimeTicked/{vehiculo_id}', [FacturaController::class, 'imprimeTicked']);
+        Route::get('/listaCufd', [FacturaController::class, 'listaCufd']);
 
         Route::post('/verificaItemsGeneracion', [FacturaController::class, 'verificaItemsGeneracion']);
         Route::post('/arrayCuotasPagar', [FacturaController::class, 'arrayCuotasPagar']);
@@ -187,6 +188,9 @@ Route::middleware('auth')->group(function () {
         Route::post('/anularRecibo', [FacturaController::class, 'anularRecibo']);
         Route::post('/recuperaFactura', [FacturaController::class, 'recuperaFactura']);
         Route::post('/enviarTrasferenciaFactura', [FacturaController::class, 'enviarTrasferenciaFactura']);
+        Route::post('/ajaxListadoCufd', [FacturaController::class, 'ajaxListadoCufd']);
+        Route::post('/eliminarCufd', [FacturaController::class, 'eliminarCufd']);
+
     });
 
     Route::prefix('/puntoVenta')->group(function () {

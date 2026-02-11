@@ -6,6 +6,7 @@ use App\Firma\Firmadores\FirmadorBoliviaSingle;
 use App\Mail\CorreoAnulacion;
 use App\Mail\EnviaCorreo;
 use App\Models\Cliente;
+use App\Models\Cufd;
 use App\Models\Factura;
 use App\Models\Pago;
 use App\Models\Vehiculo;
@@ -1857,6 +1858,51 @@ class FacturaController extends Controller
         }
 
         return $data;
+    }
+
+    public function listaCufd(Request $request){
+        return view('pago.listaCufd');
+    }
+
+    public function ajaxListadoCufd(Request $request){
+
+        if($request->ajax()){
+
+            $cufds = Cufd::orderBy('id', 'desc')->get();
+
+            $data['estado'] = true;
+            $data['data'] = view('pago.ajaxListadoCufd')->with(compact('cufds'))->render();
+            $data['msg'] = "EXITO!";
+
+        }else{
+            $data['estado'] = false;
+            $data['data'] = null;
+            $data['msg'] = "ERROR!";
+        }
+
+        return $data;
+
+    }
+
+    public function eliminarCufd(Request $request){
+
+        if($request->ajax()){
+
+            $cufd_id = $request->input('cufd');
+            Cufd::destroy($cufd_id);
+
+            $data['estado'] = true;
+            $data['data'] = null;
+            $data['msg'] = "EXITO!";
+
+        }else{
+            $data['estado'] = false;
+            $data['data'] = null;
+            $data['msg'] = "ERROR!";
+        }
+
+        return $data;
+
     }
 
     public function enviarTrasferenciaFactura(Request $request){
